@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using market_mvc.Domain.ViewModels.Error;
 using market_mvc.Domain.ViewModels.Home;
-using market_mvc.Services;
+using market_mvc.Features.Home.Services;
 
 namespace market_mvc.Controllers
 {

@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using market_mvc.Data;
+using market_mvc.Infrastructure.Data;
 using market_mvc.Extensions;
 using market_mvc.Features.Products.Commands.CreateProduct;
 using market_mvc.Features.Products.Commands.DeleteProduct;
@@ -13,7 +13,7 @@ using market_mvc.Features.Products.Queries.GetProducts;
 using market_mvc.Domain;
 using market_mvc.Domain.Enums;
 using market_mvc.Domain.ViewModels.Product;
-using market_mvc.Services;
+using market_mvc.Features.Products.Services;
 
 namespace market_mvc.Controllers
 {

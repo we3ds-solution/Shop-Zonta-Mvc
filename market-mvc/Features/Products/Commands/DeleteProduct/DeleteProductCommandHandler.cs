@@ -1,5 +1,5 @@
 using MediatR;
-using market_mvc.Data;
+using market_mvc.Infrastructure.Data;
 
 namespace market_mvc.Features.Products.Commands.DeleteProduct
 {

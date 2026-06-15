@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using market_mvc.Domain;
 using market_mvc.Domain.entity;
 using market_mvc.Domain.ViewModels.Order;
-using market_mvc.Services;
+using market_mvc.Features.Orders.Services;
 
 namespace market_mvc.Controllers
 {

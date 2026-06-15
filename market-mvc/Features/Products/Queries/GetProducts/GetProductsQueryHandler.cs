@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using market_mvc.Data;
+using market_mvc.Infrastructure.Data;
 using market_mvc.Domain;
 using market_mvc.Domain.entity;
 
