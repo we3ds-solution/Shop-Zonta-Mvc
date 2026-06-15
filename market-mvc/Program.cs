@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using market_mvc.Data;
+using market_mvc.Data.Seeds;
 using market_mvc.Repositoriers;
 using market_mvc.Services;
-using market_mvc.Seeds;
 using FluentValidation;
 using System.Reflection;
 

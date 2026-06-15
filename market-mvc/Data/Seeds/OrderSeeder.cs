@@ -4,7 +4,7 @@ using market_mvc.Models.entity;
 using market_mvc.Models.Enums;
 using market_mvc.Models.ObjectValues;
 
-namespace market_mvc.Seeds
+namespace market_mvc.Data.Seeds
 {
     /// <summary>
     /// Seeder for order and order item data
@@ -184,3 +184,4 @@ namespace market_mvc.Seeds
         }
     }
 }
+

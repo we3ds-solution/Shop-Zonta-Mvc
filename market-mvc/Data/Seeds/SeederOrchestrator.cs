@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using market_mvc.Data;
 
-namespace market_mvc.Seeds
+namespace market_mvc.Data.Seeds
 {
     /// <summary>
     /// Orchestrates the execution of all seeders in the correct order
@@ -95,3 +95,4 @@ namespace market_mvc.Seeds
         public int SeederCount => _seeders.Count;
     }
 }
+

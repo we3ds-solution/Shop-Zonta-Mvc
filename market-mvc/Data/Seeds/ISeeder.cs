@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace market_mvc.Seeds
+namespace market_mvc.Data.Seeds
 {
     /// <summary>
     /// Interface for database seeders that implement specific data seeding logic
@@ -25,3 +25,4 @@ namespace market_mvc.Seeds
         Task SeedAsync(DbContext context);
     }
 }
+

@@ -3,7 +3,7 @@ using market_mvc.Data;
 using market_mvc.Models.entity;
 using market_mvc.Models.Enums;
 
-namespace market_mvc.Seeds
+namespace market_mvc.Data.Seeds
 {
     /// <summary>
     /// Seeder for product categories
@@ -93,3 +93,4 @@ namespace market_mvc.Seeds
         }
     }
 }
+

@@ -3,7 +3,7 @@ using market_mvc.Data;
 using market_mvc.Models.entity;
 using market_mvc.Models.ObjectValues;
 
-namespace market_mvc.Seeds
+namespace market_mvc.Data.Seeds
 {
     /// <summary>
     /// Seeder for customer data
@@ -84,3 +84,4 @@ namespace market_mvc.Seeds
         }
     }
 }
+
