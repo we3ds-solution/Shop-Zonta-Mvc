@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using market_mvc.Infrastructure.Data;
-using market_mvc.Extensions;
+using market_mvc.Features.Common.Extensions;
 using market_mvc.Features.Products.Commands.CreateProduct;
 using market_mvc.Features.Products.Commands.DeleteProduct;
 using market_mvc.Features.Products.Commands.UpdateProduct;
