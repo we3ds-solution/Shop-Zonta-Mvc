@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using market_mvc.Data;
 using market_mvc.Repositoriers;
 using market_mvc.Services;
+using market_mvc.Seeds;
 using FluentValidation;
 using System.Reflection;
 
@@ -28,6 +29,13 @@ builder.Services.AddScoped<IProductServ, ProductServ>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<IHomeRepository, HomeRepository>();
+
+// Seeder registration
+builder.Services.AddSingleton<SeederOrchestrator>();
+builder.Services.AddSingleton<ISeeder, CategorySeeder>();
+builder.Services.AddSingleton<ISeeder, CustomerSeeder>();
+builder.Services.AddSingleton<ISeeder, ProductSeeder>();
+builder.Services.AddSingleton<ISeeder, OrderSeeder>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
@@ -70,7 +78,27 @@ app.MapControllerRoute(
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await DataSeeder.SeedAsync(context);
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    var orchestrator = scope.ServiceProvider.GetRequiredService<SeederOrchestrator>();
+    
+    // Register all seeders
+    var seeders = scope.ServiceProvider.GetServices<ISeeder>();
+    foreach (var seeder in seeders)
+    {
+        orchestrator.RegisterSeeder(seeder);
+    }
+    
+    // Execute seeding
+    try
+    {
+        logger.LogInformation("Starting database seeding process");
+        await orchestrator.ExecuteAsync(context);
+        logger.LogInformation("Database seeding completed successfully");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Error during database seeding");
+    }
 }
 
 app.Run();
