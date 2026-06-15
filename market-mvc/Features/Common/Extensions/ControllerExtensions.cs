@@ -3,8 +3,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace market_mvc.Extensions
+namespace market_mvc.Features.Common.Extensions
 {
+    /// <summary>
+    /// Extension methods for Controller rendering functionality
+    /// Provides view rendering capabilities
+    /// </summary>
     public static class ControllerExtensions
     {
         public static async Task<string> RenderViewAsync<TModel>(this Controller controller, string viewName, TModel model, bool partial = true)
@@ -47,4 +51,3 @@ namespace market_mvc.Extensions
         }
     }
 }
-
