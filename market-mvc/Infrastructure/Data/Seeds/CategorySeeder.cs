@@ -11,7 +11,7 @@ namespace market_mvc.Infrastructure.Data.Seeds
     public class CategorySeeder : ISeeder
     {
         public string Name => "Categories";
-        public int Order => 1; // Execute first
+        public int Order => 1; // Execute after ApplicationUserSeeder
 
         public async Task SeedAsync(DbContext context)
         {

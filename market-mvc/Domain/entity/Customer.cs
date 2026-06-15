@@ -25,21 +25,19 @@ namespace market_mvc.Domain.entity
         
         [StringLength(1000)]
         public string? Notes { get; set; }
-        
-        public DateTime? LastLoginAt { get; set; }
-        
-        public DateTime? EmailVerifiedAt { get; set; }
-        
-        public DateTime? PhoneVerifiedAt { get; set; }
+
+        /// <summary>
+        /// Foreign key to ApplicationUser for authentication
+        /// </summary>
+        public string? ApplicationUserId { get; set; }
 
         // Navigation properties
+        public virtual ApplicationUser? User { get; set; }
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
         // Computed properties
         public string FullName => Name.FullName;
         public bool HasAddress => Address != null;
-        public bool IsEmailVerified => EmailVerifiedAt.HasValue;
-        public bool IsPhoneVerified => PhoneVerifiedAt.HasValue;
         public int TotalOrders => Orders?.Count(o => !o.IsDeleted) ?? 0;
         public decimal TotalSpent => Orders?.Where(o => !o.IsDeleted).Sum(o => o.Total) ?? 0;
         
@@ -51,24 +49,6 @@ namespace market_mvc.Domain.entity
         };
         
         // Business methods
-        public void VerifyEmail()
-        {
-            EmailVerifiedAt = DateTime.UtcNow;
-            UpdatedAt = DateTime.UtcNow;
-        }
-        
-        public void VerifyPhone()
-        {
-            PhoneVerifiedAt = DateTime.UtcNow;
-            UpdatedAt = DateTime.UtcNow;
-        }
-        
-        public void UpdateLastLogin()
-        {
-            LastLoginAt = DateTime.UtcNow;
-            UpdatedAt = DateTime.UtcNow;
-        }
-        
         public void Deactivate(string? reason = null)
         {
             IsActive = false;

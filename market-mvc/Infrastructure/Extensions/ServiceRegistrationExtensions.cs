@@ -78,11 +78,12 @@ namespace market_mvc.Infrastructure.Extensions
         /// </summary>
         public static IServiceCollection AddDataSeedingServices(this IServiceCollection services)
         {
-            services.AddSingleton<SeederOrchestrator>();
-            services.AddSingleton<ISeeder, CategorySeeder>();
-            services.AddSingleton<ISeeder, CustomerSeeder>();
-            services.AddSingleton<ISeeder, ProductSeeder>();
-            services.AddSingleton<ISeeder, OrderSeeder>();
+            services.AddTransient<SeederOrchestrator>();
+            services.AddTransient<ISeeder, ApplicationUserSeeder>();
+            services.AddTransient<ISeeder, CategorySeeder>();
+            services.AddTransient<ISeeder, CustomerSeeder>();
+            services.AddTransient<ISeeder, ProductSeeder>();
+            services.AddTransient<ISeeder, OrderSeeder>();
             return services;
         }
 
@@ -111,7 +112,8 @@ namespace market_mvc.Infrastructure.Extensions
                 .AddFluentValidationServices()
                 .AddApplicationServices()
                 .AddDataSeedingServices()
-                .AddDatabaseContext(configuration);
+                .AddDatabaseContext(configuration)
+                .AddAuthenticationServices();
 
             return services;
         }

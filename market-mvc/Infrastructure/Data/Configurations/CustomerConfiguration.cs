@@ -67,6 +67,9 @@ namespace market_mvc.Infrastructure.Data.Configurations
                 .HasFilter("[IsDeleted] = 0")
                 .HasName("IX_Customer_Email_Unique");
 
+            entity.HasIndex(c => c.ApplicationUserId)
+                .HasName("IX_Customer_ApplicationUserId");
+
             // Configure regular indexes for performance
             entity.HasIndex(c => c.IsActive)
                 .HasName("IX_Customer_IsActive");
@@ -76,6 +79,13 @@ namespace market_mvc.Infrastructure.Data.Configurations
 
             entity.HasIndex(c => c.IsDeleted)
                 .HasName("IX_Customer_IsDeleted");
+
+            // Configure relationships
+            entity.HasOne(c => c.User)
+                .WithOne(u => u.Customer)
+                .HasForeignKey<Customer>(c => c.ApplicationUserId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
         }
     }
 }
