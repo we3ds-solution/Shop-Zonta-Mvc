@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using market_mvc.Models.ViewModels.Error;
+using market_mvc.Domain.ViewModels.Error;
 using System.Diagnostics;
 
 namespace market_mvc.Controllers
@@ -74,3 +74,4 @@ namespace market_mvc.Controllers
         }
     }
 }
+

@@ -26,3 +26,4 @@ namespace market_mvc.Data.Seeds
     }
 }
 
+

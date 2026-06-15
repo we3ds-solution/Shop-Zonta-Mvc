@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using market_mvc.Data;
 using market_mvc.Data.Seeds;
-using market_mvc.Repositoriers;
+using market_mvc.Repositoriers; using market_mvc.Interfaces;
 using market_mvc.Services;
 using FluentValidation;
 using System.Reflection;
@@ -102,3 +102,4 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+

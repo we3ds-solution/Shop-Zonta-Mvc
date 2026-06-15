@@ -1,4 +1,4 @@
-using market_mvc.Repositoriers;
+using market_mvc.Repositoriers; using market_mvc.Interfaces;
 
 namespace market_mvc.Data
 {
@@ -32,3 +32,4 @@ namespace market_mvc.Data
         }
     }
 }
+

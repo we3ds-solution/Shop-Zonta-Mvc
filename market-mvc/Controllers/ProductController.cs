@@ -10,9 +10,9 @@ using market_mvc.Features.Products.Commands.DeleteProduct;
 using market_mvc.Features.Products.Commands.UpdateProduct;
 using market_mvc.Features.Products.Queries.GetProductById;
 using market_mvc.Features.Products.Queries.GetProducts;
-using market_mvc.Models;
-using market_mvc.Models.Enums;
-using market_mvc.Models.ViewModels.Product;
+using market_mvc.Domain;
+using market_mvc.Domain.Enums;
+using market_mvc.Domain.ViewModels.Product;
 using market_mvc.Services;
 
 namespace market_mvc.Controllers
@@ -250,3 +250,4 @@ namespace market_mvc.Controllers
         }
     }
 }
+

@@ -8,3 +8,4 @@ namespace market_mvc.Services
         string GetImagePath(string fileName, string folder = "products");
     }
 }
+

@@ -1,5 +1,5 @@
-using market_mvc.Models.ViewModels.Home;
-using market_mvc.Models.ViewModels.Product;
+using market_mvc.Domain.ViewModels.Home;
+using market_mvc.Domain.ViewModels.Product;
 
 namespace market_mvc.Services
 {
@@ -16,3 +16,4 @@ namespace market_mvc.Services
         Task<Dictionary<string, int>> GetProductStatisticsAsync();
     }
 }
+

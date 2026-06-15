@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using market_mvc.Data;
-using market_mvc.Models.Enums;
-using market_mvc.Models.ViewModels.Home;
-using market_mvc.Models.ViewModels.Product;
+using market_mvc.Domain.Enums;
+using market_mvc.Domain.ViewModels.Home;
+using market_mvc.Domain.ViewModels.Product;
 
 namespace market_mvc.Repositoriers
 {
@@ -386,3 +386,4 @@ namespace market_mvc.Repositoriers
         }
     }
 }
+

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using market_mvc.Models.entity;
+using market_mvc.Domain.entity;
 
 namespace market_mvc.Data.Configurations
 {
@@ -167,3 +167,4 @@ namespace market_mvc.Data.Configurations
         }
     }
 }
+

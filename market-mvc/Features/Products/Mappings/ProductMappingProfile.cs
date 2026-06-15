@@ -1,6 +1,6 @@
 using AutoMapper;
-using market_mvc.Models.entity;
-using market_mvc.Models.ViewModels.Product;
+using market_mvc.Domain.entity;
+using market_mvc.Domain.ViewModels.Product;
 using market_mvc.Features.Products.Commands.CreateProduct;
 using market_mvc.Features.Products.Commands.UpdateProduct;
 
@@ -78,3 +78,4 @@ namespace market_mvc.Features.Products.Mappings
         }
     }
 }
+

@@ -1,5 +1,5 @@
 using market_mvc.Infrastructure.Common;
-using market_mvc.Models;
+using market_mvc.Domain;
 
 namespace market_mvc.Features.Products.Queries.GetProducts
 {
@@ -14,3 +14,4 @@ namespace market_mvc.Features.Products.Queries.GetProducts
         public int PageSize { get; set; } = 10;
     }
 }
+

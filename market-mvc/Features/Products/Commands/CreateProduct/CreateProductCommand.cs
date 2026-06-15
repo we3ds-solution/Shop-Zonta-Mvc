@@ -1,6 +1,6 @@
 using market_mvc.Infrastructure.Common;
-using market_mvc.Models.entity;
-using market_mvc.Models.Enums;
+using market_mvc.Domain.entity;
+using market_mvc.Domain.Enums;
 
 namespace market_mvc.Features.Products.Commands.CreateProduct
 {
@@ -29,3 +29,4 @@ namespace market_mvc.Features.Products.Commands.CreateProduct
         public Guid? CategoryId { get; set; }
     }
 }
+

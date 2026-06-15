@@ -1,6 +1,6 @@
 using MediatR;
 using market_mvc.Data;
-using market_mvc.Models.entity;
+using market_mvc.Domain.entity;
 
 namespace market_mvc.Features.Products.Queries.GetProductById
 {
@@ -19,3 +19,4 @@ namespace market_mvc.Features.Products.Queries.GetProductById
         }
     }
 }
+

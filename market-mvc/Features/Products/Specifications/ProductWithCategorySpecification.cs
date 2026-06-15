@@ -1,5 +1,5 @@
 using market_mvc.Infrastructure.Common;
-using market_mvc.Models.entity;
+using market_mvc.Domain.entity;
 
 namespace market_mvc.Features.Products.Specifications
 {
@@ -16,3 +16,4 @@ namespace market_mvc.Features.Products.Specifications
         }
     }
 }
+

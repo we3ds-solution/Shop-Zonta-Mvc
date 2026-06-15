@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using market_mvc.Models;
-using market_mvc.Models.entity;
-using market_mvc.Models.ViewModels.Order;
+using market_mvc.Domain;
+using market_mvc.Domain.entity;
+using market_mvc.Domain.ViewModels.Order;
 using market_mvc.Services;
 
 namespace market_mvc.Controllers
@@ -96,3 +96,4 @@ namespace market_mvc.Controllers
         }
     }
 }
+

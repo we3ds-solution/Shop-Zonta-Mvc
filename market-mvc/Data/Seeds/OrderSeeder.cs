@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using market_mvc.Data;
-using market_mvc.Models.entity;
-using market_mvc.Models.Enums;
-using market_mvc.Models.ObjectValues;
+using market_mvc.Domain.entity;
+using market_mvc.Domain.Enums;
+using market_mvc.Domain.ObjectValues;
 
 namespace market_mvc.Data.Seeds
 {
@@ -184,4 +184,5 @@ namespace market_mvc.Data.Seeds
         }
     }
 }
+
 

@@ -1,6 +1,6 @@
 using AutoMapper;
-using market_mvc.Models.entity;
-using market_mvc.Models.ViewModels.Product;
+using market_mvc.Domain.entity;
+using market_mvc.Domain.ViewModels.Product;
 
 namespace market_mvc.Features.Home.Mappings
 {
@@ -16,3 +16,4 @@ namespace market_mvc.Features.Home.Mappings
         }
     }
 }
+

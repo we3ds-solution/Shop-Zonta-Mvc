@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using market_mvc.Data;
-using market_mvc.Models.entity;
+using market_mvc.Domain.entity;
 
 namespace market_mvc.Controllers
 {
@@ -56,3 +56,4 @@ namespace market_mvc.Controllers
         }
     }
 }
+

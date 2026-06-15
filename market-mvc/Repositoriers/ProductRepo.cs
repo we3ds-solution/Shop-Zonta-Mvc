@@ -2,8 +2,8 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using market_mvc.Data;
-using market_mvc.Models;
-using market_mvc.Models.entity;
+using market_mvc.Domain;
+using market_mvc.Domain.entity;
 
 namespace market_mvc.Repositoriers
 {
@@ -145,3 +145,4 @@ namespace market_mvc.Repositoriers
         }
     }
 }
+

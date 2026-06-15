@@ -832,3 +832,4 @@ namespace market_mvc.Migrations
         }
     }
 }
+

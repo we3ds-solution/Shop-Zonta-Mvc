@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using market_mvc.Models.entity;
+using market_mvc.Domain.entity;
 
 namespace market_mvc.Data.Configurations
 {
@@ -42,3 +42,4 @@ namespace market_mvc.Data.Configurations
         }
     }
 }
+

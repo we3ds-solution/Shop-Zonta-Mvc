@@ -1,6 +1,6 @@
 using AutoMapper;
-using market_mvc.Models.entity;
-using market_mvc.Models.ViewModels.Order;
+using market_mvc.Domain.entity;
+using market_mvc.Domain.ViewModels.Order;
 
 namespace market_mvc.Features.Orders.Mappings
 {
@@ -27,3 +27,4 @@ namespace market_mvc.Features.Orders.Mappings
         }
     }
 }
+

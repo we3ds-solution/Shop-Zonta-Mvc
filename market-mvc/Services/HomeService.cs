@@ -1,6 +1,6 @@
-using market_mvc.Models.ViewModels.Home;
-using market_mvc.Models.ViewModels.Product;
-using market_mvc.Repositoriers;
+using market_mvc.Domain.ViewModels.Home;
+using market_mvc.Domain.ViewModels.Product;
+using market_mvc.Repositoriers; using market_mvc.Interfaces;
 
 namespace market_mvc.Services
 {
@@ -173,3 +173,4 @@ namespace market_mvc.Services
         }
     }
 }
+
