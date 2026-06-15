@@ -1,5 +1,6 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -93,6 +94,7 @@ namespace market_mvc.Controllers
         }
 
         // GET: Products/Create
+        [Authorize(Policy = "AdminOrManager")]
         public async Task<IActionResult> Create()
         {
             await SetupCreateEditViewBag();
@@ -100,6 +102,7 @@ namespace market_mvc.Controllers
         }
 
         // POST: Products/Create
+        [Authorize(Policy = "AdminOrManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductCreateVM viewModel)
@@ -138,6 +141,7 @@ namespace market_mvc.Controllers
         }
 
         // GET: Products/Edit/5
+        [Authorize(Policy = "AdminOrManager")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var product = await _mediator.Send(new GetProductByIdQuery(id));
@@ -152,6 +156,7 @@ namespace market_mvc.Controllers
         }
 
         // POST: Products/Edit/5
+        [Authorize(Policy = "AdminOrManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, ProductEditVM viewModel)
@@ -225,6 +230,7 @@ namespace market_mvc.Controllers
         }
 
         // POST: Products/Delete/5
+        [Authorize(Policy = "AdminOrManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id)

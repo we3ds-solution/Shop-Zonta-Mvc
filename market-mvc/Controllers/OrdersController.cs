@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using market_mvc.Domain;
 using market_mvc.Domain.entity;
@@ -16,6 +17,7 @@ namespace market_mvc.Controllers
         }
 
         // GET: Orders
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var orders = await _orderService.GetAllOrdersAsync();
@@ -23,6 +25,7 @@ namespace market_mvc.Controllers
         }
 
         // GET: Orders/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(Guid id)
         {
             var order = await _orderService.GetOrderByIdAsync(id);
@@ -56,6 +59,7 @@ namespace market_mvc.Controllers
         }
 
         // GET: Orders/Edit/5
+        [Authorize(Policy = "AdminOrManager")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var order = await _orderService.GetOrderByIdAsync(id);
@@ -67,6 +71,7 @@ namespace market_mvc.Controllers
         }
 
         // POST: Orders/Edit/5
+        [Authorize(Policy = "AdminOrManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, Order order)
@@ -86,6 +91,7 @@ namespace market_mvc.Controllers
         }
 
         // POST: Orders/Delete/5
+        [Authorize(Policy = "AdminOrManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id)

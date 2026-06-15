@@ -113,7 +113,8 @@ namespace market_mvc.Infrastructure.Extensions
                 .AddApplicationServices()
                 .AddDataSeedingServices()
                 .AddDatabaseContext(configuration)
-                .AddAuthenticationServices();
+                .AddAuthenticationServices()
+                .AddAuthorizationPolicies();
 
             return services;
         }
