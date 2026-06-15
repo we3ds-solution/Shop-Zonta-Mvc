@@ -66,6 +66,7 @@ namespace market_mvc.Infrastructure.Extensions
             services.AddScoped<IProductServ, ProductServ>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IHomeService, HomeService>();
+            services.AddScoped<ISearchService, SearchService>();
 
             // Repositories
             services.AddScoped<IHomeRepository, HomeRepository>();

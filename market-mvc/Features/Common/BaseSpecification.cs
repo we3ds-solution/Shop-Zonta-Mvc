@@ -34,6 +34,18 @@ namespace market_mvc.Infrastructure.Common
             IncludeStrings.Add(includeString);
         }
 
+        protected virtual void AddCriteria(Expression<Func<T, bool>> criteria)
+        {
+            if (Criteria == null)
+            {
+                Criteria = criteria;
+            }
+            else
+            {
+                Criteria = Criteria.AndAlso(criteria);
+            }
+        }
+
         protected virtual void ApplyPaging(int skip, int take)
         {
             Skip = skip;
@@ -44,6 +56,16 @@ namespace market_mvc.Infrastructure.Common
         protected virtual void ApplyOrderBy(Expression<Func<T, object>> orderByExpression)
         {
             OrderBy = orderByExpression;
+        }
+
+        protected virtual void AddOrderBy(Expression<Func<T, object>> orderByExpression)
+        {
+            OrderBy = orderByExpression;
+        }
+
+        protected virtual void AddOrderByDescending(Expression<Func<T, object>> orderByDescExpression)
+        {
+            OrderByDescending = orderByDescExpression;
         }
 
         protected virtual void ApplyOrderByDescending(Expression<Func<T, object>> orderByDescExpression)
