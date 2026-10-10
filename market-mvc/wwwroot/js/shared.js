@@ -359,3 +359,24 @@ $(document).ready(function() {
         });
     }
 });
+
+// Client rule for [MustBeTrue] checkboxes (the built-in "range" rule cannot
+// compare booleans and always fails even when checked).
+// Registered on document.ready because jquery.validate* scripts load after
+// this file (per-view Scripts section).
+function registerMustBeTrueAdapter() {
+    if (window.jQuery && jQuery.validator && jQuery.validator.unobtrusive) {
+        if (!jQuery.validator.methods.mustbetrue) {
+            jQuery.validator.addMethod('mustbetrue', function (value, element) {
+                return element.checked === true;
+            });
+        }
+        jQuery.validator.unobtrusive.adapters.addBool('mustbetrue');
+        return true;
+    }
+    return false;
+}
+
+$(document).ready(function() {
+    registerMustBeTrueAdapter();
+});
