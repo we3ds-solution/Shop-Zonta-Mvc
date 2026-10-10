@@ -1,65 +1,57 @@
-# Zonta catalog — verified data workflow
+# Zonta catalog — verified data (official store)
 
-Date checked: 2026-10-10.
-Primary source `https://shopzonta.com` was **inaccessible** (Cloudflare 409 on `/`, `/sitemap.xml`, `/robots.txt`, `/products.json`).
-Wayback (16 Feb 2025) showed a Shopify password page. No products, prices, currency, sizes, or contact info could be verified.
+## Verified source
 
-## What is verified (secondary sources only)
+Official `https://shopzonta.com` homepage, Wayback capture **2024-12-21**
+(`https://web.archive.org/web/20241221051009/https://shopzonta.com/`).
+Live site returns Cloudflare 409; sub-pages were not archived. Checked 2026-10-10
+(initial) and re-checked via archive.
 
-- Brand: **Zonta / زونتا** — Egyptian-born streetwear label, "Arabic Sneakers".
-- Taglines seen: "Born in the Arab world, worn around the globe.", "The Only Sneakers That Speak Your Language.", "Premium, genuine leather.", "Produced by Arab hands".
-- Drop 1.0: minimalist sneakers inscribed with **Hob (love), Shaghaf (passion), Fakhr (pride)**.
-- Founders: Ahmed El Hefny and Sameh Radwan (also Amzolute). Source: scenestyled.com, 13 Feb 2025.
-- Shark Tank Egypt: EGP 5M for 15% (secondary editorial claim, not product data).
-- Instagram: `https://www.instagram.com/shop.zonta/?hl=en` (login-walled; snippets only).
-- Hosting inference only: Shopify IPs (23.227.38.65, shops.myshopify.com CNAME).
+### Verified brand facts (official HTML)
 
-These facts back the brand story section only. They are **not** product prices, stock, or policies.
+- `<html lang="ar">`, Arabic-first RTL; English version published at `/en`.
+- Title: `زونتا | أحذية متينة من الألياف الدقيقة` (Zonta | durable microfiber shoes).
+- Tagline: `معاك في اي حاجة`. Hero: `معاك في كل خطوة، وفي كل مناسبة`.
+- `og:site_name`: `Zonta`. Favicon: Arabic Zonta mark (`cdn/shop/files/uppdated_zonta_favicon_-_arabic.png`).
+- Fonts: **Somar Sans** (headings 800, body 400).
+- Colors: bg #FFFFFF, text #222222, muted #666666, borders #EEEEEE, **buttons BLACK/white
+  UPPERCASE 5px**, sale #E84E4E, footer #F5F5F5, badges hot #9A84C8 / new #98D8CA / sale #DA3F3F.
+- **Currency: EGP** (`Shopify.currency.active=EGP`, `money_format={{amount}} EGP`).
+- Sections: `الأفضل مبيعاً` (best sellers), `حريمي` (women), `رجالي` (men).
+- Collections: `all`, `all-shoes`, `mens-collections`, `womens-collection`.
+- Pages: `about`, `contact`, `exchange-and-refund`; policies: `privacy-policy`, `terms-of-service`.
 
-## Missing data (do NOT guess)
+### Verified products (14)
 
-Product names, URLs, descriptions, prices, sale prices, sizes, colors, stock state,
-SKUs, image URLs/alt, categories, materials, contact info, shipping/return policies,
-currency confirmation on product pages.
+All men's/Urban Edge at **850.00 EGP**, women's ZigZag high-tops at **950.00 EGP**,
+all with official CDN image URLs. See `ZontaCatalog.json` (each item has `sourceUrl`
++ `dateChecked: 2024-12-21`). No compare-at (sale) prices were displayed.
+Handles `lace-up-shoes`, `slip-on-shoes-low-cut`, `tricot-slip-on-shoes` appeared
+without prices and are **excluded** (never guess).
+
+### NOT verified (do NOT guess)
+
+Per-product descriptions, materials beyond the microfiber title, sizes, size guide,
+stock counts, SKUs, ratings, contact details, shipping/return/legal texts
+(sub-page captures returned 404).
 
 ## Import workflow (manual, idempotent)
 
-1. Open each official product page on shopzonta.com.
-2. For each product, record: name, URL, description (verbatim), displayed price + currency,
-   sale price only if displayed, sizes, colors, availability text, SKU if shown,
-   image URLs + alt, category, materials, source URL, date checked.
-3. Add an entry to `market-mvc/Infrastructure/Data/Catalog/ZontaCatalog.json`:
-   ```json
-   {
-     "sku": "ZONTA-HOB-001",
-     "name": "...",
-     "slug": "hob-sneaker",
-     "description": "...",
-     "price": 0,
-     "compareAtPrice": null,
-     "currency": "EGP",
-     "sizes": [],
-     "colors": [],
-     "availability": "unknown",
-     "imageUrl": null,
-     "imageAlt": null,
-     "category": "Sneakers",
-     "sourceUrl": "https://shopzonta.com/products/...",
-     "dateChecked": "2026-10-10"
-   }
-   ```
-4. Import via the maintained command (idempotent by Sku, preserves manual stock):
+1. Verify any new product on an official/archived product page.
+2. Add an entry to `market-mvc/Infrastructure/Data/Catalog/ZontaCatalog.json`
+   (`sku`, `name` verbatim, `price`, `imageUrl`, `category`, `sourceUrl`, `dateChecked`).
+   `status: Active` only when the product is shown for sale officially;
+   `trackQuantity: false` when stock counts were never published (shows
+   "Available" with no quantity claims — never invent numbers).
+3. Run (idempotent by Sku, preserves manual stock):
    ```bash
    dotnet run --project market-mvc -- import-catalog --file market-mvc/Infrastructure/Data/Catalog/ZontaCatalog.json
    ```
-   New variants are created inactive with zero stock; an admin must confirm
-   availability (Products → Edit → Variants) before sale. Or use the admin
-   product create page (validates price/stock/status server-side).
-5. Re-running must match by `Sku` and update — never duplicate. Never overwrite manual inventory counts blindly.
-6. Keep product data separate from UI markup. Official image URLs preferred; do not
-   download/redistribute third-party assets unless permitted.
+4. New variants import inactive/zero-stock for admin confirmation.
+5. Official image URLs are hotlinked (no redistribution). If the CDN blocks,
+   download with permission and host locally, updating `imageUrl`.
 
 ## Currency
 
-`Zonta:Currency` defaults to `EGP` based on Egyptian context but **requires confirmation**
-on official product pages. Do not assume currency from numeric values.
+`Zonta:Currency` = `EGP` — confirmed by official config. `Zonta:PublicUrl`
+(`https://shopzonta.com`) drives canonical/OG links.

@@ -41,6 +41,16 @@ namespace market_mvc.Controllers
             return View();
         }
 
+        public IActionResult About()
+        {
+            return View();
+        }
+
+        public IActionResult SizeGuide()
+        {
+            return View();
+        }
+
         public IActionResult Shipping()
         {
             return View();

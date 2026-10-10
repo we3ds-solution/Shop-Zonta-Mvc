@@ -1,0 +1,38 @@
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
+@{
+    ViewData["Title"] = L.Culture == "ar" ? "زونتا | قصتنا" : "Zonta | Our story";
+    ViewData["Description"] = L.Culture == "ar" ? "زونتا | أحذية متينة من الألياف الدقيقة. معاك في اي حاجة" : "Zonta — durable microfiber shoes. With you in everything.";
+    ViewBag.PageTitle = L.Culture == "ar" ? "قصتنا" : "Our story";
+    ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
+    {
+        (L.Culture == "ar" ? "قصتنا" : "About", "Home", "About")
+    };
+}
+
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container">
+    <div class="content-card">
+        <div class="col-md-9 mx-auto">
+            @if (L.Culture == "ar")
+            {
+                <h2 class="h4">زونتا | أحذية متينة من الألياف الدقيقة</h2>
+                <p class="fs-5">معاك في اي حاجة — معاك في كل خطوة، وفي كل مناسبة.</p>
+                <p>زونتا علامة ستريت وير مصرية الأصل، اشتهرت بأول سنيكرز عربي. أسسها أحمد الحفني وسامح رضوان، وأول إصدار (Drop 1.0) ضم سنيكرز minimalist محفور عليها حب وشغف وفخر.</p>
+                <p>المتجر الرسمي يعمل باللغة العربية أولاً مع نسخة إنجليزية، والأسعار بالجنيه المصري (EGP).</p>
+            }
+            else
+            {
+                <h2 class="h4">Zonta | Durable microfiber shoes</h2>
+                <p class="fs-5">With you in everything — with you every step, every occasion.</p>
+                <p>Zonta is an Egyptian-born streetwear label, known for the first-ever Arabic sneakers. Founded by Ahmed El Hefny and Sameh Radwan, Drop 1.0 featured minimalist sneakers inscribed with Hob (love), Shaghaf (passion) and Fakhr (pride).</p>
+                <p>The official store is Arabic-first with an English version, and prices are in Egyptian pounds (EGP).</p>
+            }
+            <p class="small text-muted mb-0">Sources: official shopzonta.com homepage (archived 2024-12-21) for name, tagline, materials and currency; scenestyled.com (13 Feb 2025) for founders and Drop 1.0.</p>
+            <div class="mt-3 d-flex gap-2 flex-wrap">
+                <a asp-controller="Products" asp-action="Index" class="btn btn-custom-primary">@L.Get("Hero.Shop")</a>
+                <a asp-controller="Home" asp-action="Contact" class="btn btn-custom-secondary">@L.Get("Hero.Contact")</a>
+            </div>
+        </div>
+    </div>
+</div>

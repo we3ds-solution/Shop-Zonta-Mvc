@@ -28,6 +28,7 @@ namespace market_mvc.Domain
         public decimal? MaxPrice { get; set; }
         public string PriceRange { get; set; } = string.Empty;
         public string Filter { get; set; } = string.Empty;
+        public string Category { get; set; } = string.Empty;
     }
 
     public class OrderSearchRequest : SearchFilterRequest

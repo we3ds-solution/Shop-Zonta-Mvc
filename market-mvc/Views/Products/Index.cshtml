@@ -15,6 +15,15 @@
 <div class="container">
     @await Html.PartialAsync("_SearchFilter")
 
+    @* Collections (official store groups: all shoes, men, women — mapped to local categories) *@
+    <div class="d-flex gap-2 justify-content-center flex-wrap mb-4" role="navigation" aria-label="Collections">
+        <a asp-action="Index" class="btn btn-sm @(string.IsNullOrEmpty(Context.Request.Query["category"]) ? "btn-custom-primary" : "btn-custom-secondary")">All</a>
+        <a asp-action="Index" asp-route-category="Sneakers" class="btn btn-sm @(Context.Request.Query["category"] == "Sneakers" ? "btn-custom-primary" : "btn-custom-secondary")">Sneakers</a>
+        <a asp-action="Index" asp-route-category="Apparel" class="btn btn-sm @(Context.Request.Query["category"] == "Apparel" ? "btn-custom-primary" : "btn-custom-secondary")">Apparel</a>
+        <a asp-action="Index" asp-route-category="Accessories" class="btn btn-sm @(Context.Request.Query["category"] == "Accessories" ? "btn-custom-primary" : "btn-custom-secondary")">Accessories</a>
+        <a asp-controller="Home" asp-action="SizeGuide" class="btn btn-sm btn-custom-secondary">Size guide</a>
+    </div>
+
     <div class="content-card">
         @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
         {

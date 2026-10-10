@@ -19,7 +19,9 @@ namespace market_mvc.Features.Catalog
         List<string>? Sizes,
         List<string>? Colors,
         string? SourceUrl,
-        string? DateChecked);
+        string? DateChecked,
+        string? Status,
+        bool? TrackQuantity);
 
     public record CatalogImportResult(int Created, int Updated, int VariantsCreated, List<string> Errors);
 
@@ -81,7 +83,9 @@ namespace market_mvc.Features.Catalog
                         el.TryGetProperty("availability", out var a) && a.ValueKind == JsonValueKind.String ? a.GetString() : null,
                         GetList("sizes"), GetList("colors"),
                         el.TryGetProperty("sourceUrl", out var s) && s.ValueKind == JsonValueKind.String ? s.GetString() : null,
-                        el.TryGetProperty("dateChecked", out var dc) && dc.ValueKind == JsonValueKind.String ? dc.GetString() : null));
+                        el.TryGetProperty("dateChecked", out var dc) && dc.ValueKind == JsonValueKind.String ? dc.GetString() : null,
+                        el.TryGetProperty("status", out var st) && st.ValueKind == JsonValueKind.String ? st.GetString() : null,
+                        el.TryGetProperty("trackQuantity", out var tq) && (tq.ValueKind == JsonValueKind.True || tq.ValueKind == JsonValueKind.False) ? tq.GetBoolean() : null));
                 }
             }
             catch (Exception ex)
@@ -104,6 +108,15 @@ namespace market_mvc.Features.Catalog
                     var category = await ResolveCategoryAsync(item.Category, categories, ct);
                     var inStock = !string.Equals(item.Availability, "out_of_stock", StringComparison.OrdinalIgnoreCase);
 
+                    // Status honesty: Active only when explicitly verified ("listed" =
+                    // shown for sale on the official store). Otherwise Draft for admin review.
+                    var status = string.Equals(item.Status, "Active", StringComparison.OrdinalIgnoreCase) && inStock
+                        ? ProductStatus.Active
+                        : ProductStatus.Draft;
+                    // Stock honesty: counts are never invented. trackQuantity=false means
+                    // the store shows "Available" without quantity claims.
+                    var trackQuantity = item.TrackQuantity ?? true;
+
                     var existing = await _db.Products
                         .Include(p => p.Variants)
                         .FirstOrDefaultAsync(p => p.Sku == item.Sku && !p.IsDeleted, ct);
@@ -121,8 +134,8 @@ namespace market_mvc.Features.Catalog
                             ImageAlt = item.ImageAlt ?? item.Name,
                             Sku = item.Sku,
                             StockQuantity = 0, // never invent stock; admin sets after verification
-                            TrackQuantity = true,
-                            Status = inStock ? ProductStatus.Draft : ProductStatus.Draft, // always Draft: admin activates
+                            TrackQuantity = trackQuantity,
+                            Status = status,
                             CategoryId = category?.Id,
                             Tags = $"zonta,imported,{item.Sku.ToLowerInvariant()}",
                             CreatedAt = DateTime.UtcNow,

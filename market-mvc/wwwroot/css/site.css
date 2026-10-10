@@ -1,47 +1,55 @@
 /* ============================================================
    Zonta Egypt — centralized design system
    Single source of truth for storefront styling.
-   Tokens first, then base, components, responsive, RTL.
-   Brand: premium minimal streetwear (ink / paper / sand / gold).
-   shopzonta.com was unreachable (Cloudflare 409, checked 2026-10-10),
-   so direction follows verified brand identity (black-white minimal,
-   Arabic accents) — not a copy of any store.
+   Palette verified from the official store (shopzonta.com,
+   Wayback capture 2024-12-21, Minimog theme):
+   bg #FFFFFF, text #222222, muted #666666, borders #EEEEEE,
+   buttons BLACK/white UPPERCASE 5px, sale #E84E4E, footer #F5F5F5,
+   badges hot #9A84C8 / new #98D8CA / sale #DA3F3F, base 16px,
+   Somar Sans headings (800) / body (400), Arabic-first RTL.
    ============================================================ */
 
 :root {
-  --zonta-ink: #141414;
-  --zonta-ink-soft: #2b2b2b;
-  --zonta-paper: #faf9f7;
+  --zonta-ink: #222222;
+  --zonta-ink-soft: #222222;
+  --zonta-black: #000000;
+  --zonta-paper: #ffffff;
   --zonta-card: #ffffff;
-  --zonta-line: #e7e2d9;
-  --zonta-muted: #6f6a61;
-  --zonta-gold: #b98a2f;
-  --zonta-gold-soft: #f3e9d3;
-  --zonta-success: #1e7e34;
-  --zonta-danger: #b3261e;
-  --zonta-warning: #8a5a00;
+  --zonta-line: #eeeeee;
+  --zonta-muted: #666666;
+  --zonta-sale: #e84e4e;
+  --zonta-sale-dark: #da3f3f;
+  --zonta-success: #3a8735;
+  --zonta-danger: #da3f3f;
+  --zonta-warning: #d2861a;
   --zonta-info: #33546d;
-  --zonta-radius: 14px;
-  --zonta-radius-sm: 10px;
-  --zonta-shadow: 0 4px 14px rgba(20, 20, 20, 0.07);
-  --zonta-shadow-lg: 0 10px 30px rgba(20, 20, 20, 0.12);
+  --zonta-footer-bg: #f5f5f5;
+  --zonta-radius: 10px;
+  --zonta-radius-sm: 5px;
+  --zonta-btn-radius: 5px;
+  --zonta-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  --zonta-shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --zonta-font-heading: 'Somar Sans', 'Segoe UI', Tahoma, Arial, sans-serif;
+  --zonta-font-body: 'Somar Sans', 'Segoe UI', Tahoma, Arial, sans-serif;
 }
 
 /* ---------- Base ---------- */
 html {
-  font-size: 14px;
+  font-size: 16px;
   position: relative;
   min-height: 100%;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
 body {
   background-color: var(--zonta-paper);
+  color: var(--zonta-ink);
+  font-family: var(--zonta-font-body);
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--zonta-font-heading);
+  font-weight: 800;
   color: var(--zonta-ink);
 }
 
@@ -107,19 +115,21 @@ textarea:focus-visible,
 /* ---------- Buttons (centralized) ---------- */
 .btn-custom-primary,
 .btn-primary {
-  background-color: var(--zonta-ink);
-  border: 1px solid var(--zonta-ink);
+  background-color: var(--zonta-black);
+  border: 1px solid var(--zonta-black);
   color: #fff;
-  padding: 0.55rem 1.6rem;
-  border-radius: 999px;
-  font-weight: 600;
+  padding: 0.65rem 1.8rem;
+  border-radius: var(--zonta-btn-radius);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .btn-custom-primary:hover,
 .btn-primary:hover {
-  background-color: var(--zonta-ink-soft);
-  border-color: var(--zonta-ink-soft);
+  background-color: var(--zonta-ink);
+  border-color: var(--zonta-ink);
   color: #fff;
   transform: translateY(-2px);
   box-shadow: var(--zonta-shadow);
@@ -128,71 +138,85 @@ textarea:focus-visible,
 .btn-custom-secondary,
 .btn-outline-primary {
   background: transparent;
-  border: 1px solid var(--zonta-ink);
-  color: var(--zonta-ink);
-  padding: 0.55rem 1.6rem;
-  border-radius: 999px;
-  font-weight: 600;
+  border: 1px solid var(--zonta-black);
+  color: var(--zonta-black);
+  padding: 0.65rem 1.8rem;
+  border-radius: var(--zonta-btn-radius);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .btn-custom-secondary:hover,
 .btn-outline-primary:hover {
-  background: var(--zonta-ink);
-  border-color: var(--zonta-ink);
+  background: var(--zonta-black);
+  border-color: var(--zonta-black);
   color: #fff;
   transform: translateY(-2px);
 }
 
 .btn-outline-secondary {
-  border-radius: 999px;
+  border-radius: var(--zonta-btn-radius);
 }
 
 .btn-outline-danger,
 .btn-outline-success,
 .btn-outline-warning,
 .btn-outline-info,
-.btn-outline-light {
-  border-radius: 999px;
+.btn-outline-light,
+.btn-outline-dark {
+  border-radius: var(--zonta-btn-radius);
+}
+
+/* Official semantic colors (verified): success #3A8735, error/sale #DA3F3F */
+.bg-success {
+  background-color: var(--zonta-success) !important;
+}
+
+.bg-danger {
+  background-color: var(--zonta-danger) !important;
 }
 
 /* ---------- Topbar / Hero ---------- */
 .zonta-topbar {
-  background: var(--zonta-ink);
+  background: var(--zonta-black);
   color: #fff;
-  border-bottom: 2px solid var(--zonta-gold);
+  font-size: 14px;
 }
 
 .zonta-hero {
-  background: var(--zonta-ink);
+  background: var(--zonta-black);
   color: #fff;
   text-align: center;
-  border-bottom: 3px solid var(--zonta-gold);
 }
 
 .zonta-hero .btn-light {
-  color: var(--zonta-ink);
-  border-radius: 999px;
-  font-weight: 600;
+  color: var(--zonta-black);
+  border-radius: var(--zonta-btn-radius);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .zonta-hero .btn-outline-light {
-  border-radius: 999px;
+  border-radius: var(--zonta-btn-radius);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .zonta-hero .text-uppercase {
-  color: var(--zonta-gold-soft);
+  color: rgba(255, 255, 255, 0.85);
   letter-spacing: 2px;
 }
 
 /* ---------- Page header ---------- */
 .page-header {
-  background: var(--zonta-ink);
+  background: var(--zonta-black);
   color: #fff;
   padding: 2rem 0;
   margin-bottom: 2rem;
   border-radius: 0 0 var(--zonta-radius) var(--zonta-radius);
-  border-bottom: 3px solid var(--zonta-gold);
   text-align: center;
 }
 
@@ -451,49 +475,51 @@ textarea:focus-visible,
   font-weight: 500;
 }
 
-.navbar-dark .nav-link {
-  color: rgba(255, 255, 255, 0.85);
+.navbar-light .navbar-nav .nav-link {
+  color: var(--zonta-ink);
 }
 
-.navbar-dark .nav-link:hover,
-.navbar-dark .nav-link:focus {
-  color: #fff;
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:focus {
+  color: var(--zonta-black);
 }
 
 .bg-black {
-  background-color: var(--zonta-ink) !important;
+  background-color: var(--zonta-black) !important;
 }
 
 .footer {
-  background: #101010;
-  color: #cfc9bd;
+  background: var(--zonta-footer-bg);
+  color: var(--zonta-ink);
 }
 
 .footer a {
-  color: #e8e2d5;
+  color: var(--zonta-ink);
   text-decoration: none;
 }
 
 .footer a:hover {
-  color: #fff;
+  color: var(--zonta-black);
   text-decoration: underline;
 }
 
 .zonta-footer {
-  background: #101010 !important;
-  color: #cfc9bd !important;
-  border-top: 3px solid var(--zonta-gold) !important;
+  background: var(--zonta-footer-bg) !important;
+  color: var(--zonta-muted) !important;
+  border-top: 1px solid #d8d8d8 !important;
   flex-shrink: 0;
 }
 
 .zonta-footer h5,
 .zonta-footer h6 {
-  color: #fff;
+  color: var(--zonta-ink);
   letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
 }
 
 .zonta-footer .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 1px solid #d8d8d8;
 }
 
 @media (max-width: 767px) {
@@ -609,13 +635,15 @@ textarea:focus-visible,
 }
 
 .search-btn {
-  border-radius: 999px;
+  border-radius: var(--zonta-btn-radius);
   padding: 0.7rem 2rem;
-  font-weight: 600;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .clear-btn {
-  border-radius: 999px;
+  border-radius: var(--zonta-btn-radius);
   padding: 0.7rem 1.5rem;
   font-weight: 500;
 }
@@ -787,8 +815,11 @@ textarea:focus-visible,
 }
 
 .product-card .btn {
-  border-radius: 999px;
-  font-weight: 600;
+  border-radius: var(--zonta-btn-radius);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-size: 0.8rem;
 }
 
 @media (max-width: 768px) {
@@ -831,7 +862,7 @@ textarea:focus-visible,
   transform: translateX(-50%);
   width: 64px;
   height: 3px;
-  background: var(--zonta-gold);
+  background: var(--zonta-black);
   border-radius: 2px;
 }
 
@@ -862,7 +893,7 @@ textarea:focus-visible,
   border-radius: var(--zonta-radius-sm);
   padding: 1rem;
   margin-bottom: 1rem;
-  border-left: 4px solid var(--zonta-gold);
+  border-left: 4px solid var(--zonta-black);
 }
 
 .results-info .results-count {
