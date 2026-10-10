@@ -48,8 +48,12 @@ stock counts, SKUs, ratings, contact details, shipping/return/legal texts
    dotnet run --project market-mvc -- import-catalog --file market-mvc/Infrastructure/Data/Catalog/ZontaCatalog.json
    ```
 4. New variants import inactive/zero-stock for admin confirmation.
-5. Official image URLs are hotlinked (no redistribution). If the CDN blocks,
-   download with permission and host locally, updating `imageUrl`.
+5. Official image URLs are hotlinked (no redistribution). The official CDN blocks some
+   networks (Cloudflare 409) and the files were never archived, so local download is
+   currently impossible without permission/access. Views therefore include an
+   `onerror` fallback to a neutral local brand placeholder
+   (`wwwroot/images/products/placeholder.svg`) — no fake product photos. If CDN access
+   is granted, download with permission and host locally, updating `imageUrl`.
 
 ## Currency
 
