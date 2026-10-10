@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using market_mvc.Domain.Validation;
 
 namespace market_mvc.Domain.ViewModels.Auth
 {
@@ -32,7 +33,7 @@ namespace market_mvc.Domain.ViewModels.Auth
         public string ConfirmPassword { get; set; } = string.Empty;
 
         [Display(Name = "I agree to the terms and conditions")]
-        [Range(typeof(bool), "true", "true", ErrorMessage = "You must agree to the terms and conditions")]
+        [MustBeTrue(ErrorMessage = "You must agree to the terms and conditions")]
         public bool AgreeToTerms { get; set; }
     }
 }

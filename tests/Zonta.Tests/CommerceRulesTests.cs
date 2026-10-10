@@ -1,6 +1,8 @@
 using market_mvc.Domain.entity;
 using market_mvc.Domain.ObjectValues;
 using market_mvc.Domain.ViewModels.Cart;
+using market_mvc.Domain.ViewModels.Auth;
+using market_mvc.Domain.Validation;
 
 namespace Zonta.Tests;
 
@@ -44,5 +46,38 @@ public class CommerceRulesTests
     {
         var item = new OrderItem { Quantity = 3, UnitPrice = 1500m };
         Assert.Equal(4500m, item.LineTotal);
+    }
+
+    [Fact]
+    public void AgreeToTerms_Checked_Passes_Validation()
+    {
+        var model = new RegisterVM
+        {
+            FullName = "Test User",
+            Email = "t@example.com",
+            Password = "TestPass123!",
+            ConfirmPassword = "TestPass123!",
+            AgreeToTerms = true
+        };
+        var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+        var ctx = new System.ComponentModel.DataAnnotations.ValidationContext(model);
+        Assert.True(System.ComponentModel.DataAnnotations.Validator.TryValidateObject(model, ctx, results, true));
+    }
+
+    [Fact]
+    public void AgreeToTerms_Unchecked_Fails_With_Terms_Error()
+    {
+        var model = new RegisterVM
+        {
+            FullName = "Test User",
+            Email = "t@example.com",
+            Password = "TestPass123!",
+            ConfirmPassword = "TestPass123!",
+            AgreeToTerms = false
+        };
+        var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+        var ctx = new System.ComponentModel.DataAnnotations.ValidationContext(model);
+        Assert.False(System.ComponentModel.DataAnnotations.Validator.TryValidateObject(model, ctx, results, true));
+        Assert.Contains(results, r => r.ErrorMessage != null && r.ErrorMessage.Contains("agree"));
     }
 }
