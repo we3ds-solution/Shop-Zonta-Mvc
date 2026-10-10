@@ -2,12 +2,12 @@
 @inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
-    ViewData["Title"] = "Cart";
+    ViewData["Title"] = L.Get("Cart.Title");
     ViewData["Description"] = "Your Zonta Egypt shopping cart.";
-    ViewBag.PageTitle = "Your Cart";
+    ViewBag.PageTitle = L.Get("Cart.Title");
     ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
     {
-        ("Cart", "Cart", "Index")
+        (L.Get("Cart.Title"), "Cart", "Index")
     };
 }
 
@@ -18,9 +18,9 @@
     {
         <div class="content-card text-center py-5" role="status">
             <i class="fas fa-shopping-bag fa-3x text-muted mb-3" aria-hidden="true"></i>
-            <h2>Your cart is empty</h2>
-            <p class="text-muted">Browse the collection and add your favorites.</p>
-            <a asp-controller="Products" asp-action="Index" class="btn btn-custom-primary mt-2">Shop now</a>
+            <h2>@L.Get("Cart.Empty")</h2>
+            <p class="text-muted">@L.Get("Cart.EmptyHint")</p>
+            <a asp-controller="Products" asp-action="Index" class="btn btn-custom-primary mt-2">@L.Get("Common.ShopNow")</a>
         </div>
     }
     else
@@ -64,7 +64,7 @@
                                         <input type="hidden" name="variantId" value="@item.VariantId" />
                                         <label class="visually-hidden" for="qty-@item.ProductId">Quantity for @item.DisplayName</label>
                                         <input id="qty-@item.ProductId" name="quantity" type="number" value="@item.Quantity" min="0" max="99" class="form-control" style="width: 90px;" />
-                                        <button type="submit" class="btn btn-outline-primary btn-sm">Update</button>
+                                        <button type="submit" class="btn btn-outline-primary btn-sm">@L.Get("Cart.Update")</button>
                                     </form>
                                 </td>
                                 <td class="fw-bold">@item.LineTotal.ToString("N2") EGP</td>
@@ -73,7 +73,7 @@
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="productId" value="@item.ProductId" />
                                         <input type="hidden" name="variantId" value="@item.VariantId" />
-                                        <button type="submit" class="btn btn-outline-danger btn-sm" aria-label="Remove @item.DisplayName">Remove</button>
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" aria-label="Remove @item.DisplayName">@L.Get("Cart.Remove")</button>
                                     </form>
                                 </td>
                             </tr>
@@ -83,13 +83,13 @@
             </div>
             <div class="d-flex justify-content-end">
                 <div class="text-end">
-                    <p class="mb-1">Subtotal: <strong>@Model.SubTotal.ToString("N2") EGP</strong></p>
-                    <p class="mb-1">Shipping: <strong>@(Model.ShippingAmount == 0 ? L.Get("Cart.FreeShipNote") + " (0.00 EGP)" : Model.ShippingAmount.ToString("N2") + " EGP")</strong></p>
-                    <p class="h5">Total: <strong>@Model.Total.ToString("N2") EGP</strong></p>
-                    <p class="small text-muted">Totals are recalculated on the server at checkout.</p>
+                    <p class="mb-1">@L.Get("Cart.Subtotal"): <strong>@Model.SubTotal.ToString("N2") EGP</strong></p>
+                    <p class="mb-1">@L.Get("Cart.Shipping"): <strong>@(Model.ShippingAmount == 0 ? L.Get("Cart.FreeShipNote") + " (0.00 EGP)" : Model.ShippingAmount.ToString("N2") + " EGP")</strong></p>
+                    <p class="h5">@L.Get("Cart.Total"): <strong>@Model.Total.ToString("N2") EGP</strong></p>
+                    <p class="small text-muted">@L.Get("Cart.Recalc")</p>
                     <div class="d-flex gap-2 justify-content-end flex-wrap">
-                        <a asp-controller="Products" asp-action="Index" class="btn btn-custom-secondary">Continue shopping</a>
-                        <a asp-action="Checkout" class="btn btn-custom-primary">Checkout</a>
+                        <a asp-controller="Products" asp-action="Index" class="btn btn-custom-secondary">@L.Get("Cart.Continue")</a>
+                        <a asp-action="Checkout" class="btn btn-custom-primary">@L.Get("Cart.Checkout")</a>
                     </div>
                 </div>
             </div>

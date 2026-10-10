@@ -1,0 +1,25 @@
+@model bool
+
+@{
+    ViewData["Title"] = "Email confirmation";
+    ViewBag.PageTitle = "Email confirmation";
+}
+
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container">
+    <div class="content-card text-center py-5">
+        @if (Model)
+        {
+            <i class="fas fa-check-circle fa-3x text-success mb-3" aria-hidden="true"></i>
+            <h2>Your email is confirmed</h2>
+        }
+        else
+        {
+            <i class="fas fa-times-circle fa-3x text-danger mb-3" aria-hidden="true"></i>
+            <h2>This confirmation link is invalid or expired</h2>
+            <p class="text-muted">Register again or request a new link.</p>
+        }
+        <a asp-action="Login" class="btn btn-custom-primary mt-3">Back to login</a>
+    </div>
+</div>

@@ -5,6 +5,7 @@ using market_mvc.Domain.entity;
 using market_mvc.Domain.Enums;
 using market_mvc.Domain.ObjectValues;
 using market_mvc.Features.Cart.Services;
+using market_mvc.Features.Payments;
 
 namespace market_mvc.Features.Orders.Services
 {
@@ -13,13 +14,15 @@ namespace market_mvc.Features.Orders.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly AppDbContext _db;
         private readonly ICartService _cart;
+        private readonly IPaymentProvider _payments;
         private readonly IConfiguration _config;
 
-        public OrderService(IUnitOfWork unitOfWork, AppDbContext db, ICartService cart, IConfiguration config)
+        public OrderService(IUnitOfWork unitOfWork, AppDbContext db, ICartService cart, IPaymentProvider payments, IConfiguration config)
         {
             _unitOfWork = unitOfWork;
             _db = db;
             _cart = cart;
+            _payments = payments;
             _config = config;
         }
 
@@ -152,11 +155,23 @@ namespace market_mvc.Features.Orders.Services
                     DiscountAmount = 0m,
                     Notes = input.Notes,
                     Status = OrderStatus.Pending,
-                    PaymentStatus = PaymentStatus.Pending, // honest COD pending; never mark paid from client
-                    PaymentMethod = "Cash on Delivery",
+                    PaymentStatus = PaymentStatus.Pending, // overwritten by provider result below
+                    PaymentMethod = _payments.MethodName,
                     CreatedAt = DateTime.UtcNow
                 };
                 order.CalculateTotal();
+
+                // Charge through the configured provider (COD default: stays Pending).
+                // Never mark paid from client input; provider result is authoritative.
+                var charge = await _payments.CreateChargeAsync(
+                    order.Total, _config["Zonta:Currency"] ?? "EGP", ct);
+                if (!charge.Ok)
+                    return (false, charge.Error ?? "Payment failed.", Guid.Empty);
+                order.PaymentStatus = charge.Status;
+                order.PaymentMethod = _payments.MethodName;
+                if (charge.TransactionId != null)
+                    order.PaymentTransactionId = charge.TransactionId;
+
                 foreach (var item in items) item.OrderId = order.Id;
                 order.OrderItems = items;
 

@@ -11,7 +11,10 @@ using FluentValidation;
 using System.Reflection;
 using market_mvc.Features.Cart.Services;
 using market_mvc.Features.Catalog;
+using market_mvc.Features.Payments;
+using market_mvc.Features.Auth.Email;
 using market_mvc.Infrastructure.Localization;
+using market_mvc.Infrastructure.Security;
 
 namespace market_mvc.Infrastructure.Extensions
 {
@@ -72,6 +75,8 @@ namespace market_mvc.Infrastructure.Extensions
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<ICatalogImportService, CatalogImportService>();
+            // Payment readiness (#9): COD default; swap registration to add online providers.
+            services.AddScoped<IPaymentProvider, CashOnDeliveryProvider>();
             services.AddScoped<IProductServ, ProductServ>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IHomeService, HomeService>();
@@ -79,6 +84,15 @@ namespace market_mvc.Infrastructure.Extensions
 
             // Repositories
             services.AddScoped<IHomeRepository, HomeRepository>();
+
+            // Email delivery (#4): SMTP when configured, dev file-sender otherwise.
+            services.AddScoped<IEmailSender>(sp =>
+            {
+                var config = sp.GetRequiredService<IConfiguration>();
+                return string.IsNullOrWhiteSpace(config["Smtp:Host"])
+                    ? (IEmailSender)ActivatorUtilities.CreateInstance<FileEmailSender>(sp)
+                    : ActivatorUtilities.CreateInstance<SmtpEmailSender>(sp);
+            });
 
             return services;
         }
@@ -128,6 +142,7 @@ namespace market_mvc.Infrastructure.Extensions
 
             // Session-backed cart (no extra infrastructure).
             services.AddDistributedMemoryCache();
+            services.AddAuthRateLimiting();
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromHours(4);
@@ -137,8 +152,7 @@ namespace market_mvc.Infrastructure.Extensions
             });
 
             // Real EN/AR request localization (cookie-driven, culture-aware formatting).
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
+            services.Configure<RequestLocalizationOptions>(options =>            {
                 var supported = new[] { "en", "ar" }
                     .Select(c => new System.Globalization.CultureInfo(c)).ToList();
                 options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en");
