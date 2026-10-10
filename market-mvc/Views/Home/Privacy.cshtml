@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Privacy Policy";
+    ViewBag.PageTitle = "Privacy Policy";
+    ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
+    {
+        ("Privacy", "Home", "Privacy")
+    };
+}
+
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container">
+    <div class="content-card">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="text-center mb-4">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                </div>
+                
+                <h4>Information We Collect</h4>
+                <p>We collect information you provide directly to us, such as when you create an account, make a purchase, or contact us for support.</p>
+                
+                <h4>How We Use Your Information</h4>
+                <p>We use the information we collect to provide, maintain, and improve our services, process transactions, and communicate with you.</p>
+                
+                <h4>Information Sharing</h4>
+                <p>We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy.</p>
+                
+                <h4>Data Security</h4>
+                <p>We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p>
+                
+                <h4>Contact Us</h4>
+                <p>If you have any questions about this Privacy Policy, please see our <a asp-controller="Home" asp-action="Contact">contact page</a>. Official contact details are published only after verification.</p>
+                <div class="alert alert-warning mt-3" role="note"><strong>Draft — requires legal review.</strong> This policy text is a template, not yet approved company policy.</div>
+                
+                <div class="text-center mt-4">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-custom-primary">
+                        <i class="fas fa-home me-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

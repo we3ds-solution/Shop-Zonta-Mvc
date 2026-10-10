@@ -1,0 +1,21 @@
+name: build-test
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+      - name: Restore
+        run: dotnet restore market-mvc.sln
+      - name: Build
+        run: dotnet build market-mvc.sln --no-restore --nologo
+      - name: Test
+        run: dotnet test market-mvc.sln --no-build --nologo

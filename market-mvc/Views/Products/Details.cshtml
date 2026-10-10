@@ -1,0 +1,140 @@
+@model market_mvc.Domain.entity.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+    ViewData["Description"] = string.IsNullOrWhiteSpace(Model.MetaDescription) ? Model.Description : Model.MetaDescription;
+    var isAdmin = User.IsInRole("Admin") || User.IsInRole("Manager");
+    var variants = Model.Variants?.Where(v => !v.IsDeleted && v.IsActive).OrderBy(v => v.Size).ThenBy(v => v.Color).ToList() ?? new List<market_mvc.Domain.entity.ProductVariant>();
+    var hasVariants = variants.Any();
+    var baseOutOfStock = Model.TrackQuantity && Model.StockQuantity <= 0;
+    var variantsAvailable = variants.Any(v => v.StockQuantity > 0);
+    var unavailable = Model.Status != market_mvc.Domain.Enums.ProductStatus.Active || (hasVariants ? !variantsAvailable : baseOutOfStock);
+}
+
+<nav aria-label="breadcrumb" class="mt-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">Shop</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+    </ol>
+</nav>
+
+<div class="container">
+    <div class="row g-4">
+        <div class="col-12 col-md-6">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" alt="@(Model.ImageAlt ?? Model.Name)" class="img-fluid rounded shadow-sm w-100" style="aspect-ratio: 1/1; object-fit: cover;" />
+            }
+            else
+            {
+                <div class="product-image-placeholder-large w-100 d-flex align-items-center justify-content-center" style="aspect-ratio: 1/1;">
+                    <i class="fas fa-image" aria-hidden="true"></i>
+                </div>
+            }
+        </div>
+        <div class="col-12 col-md-6">
+            @if (Model.Category != null)
+            {
+                <p class="text-muted small mb-1">@Model.Category.Name</p>
+            }
+            <h1 class="h2">@Model.Name</h1>
+            @if (!string.IsNullOrWhiteSpace(Model.Sku))
+            {
+                <p class="text-muted small">SKU: @Model.Sku</p>
+            }
+            <div class="d-flex align-items-center gap-2 my-3">
+                <span class="h3 mb-0 text-primary fw-bold">@Model.Price.ToString("N2") EGP</span>
+                @if (Model.CompareAtPrice.HasValue && Model.CompareAtPrice > Model.Price)
+                {
+                    <span class="text-muted text-decoration-line-through">@Model.CompareAtPrice.Value.ToString("N2") EGP</span>
+                    <span class="badge bg-danger">Sale</span>
+                }
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.Description))
+            {
+                <p>@Model.Description</p>
+            }
+            <p class="small">
+                @if (unavailable)
+                {
+                    <span class="badge bg-secondary">Unavailable</span>
+                }
+                else if (hasVariants)
+                {
+                    <span class="badge bg-success">Select size/color below</span>
+                }
+                else if (Model.TrackQuantity)
+                {
+                    <span class="badge bg-success">In stock (@Model.StockQuantity)</span>
+                }
+                else
+                {
+                    <span class="badge bg-success">Available</span>
+                }
+            </p>
+
+            @if (!unavailable)
+            {
+                <form asp-controller="Cart" asp-action="Add" method="post" class="mt-3">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="ProductId" value="@Model.Id" />
+                    @if (hasVariants)
+                    {
+                        <div class="mb-3">
+                            <label for="variant" class="form-label">Size / Color</label>
+                            <select id="variant" name="VariantId" class="form-select" required>
+                                <option value="">Select an option</option>
+                                @foreach (var v in variants)
+                                {
+                                    var price = v.EffectivePrice(Model.Price);
+                                    var label = $"{v.Label} — {price.ToString("N2")} EGP" + (v.StockQuantity <= 0 ? " (out of stock)" : $" ({v.StockQuantity} available)");
+                                    <option value="@v.Id" disabled="@(v.StockQuantity <= 0)">@label</option>
+                                }
+                            </select>
+                        </div>
+                    }
+                    <div class="d-flex gap-2 align-items-end">
+                        <div>
+                            <label for="qty" class="form-label">Quantity</label>
+                            <input id="qty" name="Quantity" type="number" value="1" min="1" max="99" class="form-control" style="width: 110px;" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-shopping-bag me-2" aria-hidden="true"></i>Add to cart
+                        </button>
+                    </div>
+                </form>
+                <p class="small text-muted mt-2">Cash on delivery. Prices verified in-store; totals are calculated on the server at checkout.</p>
+            }
+            else
+            {
+                <div class="alert alert-secondary mt-3" role="status">This product is currently unavailable.</div>
+            }
+
+            <div class="d-flex gap-2 mt-3 flex-wrap">
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2" aria-hidden="true"></i>Back to shop
+                </a>
+                @if (isAdmin)
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning">
+                        <i class="fas fa-edit me-2" aria-hidden="true"></i>Edit (admin)
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Product structured data: emitted only for visible, purchasable offers (no invented data). *@
+@if (Model.Status == market_mvc.Domain.Enums.ProductStatus.Active && !unavailable)
+{
+    var jsonName = System.Text.Json.JsonSerializer.Serialize(Model.Name);
+    var jsonDesc = System.Text.Json.JsonSerializer.Serialize(Model.Description ?? "");
+    var jsonSku = System.Text.Json.JsonSerializer.Serialize(Model.Sku ?? Model.Id.ToString());
+    var jsonImg = string.IsNullOrEmpty(Model.ImageUrl) ? "null" : System.Text.Json.JsonSerializer.Serialize(Model.ImageUrl);
+    var jsonPrice = Model.Price.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
+    <script type="application/ld+json">
+    {"@@context":"https://schema.org","@@type":"Product","name":@Html.Raw(jsonName),"description":@Html.Raw(jsonDesc),"sku":@Html.Raw(jsonSku),"image":@Html.Raw(jsonImg),"offers":{"@@type":"Offer","priceCurrency":"EGP","price":"@jsonPrice","availability":"https://schema.org/InStock"}}
+    </script>
+}

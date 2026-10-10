@@ -1,0 +1,30 @@
+@{
+    ViewData["Title"] = "Contact";
+    ViewData["Description"] = "Contact Zonta Egypt.";
+    ViewBag.PageTitle = "Contact";
+    ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
+    {
+        ("Contact", "Home", "Contact")
+    };
+}
+
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container">
+    <div class="content-card">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <h2 class="h4">Contact Zonta</h2>
+                <p>Verified contact details from the official store are still being confirmed (shopzonta.com was inaccessible on 2026-10-10). Meanwhile, the verified public channel is:</p>
+                <ul>
+                    <li>Instagram: <a href="https://www.instagram.com/shop.zonta/?hl=en" target="_blank" rel="noopener">@@shop.zonta</a></li>
+                    <li>Official store: <a href="https://shopzonta.com" target="_blank" rel="noopener">shopzonta.com</a></li>
+                </ul>
+                <div class="alert alert-warning" role="note">
+                    No phone number, email, or physical address is published here until officially verified. Do not trust unverified contact details from other sources.
+                </div>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-custom-primary">Back to home</a>
+            </div>
+        </div>
+    </div>
+</div>

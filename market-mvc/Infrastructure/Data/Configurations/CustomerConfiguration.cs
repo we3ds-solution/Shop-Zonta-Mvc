@@ -1,0 +1,93 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using market_mvc.Domain.entity;
+
+namespace market_mvc.Infrastructure.Data.Configurations
+{
+    /// <summary>
+    /// Entity Framework Core configuration for Customer entity
+    /// </summary>
+    public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
+    {
+        public void Configure(EntityTypeBuilder<Customer> entity)
+        {
+            // Configure string properties max length
+            entity.Property(c => c.Email)
+                .HasMaxLength(255)
+                .IsRequired();
+
+            entity.Property(c => c.Phone)
+                .HasMaxLength(20);
+
+            // Configure PersonName value object
+            entity.OwnsOne(c => c.Name, name =>
+            {
+                name.Property(n => n.FirstName)
+                    .HasColumnName("FirstName")
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                name.Property(n => n.LastName)
+                    .HasColumnName("LastName")
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                name.Property(n => n.MiddleName)
+                    .HasColumnName("MiddleName")
+                    .HasMaxLength(100);
+            });
+
+            // Configure Address value object (optional)
+            entity.OwnsOne(c => c.Address, address =>
+            {
+                address.Property(a => a.Street)
+                    .HasColumnName("AddressStreet")
+                    .HasMaxLength(200);
+
+                address.Property(a => a.City)
+                    .HasColumnName("AddressCity")
+                    .HasMaxLength(100);
+
+                address.Property(a => a.State)
+                    .HasColumnName("AddressState")
+                    .HasMaxLength(100);
+
+                address.Property(a => a.ZipCode)
+                    .HasColumnName("AddressZipCode")
+                    .HasMaxLength(20);
+
+                address.Property(a => a.Country)
+                    .HasColumnName("AddressCountry")
+                    .HasMaxLength(100);
+            });
+
+            // Configure unique indexes
+            entity.HasIndex(c => c.Email)
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0")
+                .HasDatabaseName("IX_Customer_Email_Unique");
+
+            entity.HasIndex(c => c.ApplicationUserId)
+                .HasDatabaseName("IX_Customer_ApplicationUserId");
+
+            // Configure regular indexes for performance
+            entity.HasIndex(c => c.IsActive)
+                .HasDatabaseName("IX_Customer_IsActive");
+
+            entity.HasIndex(c => c.CreatedAt)
+                .HasDatabaseName("IX_Customer_CreatedAt");
+
+            entity.HasIndex(c => c.IsDeleted)
+                .HasDatabaseName("IX_Customer_IsDeleted");
+
+            // Configure relationships
+            entity.HasOne(c => c.User)
+                .WithOne(u => u.Customer)
+                .HasForeignKey<Customer>(c => c.ApplicationUserId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+        }
+    }
+}
+
+

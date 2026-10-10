@@ -1,0 +1,65 @@
+@model dynamic
+
+@{
+    var searchPlaceholder = ViewBag.SearchPlaceholder ?? "Search...";
+    var showFilters = ViewBag.ShowFilters ?? true;
+    var filterOptions = ViewBag.FilterOptions as Dictionary<string, List<SelectListItem>> ?? new Dictionary<string, List<SelectListItem>>();
+}
+
+<div class="search-filter-container">
+    <div class="row align-items-end">
+        <div class="col-12 col-md-4 col-lg-3">
+            <label for="searchInput" class="form-label">
+                <i class="fas fa-search me-1"></i>Search
+            </label>
+            <input type="text" id="searchInput" class="form-control search-input" placeholder="@searchPlaceholder" />
+        </div>
+        
+        @if (showFilters && filterOptions.Any())
+        {
+            @foreach (var filter in filterOptions)
+            {
+                <div class="col-12 col-md-6 col-lg-2">
+                    <label for="@filter.Key" class="form-label">@filter.Key.Replace("Filter", "")</label>
+                    <select id="@filter.Key" name="@filter.Key" class="form-select filter-select">
+                        <option value="">All</option>
+                        @foreach (var option in filter.Value)
+                        {
+                            <option value="@option.Value">@option.Text</option>
+                        }
+                    </select>
+                </div>
+            }
+        }
+        
+        <div class="col-12 col-md-6 col-lg-2">
+            <label for="pageSize" class="form-label">Per Page</label>
+            <select id="pageSize" class="form-select filter-select">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        
+        <div class="col-12 col-md-12 col-lg-3">
+            <div class="d-flex gap-2 flex-column flex-lg-row">
+                <button type="button" id="searchBtn" class="btn btn-custom-primary search-btn flex-fill">
+                    <i class="fas fa-search me-1"></i>Search
+                </button>
+                <button type="button" id="clearFilters" class="btn btn-outline-secondary clear-btn flex-fill">
+                    <i class="fas fa-times me-1"></i>Clear
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="resultsInfo"></div>
+
+<div id="loadingSpinner" class="loading-spinner">
+    <div class="spinner-border spinner-border-custom" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2 text-muted">Searching...</p>
+</div>

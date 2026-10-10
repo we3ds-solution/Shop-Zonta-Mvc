@@ -1,0 +1,58 @@
+@model market_mvc.Domain.entity.Order
+
+@{
+    ViewData["Title"] = "Update Order Status";
+    ViewBag.PageTitle = $"Order {Model.OrderNumber}";
+    ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
+    {
+        ("Orders", "Orders", "Index"),
+        ("Edit", "Orders", "Edit")
+    };
+}
+
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="content-card mb-3">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Order number</dt>
+                    <dd class="col-sm-8"><code>@Model.OrderNumber</code></dd>
+                    <dt class="col-sm-4">Customer</dt>
+                    <dd class="col-sm-8">@Model.CustomerEmail</dd>
+                    <dt class="col-sm-4">Total (server-calculated)</dt>
+                    <dd class="col-sm-8 fw-bold">@Model.Total.ToString("N2") EGP</dd>
+                    <dt class="col-sm-4">Current status</dt>
+                    <dd class="col-sm-8">@Model.Status · @Model.PaymentStatus</dd>
+                </dl>
+                <p class="small text-muted mb-0 mt-2">Totals, payment status, and customer are never edited here — only the fulfillment status transitions.</p>
+            </div>
+            <div class="form-enhanced">
+                <form asp-action="Edit" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    <input type="hidden" name="Id" value="@Model.Id" />
+                    <div class="form-group">
+                        <label for="Status" class="control-label">New status</label>
+                        <select name="Status" id="Status" class="form-select">
+                            @foreach (var s in Enum.GetValues<market_mvc.Domain.Enums.OrderStatus>())
+                            {
+                                <option value="@s" selected="@(s == Model.Status)">@s</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group d-flex gap-2 flex-wrap">
+                        <button type="submit" class="btn btn-custom-primary">Update status</button>
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">View details</a>
+                        <a asp-action="Index" class="btn btn-custom-secondary">Back to list</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

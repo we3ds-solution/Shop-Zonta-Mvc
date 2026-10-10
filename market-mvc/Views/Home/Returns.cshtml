@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Returns & Refunds";
+    ViewBag.PageTitle = "Returns & Refunds";
+    ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)> { ("Returns", "Home", "Returns") };
+}
+@await Html.PartialAsync("_PageHeader")
+<div class="container">
+    <div class="content-card">
+        <div class="col-md-8 mx-auto">
+            <div class="alert alert-warning" role="note"><strong>Draft — requires business confirmation.</strong> This is not yet approved company policy. Do not treat it as final.</div>
+            <h2 class="h4">Returns</h2>
+            <ul>
+                <li>Eligibility window, size-exchange rules, and refund method are to be confirmed with Zonta.</li>
+                <li>Keep items unworn with tags until the official policy is published.</li>
+                <li>To request a return, use the <a asp-action="Contact">contact page</a> once official channels are verified.</li>
+            </ul>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-custom-primary">Back to home</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Shipping";
+    ViewBag.PageTitle = "Shipping";
+    ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)> { ("Shipping", "Home", "Shipping") };
+}
+@await Html.PartialAsync("_PageHeader")
+<div class="container">
+    <div class="content-card">
+        <div class="col-md-8 mx-auto">
+            <div class="alert alert-warning" role="note"><strong>Draft — requires business confirmation.</strong> Shipping fees, zones, and timelines below are not yet approved company policy.</div>
+            <h2 class="h4">How delivery works</h2>
+            <ul>
+                <li>Cash on delivery within Egypt (zones and fees to be confirmed).</li>
+                <li>Orders are confirmed by phone/message before dispatch (process to be confirmed).</li>
+                <li>Shipping fee is shown at checkout and included in the server-calculated total. Current configured fee: see appsettings <code>Zonta:ShippingFee</code> (default 0 until confirmed).</li>
+            </ul>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-custom-primary">Back to home</a>
+        </div>
+    </div>
+</div>

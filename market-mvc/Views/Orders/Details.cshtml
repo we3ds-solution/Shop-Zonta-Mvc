@@ -1,0 +1,97 @@
+@model market_mvc.Domain.entity.Order
+
+@{
+    ViewData["Title"] = "Order Details";
+    ViewBag.PageTitle = "Order Details";
+    ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
+    {
+        ("Orders", "Orders", "Index"),
+        ("Details", "Orders", "Details")
+    };
+}
+
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="details-card">
+                <div class="text-center mb-4">
+                    <i class="fas fa-shopping-cart fa-3x text-primary mb-3"></i>
+                    <h3>Order #@Model.Id.ToString().Substring(0, 8).ToUpper()</h3>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="detail-label">
+                                <i class="fas fa-fingerprint me-2"></i>Order ID
+                            </div>
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="detail-value">
+                                <code>@Html.DisplayFor(model => model.Id)</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="detail-label">
+                                <i class="fas fa-dollar-sign me-2"></i>Total Amount
+                            </div>
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="detail-value">
+                                <span class="badge bg-success fs-4">@Model.Total.ToString("N2") EGP</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="detail-label">
+                                <i class="fas fa-calendar me-2"></i>Created Date
+                            </div>
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="detail-value">
+                                <i class="fas fa-clock me-1"></i>@Model.CreatedAt.ToString("MMMM dd, yyyy 'at' HH:mm")
+                                <br><small class="text-muted">(@Model.CreatedAt.ToString("dddd"))</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.OrderItems.Any())
+                {
+                    <div class="detail-row">
+                        <div class="detail-label mb-2"><i class="fas fa-box-open me-2"></i>Items</div>
+                        <ul class="list-group">
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>@(string.IsNullOrWhiteSpace(item.VariantLabel) ? item.ProductName : $"{item.ProductName} ({item.VariantLabel})") × @item.Quantity</span>
+                                    <span class="fw-bold">@((item.UnitPrice * item.Quantity).ToString("N2")) EGP</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+                
+                <div class="d-flex gap-3 justify-content-center mt-4">
+                    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">
+                        <i class="fas fa-edit me-2"></i>Edit Order
+                    </a>
+                    <a asp-action="Index" class="btn btn-custom-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

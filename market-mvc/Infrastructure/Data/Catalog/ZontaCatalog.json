@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json.schemastore.org/json-schema-2020-12.json",
+  "title": "Zonta verified catalog import template",
+  "description": "Fill ONLY from official shopzonta.com product pages. Never invent prices, stock, or descriptions. Re-running import updates by Sku and never duplicates. See docs/ZONTA-CATALOG.md.",
+  "currency": "EGP",
+  "currencyConfirmation": "REQUIRED — shopzonta.com was inaccessible (Cloudflare 409) on 2026-10-10. Confirm EGP on official product pages before production.",
+  "products": []
+}

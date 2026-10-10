@@ -1,0 +1,166 @@
+# Zonta Egypt — Online Store (ASP.NET Core MVC)
+
+Egyptian streetwear storefront for **Zonta / زونتا** — premium Arabic sneakers
+(Hob, Shaghaf, Fakhr), apparel, and accessories. Transformed from a generic demo
+marketplace into a production-oriented store with secured checkout.
+
+> Data honesty: `https://shopzonta.com` was inaccessible on 2026-10-10 (Cloudflare 409),
+> so no official product prices/stock are seeded. The catalog starts with structural
+> categories only; verified import is manual (see `docs/ZONTA-CATALOG.md`).
+> Brand story facts come from scenestyled.com (13 Feb 2025) and LinkedIn — not prices.
+
+## Technology stack (verified)
+
+- ASP.NET Core MVC 9.0 / .NET 9.0.318 SDK
+- Entity Framework Core 9.0.10 + SQL Server
+- ASP.NET Core Identity (roles: Admin, Manager, Support, Customer)
+- MediatR 14.0.0 (CQRS), AutoMapper 12.0.1, FluentValidation 11.9.0
+- Razor views + Bootstrap 5 + session-backed cart (no extra infrastructure)
+- xUnit tests: `tests/Zonta.Tests`
+
+## Prerequisites
+
+- .NET 9 SDK
+- SQL Server 2019+ (or LocalDB for dev)
+- Git
+
+## Local setup
+
+```bash
+git clone <repo-url>
+cd <repo>
+dotnet restore
+dotnet build
+dotnet test
+```
+
+Configure the connection (never commit secrets):
+
+```powershell
+$env:ConnectionStrings__DefaultConnection="Server=(localdb)\mssqllocaldb;Database=zonta_store_db;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"
+dotnet run --project market-mvc
+```
+
+Or use user-secrets:
+
+```bash
+dotnet user-secrets init --project market-mvc
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=...;..." --project market-mvc
+```
+
+Copy `.env.example` for the full variable list (placeholders only).
+
+## Database migrations
+
+Migrations live in `market-mvc/Infrastructure/Migrations`. Startup applies pending
+migrations explicitly via `MigrateAsync()` (no `EnsureCreated` in migration-managed DBs),
+except in production where auto-migrate requires explicit `ZONTA_AUTO_MIGRATE=true`.
+
+```bash
+dotnet ef migrations add "DescribeChange" --project market-mvc
+dotnet ef database update --project market-mvc
+```
+
+Never run migrations against production without a backup + reviewed deployment plan.
+Existing data/relationships are preserved; seeders are idempotent.
+Note: `AddProductVariants` also syncs a stale snapshot (Identity tables, index renames,
+`Items` table drop) — review its header warning before any production apply.
+
+## Development seed
+
+Startup runs idempotent seeders after migrations:
+
+- Roles always (Admin/Manager/Support/Customer).
+- Zonta categories always (Sneakers, Apparel, Accessories, Collections); legacy demo
+  categories are deactivated. No products are auto-seeded (see catalog docs).
+- No demo customers/orders. Dev-only demo customer (random password) in Development only.
+- Bootstrap admin only with explicit env opt-in (below).
+
+## First administrator provisioning
+
+No default passwords exist. Provision explicitly:
+
+```powershell
+$env:ZONTA_SEED_ADMIN="true"
+$env:ZONTA_ADMIN_EMAIL="admin@example.com"
+$env:ZONTA_ADMIN_PASSWORD="<strong-unique-password>"
+dotnet run --project market-mvc
+```
+
+Idempotent (skips if email exists). Password is never logged. Remove/rotate the
+bootstrap credentials immediately after first login. Never commit them.
+
+## Build and test
+
+```bash
+dotnet --info
+dotnet restore
+dotnet build market-mvc.sln --no-restore
+dotnet test market-mvc.sln --no-build
+```
+
+Tests cover: server-side order totals, cart totals, stock validation, EGP default,
+order-item snapshots, variant labels/pricing/availability, EN/AR localization switching.
+CI (`.github/workflows/build-test.yml`) runs build+test.
+Note: on locked-down Windows paths (e.g. Downloads) WDAC may block the test runner;
+copy the repo to an approved path and run `dotnet test` there (verified 14/14).
+
+## Store workflows
+
+- Home `/` — hero, featured/on-sale/latest (real DB data), brand story, empty states.
+- Shop `/Products` — search, EGP price-range filter, sort, pagination.
+- Detail `/Products/Details/{id}` — server price, stock state, add-to-cart (POST+antiforgery).
+- Cart `/Cart` — session cart, server-price recalculation, quantity validation.
+- Checkout `/Cart/Checkout` (auth required) — contact/shipping validation, cash-on-delivery
+  only (Pending; no online payment pretended, no card collection), transactional order
+  creation with stock decrement, PRG + cart clear against duplicates.
+- Confirmation `/Cart/Confirmation/{id}` — owner/privileged only.
+- Orders `/Orders` — customers see only their own; Admin/Manager/Support see all;
+  status updates use valid transitions only (no total/payment overposting).
+- Account `/Auth/Profile`, orders history, login/register/logout, access denied.
+- Contact/Privacy/Shipping/Returns — contact lists only verified channels; legal/shipping
+  pages are marked draft requiring business/legal confirmation.
+
+## Production deployment checklist
+
+- [ ] Rotate the previously committed database password (compromised) + any reused creds.
+- [ ] Set `ConnectionStrings__DefaultConnection` via hosting secret manager (no secrets in repo).
+- [ ] Set `ZONTA_SEED_ADMIN`/`ZONTA_ADMIN_EMAIL`/`ZONTA_ADMIN_PASSWORD` only for first boot, then unset.
+- [ ] Apply migrations with backup + review (`dotnet ef database update` in release pipeline,
+      or first boot with `ZONTA_AUTO_MIGRATE=true` after review — never silently).
+- [ ] Enforce HTTPS, HSTS; cookies are `Secure=Always` in production.
+- [ ] Confirm `Zonta:Currency` (default EGP) + `Zonta:ShippingFee` (default 0) with business.
+- [ ] Import verified catalog from shopzonta.com (`docs/ZONTA-CATALOG.md`, `import-catalog` command),
+      then activate products/variants only after confirming price/stock.
+- [ ] Configure payment/shipping providers if COD is insufficient (currently COD only).
+- [ ] Point domain + verify SEO/canonical URLs.
+
+## Security notes
+
+- Remediated: live DB connection string removed from `appsettings.json` (treat as compromised, rotate now).
+- Remediated: hardcoded admin/demo passwords removed; env-gated bootstrap; demo accounts dev-only.
+- Remediated: cookie paths fixed (`/Auth/*`), `Secure` production-only strict, `SameSite=Lax`, HttpOnly.
+- Remediated: order creation no longer trusts client totals; server prices/stock/transaction; COD pending (never paid from client).
+- Remediated: order listing/details enforce ownership (no IDOR enumeration); admin edits are status-only.
+- Remediated: `EnsureCreatedAsync` replaced with explicit `MigrateAsync`; startup fails fast on DB errors.
+- Remaining risks: git history still contains old secrets (rewrite needs approval); no email confirmation/2FA/password-reset; no rate-limiting; uploads need AV/size review for large catalogs.
+
+## Known limitations
+
+- No verified products yet (official store blocked). Catalog empty until manual import
+  (`dotnet run --project market-mvc -- import-catalog --file <path>`).
+- Product variants (size/color) are implemented (entity + migration + admin management +
+  cart/checkout validation + tests) but have no verified data yet; imported variants
+  start inactive with zero stock until an admin confirms availability.
+- EN/AR UI switching is implemented (real cookie-driven culture + RTL + localized nav/hero/
+  currency, product names never translated); deeper view-by-view translation is follow-up.
+- No online payment gateway — COD workflow only.
+- No AR/EN language switcher (no fake selector); layout is LTR with RTL-ready CSS basics.
+- Legal/shipping/returns pages are drafts, not approved policy.
+- No authorized shopzonta.com sync API — manual import only (no fragile scraper).
+
+## Product data import
+
+See `docs/ZONTA-CATALOG.md` + `market-mvc/Infrastructure/Data/Catalog/ZontaCatalog.json`.
+Record source URL + date per product; match by SKU; never duplicate or overwrite manual inventory blindly.
+New variants import as inactive/zero-stock for admin confirmation.

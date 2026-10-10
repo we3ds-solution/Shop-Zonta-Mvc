@@ -1,0 +1,82 @@
+@model market_mvc.Domain.ViewModels.Error.ErrorVM
+@{
+    ViewData["Title"] = Model?.DisplayTitle ?? "Page Not Found";
+    ViewBag.PageTitle = Model?.DisplayTitle ?? "Page Not Found";
+    ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
+    {
+        ("Error", "Error", "HttpStatusCodeHandler")
+    };
+}
+
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container">
+    <div class="content-card">
+        <div class="error-page">
+            <div class="error-code @Model.StatusCodeClass">
+                <i class="@Model.IconClass me-2"></i>@(Model?.StatusCode ?? 404)
+            </div>
+            <div class="error-message">@(Model?.DisplayTitle ?? "Oops! The page you're looking for doesn't exist.")</div>
+            <p class="text-muted mb-4">@(Model?.GetUserFriendlyDescription() ?? "The page you requested could not be found. It might have been moved, deleted, or you entered the wrong URL.")</p>
+            
+            @if (Model?.ShowRequestId == true)
+            {
+                <div class="alert alert-info-enhanced mb-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Time:</strong> @Model.FormattedErrorTime
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.RequestPath))
+                    {
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <strong>Requested Path:</strong> <code>@Model.RequestPath</code>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Method:</strong> <code>@Model.HttpMethod</code>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-custom-primary">
+                    <i class="fas fa-home me-2"></i>Go Home
+                </a>
+                <button onclick="history.back()" class="btn btn-custom-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Go Back
+                </button>
+                <button onclick="location.reload()" class="btn btn-outline-primary">
+                    <i class="fas fa-redo me-2"></i>Try Again
+                </button>
+            </div>
+            
+            <div class="mt-4">
+                <h5>Quick Links:</h5>
+                <div class="d-flex justify-content-center gap-3 mt-3 flex-wrap">
+                    <a asp-controller="Products" asp-action="Index" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-box me-1"></i>Shop
+                    </a>
+                    <a asp-controller="Orders" asp-action="Index" class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-shopping-cart me-1"></i>Orders
+                    </a>
+                    <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-info btn-sm">
+                        <i class="fas fa-shopping-bag me-1"></i>Cart
+                    </a>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    If you believe this is an error, please contact support with the request ID above.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>

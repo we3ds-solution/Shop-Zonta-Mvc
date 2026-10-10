@@ -1,0 +1,97 @@
+# Build Results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio
+.vs/
+.vscode/
+*.sln.docstates
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.user
+*.log
+*.vspscc
+*.vssscc
+
+# Visual Studio cache directory
+.vs/
+
+# Test Results
+TestResults/
+*.coverage
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+
+# Entity Framework
+Migrations/[0-9]*/
+
+# Application Insights
+ApplicationInsights.config
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+appsettings.local.json
+appsettings.Development.local.json
+# .NET user secrets + publish profiles (never commit secrets)
+secrets.json
+*.publishsettings
+
+# Database files
+*.mdf
+*.ldf
+*.ndf
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Node (if using npm)
+node_modules/
+package-lock.json
+npm-debug.log
+
+# Rider
+.idea/
+*.sln.iml
+
+# Output
+publish/
+
+# Database backups
+*.bak
+*.backup

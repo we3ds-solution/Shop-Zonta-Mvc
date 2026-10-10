@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = "Create Order";
+    ViewBag.PageTitle = "Create Order";
+    ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
+    {
+        ("Orders", "Orders", "Index"),
+        ("Create", "Orders", "Create")
+    };
+}
+
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container">
+    <div class="content-card text-center py-5">
+        <h2>Orders are created through checkout</h2>
+        <p class="text-muted">Manual total entry was removed for security. Please add products to your cart and check out — totals are calculated on the server.</p>
+        <div class="d-flex gap-2 justify-content-center flex-wrap">
+            <a asp-controller="Cart" asp-action="Index" class="btn btn-custom-primary">Go to cart</a>
+            <a asp-controller="Products" asp-action="Index" class="btn btn-custom-secondary">Shop</a>
+        </div>
+    </div>
+</div>

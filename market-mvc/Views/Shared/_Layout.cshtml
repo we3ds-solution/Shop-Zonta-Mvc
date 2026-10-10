@@ -1,0 +1,163 @@
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
+<!DOCTYPE html>
+<html lang="@L.Culture" dir="@(L.IsRtl ? "rtl" : "ltr")">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@(ViewData["Title"] != null ? $"{ViewData["Title"]} - Zonta Egypt" : "Zonta Egypt — Arabic Sneakers & Streetwear")</title>
+    <meta name="description" content="@(ViewData["Description"] ?? "Zonta Egypt — Egyptian streetwear label. Premium Arabic sneakers, born in the Arab world, worn around the globe.")" />
+    <meta property="og:site_name" content="Zonta Egypt" />
+    <meta property="og:title" content="@(ViewData["Title"] ?? "Zonta Egypt")" />
+    <meta property="og:description" content="@(ViewData["Description"] ?? "Premium Arabic sneakers. Produced by Arab hands.")" />
+    <meta property="og:type" content="website" />
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/market-mvc.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="zonta-body">
+    <header>
+        <div class="zonta-topbar text-center py-1">
+            <small>Born in the Arab world, worn around the globe. <span lang="ar">صُنع بأيدٍ عربية</span></small>
+        </div>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-black border-bottom box-shadow mb-3" aria-label="Main navigation">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">ZONTA <span lang="ar">زونتا</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1" aria-hidden="true"></i>@L.Get("Nav.Home")
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Products" asp-action="Index">
+                                <i class="fas fa-shoe-prints me-1" aria-hidden="true"></i>@L.Get("Nav.Shop")
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">
+                                <i class="fas fa-shopping-bag me-1" aria-hidden="true"></i>@L.Get("Nav.Cart")
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Orders" asp-action="Index">
+                                <i class="fas fa-box-open me-1" aria-hidden="true"></i>@L.Get("Nav.Orders")
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">
+                                <i class="fas fa-envelope me-1" aria-hidden="true"></i>@L.Get("Nav.Contact")
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav align-items-center">
+                        <li class="nav-item me-2">
+                            <form asp-controller="Culture" asp-action="Set" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+                                @if (L.Culture == "ar")
+                                {
+                                    <input type="hidden" name="culture" value="en" />
+                                    <button type="submit" class="btn btn-outline-light btn-sm" lang="en">English</button>
+                                }
+                                else
+                                {
+                                    <input type="hidden" name="culture" value="ar" />
+                                    <button type="submit" class="btn btn-outline-light btn-sm" lang="ar">العربية</button>
+                                }
+                            </form>
+                        </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Auth" asp-action="Profile" title="Account">
+                                    <i class="fas fa-user me-1" aria-hidden="true"></i>@(User.Identity.Name ?? "Account")
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-link nav-link">@L.Get("Nav.Logout")</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Auth" asp-action="Login">@L.Get("Nav.Login")</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Auth" asp-action="Register">@L.Get("Nav.Register")</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    @await Html.PartialAsync("_DeleteConfirmation")
+
+    <footer class="border-top footer text-muted zonta-footer">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5 class="text-white">ZONTA <span lang="ar">زونتا</span></h5>
+                    <p class="small">@L.Get("Footer.Tag") — Hob (love), Shaghaf (passion), Fakhr (pride). Produced by Arab hands.</p>
+                    <p class="small mb-0">Sources: scenestyled.com (13 Feb 2025), LinkedIn. Prices/availability require official confirmation.</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h6 class="text-white">@L.Get("Nav.Shop")</h6>
+                    <ul class="list-unstyled small">
+                        <li><a asp-controller="Products" asp-action="Index">All products</a></li>
+                        <li><a asp-controller="Cart" asp-action="Index">@L.Get("Nav.Cart")</a></li>
+                        <li><a asp-controller="Orders" asp-action="Index">@L.Get("Nav.Orders")</a></li>
+                        <li><a asp-controller="Home" asp-action="Contact">@L.Get("Nav.Contact")</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h6 class="text-white">Follow</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="https://www.instagram.com/shop.zonta/?hl=en" target="_blank" rel="noopener">Instagram — @@shop.zonta</a></li>
+                        <li><a href="https://shopzonta.com" target="_blank" rel="noopener">Official store (shopzonta.com)</a></li>
+                    </ul>
+                    <p class="small"><a asp-controller="Home" asp-action="Privacy">Privacy</a> · <a asp-controller="Home" asp-action="Shipping">Shipping</a> · <a asp-controller="Home" asp-action="Returns">Returns</a></p>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                <span class="small">&copy; 2026 - Zonta Egypt</span>
+                <span class="small">@L.Get("Common.Cod") · @L.CurrencyLabel</span>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/shared.js" asp-append-version="true"></script>
+
+    @if (TempData.Any())
+    {
+        <script>
+            window.tempDataMessages = {
+                @foreach (var item in TempData)
+                {
+                    @:@item.Key.ToLower(): '@Html.Raw(Html.Encode(item.Value?.ToString()))',
+                }
+            };
+        </script>
+    }
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

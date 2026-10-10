@@ -1,0 +1,68 @@
+@model market_mvc.Domain.PaginatedResult<market_mvc.Domain.entity.Product>
+
+@{
+    ViewData["Title"] = "Shop";
+    ViewData["Description"] = "Shop Zonta Egypt — Arabic sneakers and streetwear.";
+    ViewBag.PageTitle = "Shop Zonta";
+    ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
+    {
+        ("Shop", "Products", "Index")
+    };
+}
+
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container">
+    @await Html.PartialAsync("_SearchFilter")
+
+    <div class="content-card">
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+        {
+            <div class="action-buttons">
+                <a asp-action="Create" class="btn btn-custom-primary">
+                    <i class="fas fa-plus me-2"></i>Add product (admin)
+                </a>
+            </div>
+        }
+
+        @if (!Model.Items.Any())
+        {
+            <div class="text-center py-5" role="status">
+                <i class="fas fa-shoe-prints fa-3x text-muted mb-3" aria-hidden="true"></i>
+                <h3>No products yet</h3>
+                <p class="text-muted">The verified Zonta catalog is being imported. Please check back soon.</p>
+            </div>
+        }
+
+        <div id="resultsContainer">
+            @await Html.PartialAsync("_ProductList", Model.Items)
+        </div>
+
+        <div id="paginationContainer"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Initialize search and filter functionality
+            const searchManager = new SearchFilterManager({
+                searchUrl: '@Url.Action("Index", "Products")',
+                filterSelects: ['#PriceRange']
+            });
+
+            // Set initial data if we have results
+            @if (Model.TotalItems > 0)
+            {
+                <text>
+                searchManager.totalItems = @Model.TotalItems;
+                searchManager.currentPage = @Model.CurrentPage;
+                searchManager.pageSize = @Model.PageSize;
+                searchManager.totalPages = @Model.TotalPages;
+                searchManager.updateResultsInfo();
+                searchManager.updatePagination();
+                </text>
+            }
+        });
+    </script>
+}

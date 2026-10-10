@@ -1,0 +1,107 @@
+@model market_mvc.Domain.ViewModels.Home.HomeVM
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
+
+@{
+    ViewData["Title"] = "Home";
+    ViewData["Description"] = "Zonta Egypt — premium Arabic sneakers and streetwear. Born in the Arab world, worn around the globe.";
+}
+
+<!-- Hero -->
+<section class="zonta-hero p-4 p-md-5 mb-4 rounded-3" aria-label="Zonta introduction">
+    <div class="container-fluid py-4">
+        <p class="text-uppercase small mb-2">@L.Get("Hero.Kicker")</p>
+        <h1 class="display-5 fw-bold">@L.Get("Hero.Title")</h1>
+        <p class="col-md-8 fs-5">@L.Get("Hero.Sub")</p>
+        <div class="d-flex gap-2 flex-wrap">
+            <a asp-controller="Products" asp-action="Index" class="btn btn-light btn-lg">
+                <i class="fas fa-shoe-prints me-2" aria-hidden="true"></i>@L.Get("Hero.Shop")
+            </a>
+            <a asp-controller="Home" asp-action="Contact" class="btn btn-outline-light btn-lg">@L.Get("Hero.Contact")</a>
+        </div>
+        <p class="small mt-3 mb-0 opacity-75">Catalog prices and availability are confirmed in-store only. Online catalog requires verified official import.</p>
+    </div>
+</section>
+
+<div class="container">
+    @if (!Model.FeaturedProducts.Any() && !Model.OnSaleProducts.Any() && !Model.LatestProducts.Any())
+    {
+        <div class="content-card text-center py-5" role="status">
+            <i class="fas fa-shoe-prints fa-3x mb-3" aria-hidden="true"></i>
+            <h2>Catalog update in progress</h2>
+            <p class="text-muted">Verified Zonta products are being imported from the official store. Please check back soon or contact us via Instagram <a href="https://www.instagram.com/shop.zonta/?hl=en" target="_blank" rel="noopener">@@shop.zonta</a>.</p>
+            <a asp-controller="Products" asp-action="Index" class="btn btn-custom-primary mt-2">Browse catalog</a>
+        </div>
+    }
+
+    @if (Model.FeaturedProducts.Any())
+    {
+        <section class="home-section" aria-label="Featured products">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-star me-2" aria-hidden="true"></i>Featured</h2>
+                <a asp-controller="Products" asp-action="Index" class="btn btn-outline-primary">
+                    View all <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i>
+                </a>
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                @foreach (var product in Model.FeaturedProducts)
+                {
+                    @await Html.PartialAsync("_ProductCard", product)
+                }
+            </div>
+        </section>
+    }
+
+    @if (Model.OnSaleProducts.Any())
+    {
+        <section class="home-section" aria-label="On sale">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-fire me-2" aria-hidden="true"></i>On sale</h2>
+                <a asp-controller="Products" asp-action="Index" class="btn btn-outline-danger">
+                    View all sales <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i>
+                </a>
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                @foreach (var product in Model.OnSaleProducts)
+                {
+                    @await Html.PartialAsync("_ProductCard", product)
+                }
+            </div>
+        </section>
+    }
+
+    @if (Model.LatestProducts.Any())
+    {
+        <section class="home-section" aria-label="Latest products">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-clock me-2" aria-hidden="true"></i>Latest</h2>
+                <a asp-controller="Products" asp-action="Index" class="btn btn-outline-success">
+                    View all <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i>
+                </a>
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                @foreach (var product in Model.LatestProducts)
+                {
+                    @await Html.PartialAsync("_ProductCard", product)
+                }
+            </div>
+        </section>
+    }
+
+    <!-- Brand story (verified facts only) -->
+    <section class="home-section" aria-label="About Zonta">
+        <div class="content-card">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3>Born in the Arab world, worn around the globe.</h3>
+                    <p class="text-muted mb-2">Zonta is an Egyptian-born streetwear label founded by Ahmed El Hefny and Sameh Radwan, known for the first-ever Arabic sneakers. Drop 1.0 features minimalist sneakers inscribed with Hob, Shaghaf, and Fakhr.</p>
+                    <p class="small text-muted mb-0">Source: scenestyled.com, 13 Feb 2025. Collection details subject to official confirmation.</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a asp-controller="Products" asp-action="Index" class="btn btn-custom-primary">
+                        <i class="fas fa-shoe-prints me-1" aria-hidden="true"></i>Shop sneakers
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
