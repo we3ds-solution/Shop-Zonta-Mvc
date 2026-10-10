@@ -182,6 +182,12 @@ class SearchFilterManager {
             pageSize: this.pageSize
         };
 
+        // Preserve collection category from the URL (pills navigate with ?category=)
+        const urlCategory = new URLSearchParams(window.location.search).get('category');
+        if (urlCategory) {
+            data['category'] = urlCategory;
+        }
+
         // Add filter values
         this.filterSelects.forEach(selector => {
             const filterName = $(selector).attr('name');

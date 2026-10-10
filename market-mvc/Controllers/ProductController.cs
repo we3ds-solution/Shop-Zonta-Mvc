@@ -58,6 +58,7 @@ namespace market_mvc.Controllers
             var query = new GetProductsQuery
             {
                 SearchTerm = request.Search,
+                Category = request.Category,
                 PriceRange = request.PriceRange,
                 SortBy = request.SortBy,
                 SortOrder = request.SortDirection,

@@ -1,0 +1,49 @@
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
+@{
+    ViewData["Title"] = L.Culture == "ar" ? "دليل المقاسات" : "Size guide";
+    ViewBag.PageTitle = L.Culture == "ar" ? "دليل المقاسات" : "Size guide";
+    ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
+    {
+        (L.Culture == "ar" ? "دليل المقاسات" : "Size guide", "Home", "SizeGuide")
+    };
+}
+
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container">
+    <div class="content-card">
+        <div class="col-md-9 mx-auto">
+            <div class="alert alert-warning" role="note"><strong>@(L.Culture == "ar" ? "مرجع عام — بانتظار الدليل الرسمي." : "General reference — pending the official guide.")</strong> @(L.Culture == "ar" ? "مقاسات منتجات زونتا الرسمية لم تكن متاحة في النسخة الموثقة، فاستخدم هذا الجدول العام للتحويل ثم أكّد مقاسك قبل الشراء." : "Official Zonta product sizes were not in the verified snapshot, so use this general conversion table and confirm your size before ordering.")</div>
+            <h2 class="h5">@(L.Culture == "ar" ? "رجالي (EU / US / UK / سم)" : "Men (EU / US / UK / CM)")</h2>
+            <div class="table-responsive mb-4">
+                <table class="table table-enhanced mb-0">
+                    <thead><tr><th>EU</th><th>US</th><th>UK</th><th>CM</th></tr></thead>
+                    <tbody>
+                        <tr><td>40</td><td>7</td><td>6</td><td>25.0</td></tr>
+                        <tr><td>41</td><td>8</td><td>7</td><td>25.7</td></tr>
+                        <tr><td>42</td><td>8.5</td><td>7.5</td><td>26.0</td></tr>
+                        <tr><td>43</td><td>9.5</td><td>8.5</td><td>27.0</td></tr>
+                        <tr><td>44</td><td>10</td><td>9</td><td>27.5</td></tr>
+                        <tr><td>45</td><td>11</td><td>10</td><td>28.3</td></tr>
+                        <tr><td>46</td><td>12</td><td>11</td><td>29.0</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <h2 class="h5">@(L.Culture == "ar" ? "حريمي (EU / US / UK / سم)" : "Women (EU / US / UK / CM)")</h2>
+            <div class="table-responsive">
+                <table class="table table-enhanced mb-0">
+                    <thead><tr><th>EU</th><th>US</th><th>UK</th><th>CM</th></tr></thead>
+                    <tbody>
+                        <tr><td>36</td><td>5.5</td><td>3.5</td><td>22.5</td></tr>
+                        <tr><td>37</td><td>6.5</td><td>4.5</td><td>23.0</td></tr>
+                        <tr><td>38</td><td>7</td><td>5</td><td>23.8</td></tr>
+                        <tr><td>39</td><td>8</td><td>6</td><td>24.5</td></tr>
+                        <tr><td>40</td><td>9</td><td>7</td><td>25.0</td></tr>
+                        <tr><td>41</td><td>10</td><td>8</td><td>25.7</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="small text-muted mt-3 mb-0">@(L.Culture == "ar" ? "قس طول قدمك بالسنتيمتر مساءً واختر أقرب مقاس أكبر." : "Measure your foot in centimeters in the evening and pick the nearest larger size.")</p>
+        </div>
+    </div>
+</div>

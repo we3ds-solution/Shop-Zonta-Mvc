@@ -131,7 +131,7 @@ copy the repo to an approved path and run `dotnet test` there (verified 14/14).
 - [ ] Enforce HTTPS, HSTS; cookies are `Secure=Always` in production.
 - [ ] Confirm `Zonta:Currency` (default EGP) + `Zonta:ShippingFee` (default 0) with business.
 - [ ] Import verified catalog from shopzonta.com (`docs/ZONTA-CATALOG.md`, `import-catalog` command),
-      then activate products/variants only after confirming price/stock.
+      then set stock counts and activate products/variants only after confirming availability.
 - [ ] Configure payment/shipping providers if COD is insufficient (currently COD only).
 - [ ] Point domain + verify SEO/canonical URLs.
 
@@ -147,11 +147,11 @@ copy the repo to an approved path and run `dotnet test` there (verified 14/14).
 
 ## Known limitations
 
-- No verified products yet (official store blocked). Catalog empty until manual import
-  (`dotnet run --project market-mvc -- import-catalog --file <path>`).
-- Product variants (size/color) are implemented (entity + migration + admin management +
-  cart/checkout validation + tests) but have no verified data yet; imported variants
-  start inactive with zero stock until an admin confirms availability.
+- Catalog holds 14 products verified from the official homepage archive (2024-12-21);
+  per-product descriptions, materials, sizes, stock counts, and legal texts were never
+  archived — absent fields mean unknown, never guessed. Import more via `import-catalog`.
+- Imported products show "Available" without quantity claims (stock counts are never
+  invented); variants start inactive/zero-stock for admin confirmation.
 - EN/AR UI switching is implemented (real cookie-driven culture + RTL + localized nav/hero/
   currency, product names never translated); deeper view-by-view translation is follow-up.
 - No online payment gateway — COD workflow only.

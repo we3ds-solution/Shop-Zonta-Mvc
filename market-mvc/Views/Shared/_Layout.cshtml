@@ -1,4 +1,5 @@
 @inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
+@inject Microsoft.Extensions.Configuration.IConfiguration Cfg
 <!DOCTYPE html>
 <html lang="@L.Culture" dir="@(L.IsRtl ? "rtl" : "ltr")">
 <head>
@@ -6,10 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@(ViewData["Title"] != null ? $"{ViewData["Title"]} - Zonta Egypt" : "Zonta Egypt — Arabic Sneakers & Streetwear")</title>
     <meta name="description" content="@(ViewData["Description"] ?? "Zonta Egypt — Egyptian streetwear label. Premium Arabic sneakers, born in the Arab world, worn around the globe.")" />
-    <meta property="og:site_name" content="Zonta Egypt" />
-    <meta property="og:title" content="@(ViewData["Title"] ?? "Zonta Egypt")" />
-    <meta property="og:description" content="@(ViewData["Description"] ?? "Premium Arabic sneakers. Produced by Arab hands.")" />
+    <meta property="og:site_name" content="Zonta" />
+    <meta property="og:title" content="@(ViewData["Title"] ?? "زونتا | أحذية متينة من الألياف الدقيقة")" />
+    <meta property="og:description" content="@(ViewData["Description"] ?? "معاك في اي حاجة")" />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="@(L.Culture == "ar" ? "ar_EG" : "en_EG")" />
+    <meta property="og:locale:alternate" content="@(L.Culture == "ar" ? "en_EG" : "ar_EG")" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="@(ViewData["CanonicalUrl"] ?? (Cfg["Zonta:PublicUrl"] ?? "https://shopzonta.com") + "/")" />
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Somar+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -19,9 +28,9 @@
 <body class="zonta-body">
     <header>
         <div class="zonta-topbar text-center py-1">
-            <small>Born in the Arab world, worn around the globe. <span lang="ar">صُنع بأيدٍ عربية</span></small>
+            <small>@L.Get("Topbar.Tag") <span lang="ar">زونتا</span> · <span lang="en">Zonta</span></small>
         </div>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-black border-bottom box-shadow mb-3" aria-label="Main navigation">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" aria-label="Main navigation">
             <div class="container-fluid">
                 <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">ZONTA <span lang="ar">زونتا</span></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -64,12 +73,12 @@
                                 @if (L.Culture == "ar")
                                 {
                                     <input type="hidden" name="culture" value="en" />
-                                    <button type="submit" class="btn btn-outline-light btn-sm" lang="en">English</button>
+                                    <button type="submit" class="btn btn-outline-dark btn-sm" lang="en">English</button>
                                 }
                                 else
                                 {
                                     <input type="hidden" name="culture" value="ar" />
-                                    <button type="submit" class="btn btn-outline-light btn-sm" lang="ar">العربية</button>
+                                    <button type="submit" class="btn btn-outline-dark btn-sm" lang="ar">العربية</button>
                                 }
                             </form>
                         </li>
@@ -137,7 +146,7 @@
             </div>
             <div class="footer-bottom d-flex justify-content-between align-items-center pt-3 mt-4">
                 <span class="small">&copy; 2026 - Zonta Egypt</span>
-                <span class="small">@L.Get("Common.Cod") · @L.CurrencyLabel <span class="text-white-50">(to be confirmed)</span></span>
+                <span class="small">@L.Get("Common.Cod") · @L.CurrencyLabel <span class="text-muted">(to be confirmed)</span></span>
             </div>
         </div>
     </footer>
