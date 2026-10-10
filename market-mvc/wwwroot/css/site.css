@@ -945,3 +945,200 @@ html[dir="rtl"] .text-md-end {
     transform: none;
   }
 }
+
+/* ============================================================
+   Zonta dark mode + themed scrollbar + toggle animation
+   Toggle: #themeToggle in the navbar (site.js). Preference saved
+   to localStorage; OS scheme is the default. All colors flow from
+   the tokens below — no scattered hex values.
+   ============================================================ */
+
+html[data-theme="dark"] {
+  --zonta-ink: #f0ede8;
+  --zonta-ink-soft: #d8d3c8;
+  --zonta-black: #ffffff;
+  --zonta-paper: #121212;
+  --zonta-card: #1b1b1b;
+  --zonta-line: #2e2e2e;
+  --zonta-muted: #a8a29a;
+  --zonta-footer-bg: #0b0b0b;
+  --zonta-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --zonta-shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+}
+
+/* Smooth theme cross-fade (disabled automatically for reduced motion) */
+html.theme-animating body,
+html.theme-animating .content-card,
+html.theme-animating .form-enhanced,
+html.theme-animating .details-card,
+html.theme-animating .table-enhanced,
+html.theme-animating .product-card,
+html.theme-animating .navbar,
+html.theme-animating .zonta-footer,
+html.theme-animating .page-header,
+html.theme-animating .search-filter-container,
+html.theme-animating .modal-content,
+html.theme-animating .dropdown-menu,
+html.theme-animating .list-group-item,
+html.theme-animating .card {
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* Dark-mode component surfaces */
+html[data-theme="dark"] .navbar-light.bg-white {
+  background-color: #161616 !important;
+}
+
+html[data-theme="dark"] .navbar-light .navbar-nav .nav-link {
+  color: #e8e2d5;
+}
+
+html[data-theme="dark"] .navbar-light .navbar-nav .nav-link:hover,
+html[data-theme="dark"] .navbar-light .navbar-nav .nav-link:focus {
+  color: #fff;
+}
+
+html[data-theme="dark"] .navbar-brand {
+  color: #fff;
+}
+
+html[data-theme="dark"] .navbar-toggler {
+  border-color: #3a3a3a;
+}
+
+html[data-theme="dark"] .navbar-toggler-icon {
+  filter: invert(1);
+}
+
+html[data-theme="dark"] .form-control,
+html[data-theme="dark"] .form-select,
+html[data-theme="dark"] .search-input,
+html[data-theme="dark"] .filter-select,
+html[data-theme="dark"] .form-enhanced .form-control,
+html[data-theme="dark"] .form-enhanced .form-select {
+  background-color: #242424;
+  border-color: #3a3a3a;
+  color: #f0ede8;
+}
+
+html[data-theme="dark"] .form-control::placeholder {
+  color: #8d877c;
+}
+
+html[data-theme="dark"] .modal-content,
+html[data-theme="dark"] .dropdown-menu,
+html[data-theme="dark"] .list-group-item,
+html[data-theme="dark"] .card {
+  background-color: var(--zonta-card);
+  border-color: var(--zonta-line);
+  color: var(--zonta-ink);
+}
+
+html[data-theme="dark"] .table {
+  color: var(--zonta-ink);
+}
+
+html[data-theme="dark"] .table-enhanced tbody tr:hover {
+  background-color: #222;
+}
+
+html[data-theme="dark"] .text-muted {
+  color: var(--zonta-muted) !important;
+}
+
+html[data-theme="dark"] .breadcrumb-item.active,
+html[data-theme="dark"] .breadcrumb-item + .breadcrumb-item::before {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+html[data-theme="dark"] .product-card-image-placeholder,
+html[data-theme="dark"] .product-image-placeholder,
+html[data-theme="dark"] .product-image-placeholder-large,
+html[data-theme="dark"] .card-img-container {
+  background: #242424;
+  color: #8d877c;
+}
+
+html[data-theme="dark"] .btn-close {
+  filter: invert(1);
+}
+
+/* Primary buttons invert in dark mode (white button, ink text — official dark scheme) */
+html[data-theme="dark"] .btn-custom-primary,
+html[data-theme="dark"] .btn-primary {
+  background-color: #fff;
+  border-color: #fff;
+  color: #222;
+}
+
+html[data-theme="dark"] .btn-custom-primary:hover,
+html[data-theme="dark"] .btn-primary:hover {
+  background-color: #e8e2d5;
+  border-color: #e8e2d5;
+  color: #000;
+}
+
+html[data-theme="dark"] .btn-custom-secondary,
+html[data-theme="dark"] .btn-outline-primary,
+html[data-theme="dark"] .btn-outline-dark {
+  border-color: #e8e2d5;
+  color: #e8e2d5;
+}
+
+html[data-theme="dark"] .btn-custom-secondary:hover,
+html[data-theme="dark"] .btn-outline-primary:hover,
+html[data-theme="dark"] .btn-outline-dark:hover {
+  background: #e8e2d5;
+  border-color: #e8e2d5;
+  color: #000;
+}
+
+/* Toggle button + spinning icon animation */
+#themeToggle {
+  width: 38px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#themeToggleIcon {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+}
+
+#themeToggleIcon.theme-icon-spin {
+  transform: rotate(180deg) scale(0.4);
+  opacity: 0;
+}
+
+/* Themed scrollbar (WebKit + Firefox), optimized: solid colors, no shadows */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--zonta-paper);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--zonta-ink);
+  border-radius: 8px;
+  border: 3px solid var(--zonta-paper);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--zonta-black);
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #222222 #ffffff;
+}
+
+html[data-theme="dark"] {
+  scrollbar-color: #e8e2d5 #121212;
+}
