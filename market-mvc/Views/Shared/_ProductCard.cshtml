@@ -68,7 +68,7 @@
             <div class="mt-auto">
                 <div class="price-section mb-3">
                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <span class="h5 mb-0 text-primary fw-bold">@Model.Price.ToString("N2") EGP</span>
+                        <span class="h5 mb-0 zonta-price">@Model.Price.ToString("N2") EGP</span>
                         @if (Model.CompareAtPrice.HasValue && Model.CompareAtPrice > Model.Price)
                         {
                             <span class="text-muted text-decoration-line-through">@Model.CompareAtPrice.Value.ToString("N2") EGP</span>

@@ -44,7 +44,7 @@
                 <p class="text-muted small">SKU: @Model.Sku</p>
             }
             <div class="d-flex align-items-center gap-2 my-3">
-                <span class="h3 mb-0 text-primary fw-bold">@Model.Price.ToString("N2") EGP</span>
+                <span class="h3 mb-0 zonta-price">@Model.Price.ToString("N2") EGP</span>
                 @if (Model.CompareAtPrice.HasValue && Model.CompareAtPrice > Model.Price)
                 {
                     <span class="text-muted text-decoration-line-through">@Model.CompareAtPrice.Value.ToString("N2") EGP</span>
