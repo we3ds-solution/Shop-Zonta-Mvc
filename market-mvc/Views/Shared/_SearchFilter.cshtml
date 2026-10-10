@@ -1,7 +1,8 @@
 @model dynamic
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
-    var searchPlaceholder = ViewBag.SearchPlaceholder ?? "Search...";
+    var searchPlaceholder = L.Get("Search.Placeholder");
     var showFilters = ViewBag.ShowFilters ?? true;
     var filterOptions = ViewBag.FilterOptions as Dictionary<string, List<SelectListItem>> ?? new Dictionary<string, List<SelectListItem>>();
 }

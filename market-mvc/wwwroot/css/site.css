@@ -13,6 +13,9 @@
   --zonta-ink: #222222;
   --zonta-ink-soft: #222222;
   --zonta-black: #000000;
+  --zonta-surface: #000000;
+  --zonta-btn-bg: #000000;
+  --zonta-btn-text: #ffffff;
   --zonta-paper: #ffffff;
   --zonta-card: #ffffff;
   --zonta-line: #eeeeee;
@@ -51,6 +54,13 @@ h1, h2, h3, h4, h5, h6,
   font-family: var(--zonta-font-heading);
   font-weight: 800;
   color: var(--zonta-ink);
+}
+
+/* Dark surfaces keep white headings (contrast) */
+.zonta-hero h1, .zonta-hero h2, .zonta-hero h3,
+.zonta-hero .h1, .zonta-hero .h2, .zonta-hero .h3,
+.page-header h1, .page-header .h1 {
+  color: #fff;
 }
 
 .zonta-body {
@@ -115,9 +125,9 @@ textarea:focus-visible,
 /* ---------- Buttons (centralized) ---------- */
 .btn-custom-primary,
 .btn-primary {
-  background-color: var(--zonta-black);
-  border: 1px solid var(--zonta-black);
-  color: #fff;
+  background-color: var(--zonta-btn-bg);
+  border: 1px solid var(--zonta-btn-bg);
+  color: var(--zonta-btn-text);
   padding: 0.65rem 1.8rem;
   border-radius: var(--zonta-btn-radius);
   font-weight: 500;
@@ -130,7 +140,7 @@ textarea:focus-visible,
 .btn-primary:hover {
   background-color: var(--zonta-ink);
   border-color: var(--zonta-ink);
-  color: #fff;
+  color: var(--zonta-paper);
   transform: translateY(-2px);
   box-shadow: var(--zonta-shadow);
 }
@@ -138,8 +148,8 @@ textarea:focus-visible,
 .btn-custom-secondary,
 .btn-outline-primary {
   background: transparent;
-  border: 1px solid var(--zonta-black);
-  color: var(--zonta-black);
+  border: 1px solid var(--zonta-btn-bg);
+  color: var(--zonta-btn-bg);
   padding: 0.65rem 1.8rem;
   border-radius: var(--zonta-btn-radius);
   font-weight: 500;
@@ -150,9 +160,9 @@ textarea:focus-visible,
 
 .btn-custom-secondary:hover,
 .btn-outline-primary:hover {
-  background: var(--zonta-black);
-  border-color: var(--zonta-black);
-  color: #fff;
+  background: var(--zonta-btn-bg);
+  border-color: var(--zonta-btn-bg);
+  color: var(--zonta-btn-text);
   transform: translateY(-2px);
 }
 
@@ -180,13 +190,13 @@ textarea:focus-visible,
 
 /* ---------- Topbar / Hero ---------- */
 .zonta-topbar {
-  background: var(--zonta-black);
+  background: var(--zonta-surface);
   color: #fff;
   font-size: 14px;
 }
 
 .zonta-hero {
-  background: var(--zonta-black);
+  background: var(--zonta-surface);
   color: #fff;
   text-align: center;
 }
@@ -212,7 +222,7 @@ textarea:focus-visible,
 
 /* ---------- Page header ---------- */
 .page-header {
-  background: var(--zonta-black);
+  background: var(--zonta-surface);
   color: #fff;
   padding: 2rem 0;
   margin-bottom: 2rem;
@@ -345,7 +355,7 @@ textarea:focus-visible,
 }
 
 .table-enhanced thead {
-  background: var(--zonta-ink);
+  background: var(--zonta-surface);
   color: #fff;
 }
 
@@ -419,6 +429,31 @@ textarea:focus-visible,
 
 .alert-info-enhanced {
   background: var(--zonta-info);
+}
+
+/* Plain Bootstrap alerts used in auth/checkout forms: official tint scheme */
+.alert-success {
+  background-color: #d1eccf;
+  border-color: #a9d6a5;
+  color: #1e5b1a;
+}
+
+.alert-danger {
+  background-color: #fbeaea;
+  border-color: #f0b9b9;
+  color: #7c1f1a;
+}
+
+.alert-warning {
+  background-color: #faecd7;
+  border-color: #f0d3a3;
+  color: #6b4a06;
+}
+
+.alert-info {
+  background-color: #eef1f4;
+  border-color: #d5dde3;
+  color: #223c4e;
 }
 
 /* ---------- Details ---------- */
@@ -862,7 +897,7 @@ textarea:focus-visible,
   transform: translateX(-50%);
   width: 64px;
   height: 3px;
-  background: var(--zonta-black);
+  background: var(--zonta-btn-bg);
   border-radius: 2px;
 }
 
@@ -893,7 +928,8 @@ textarea:focus-visible,
   border-radius: var(--zonta-radius-sm);
   padding: 1rem;
   margin-bottom: 1rem;
-  border-left: 4px solid var(--zonta-black);
+  border: 1px solid var(--zonta-line);
+  border-left: 4px solid var(--zonta-btn-bg);
 }
 
 .results-info .results-count {
@@ -956,7 +992,10 @@ html[dir="rtl"] .text-md-end {
 html[data-theme="dark"] {
   --zonta-ink: #f0ede8;
   --zonta-ink-soft: #d8d3c8;
-  --zonta-black: #ffffff;
+  --zonta-black: #000000;
+  --zonta-surface: #000000;
+  --zonta-btn-bg: #ffffff;
+  --zonta-btn-text: #222222;
   --zonta-paper: #121212;
   --zonta-card: #1b1b1b;
   --zonta-line: #2e2e2e;
@@ -996,6 +1035,10 @@ html[data-theme="dark"] .navbar-light .navbar-nav .nav-link {
 
 html[data-theme="dark"] .navbar-light .navbar-nav .nav-link:hover,
 html[data-theme="dark"] .navbar-light .navbar-nav .nav-link:focus {
+  color: #fff;
+}
+
+html[data-theme="dark"] .footer a:hover {
   color: #fff;
 }
 
@@ -1064,34 +1107,25 @@ html[data-theme="dark"] .btn-close {
   filter: invert(1);
 }
 
-/* Primary buttons invert in dark mode (white button, ink text — official dark scheme) */
-html[data-theme="dark"] .btn-custom-primary,
-html[data-theme="dark"] .btn-primary {
-  background-color: #fff;
-  border-color: #fff;
-  color: #222;
-}
-
-html[data-theme="dark"] .btn-custom-primary:hover,
-html[data-theme="dark"] .btn-primary:hover {
-  background-color: #e8e2d5;
-  border-color: #e8e2d5;
-  color: #000;
+/* Primary buttons invert in dark mode via --zonta-btn-* tokens above. */
+html[data-theme="dark"] .page-header,
+html[data-theme="dark"] .zonta-hero {
+  border: 1px solid var(--zonta-line);
 }
 
 html[data-theme="dark"] .btn-custom-secondary,
 html[data-theme="dark"] .btn-outline-primary,
 html[data-theme="dark"] .btn-outline-dark {
-  border-color: #e8e2d5;
-  color: #e8e2d5;
+  border-color: var(--zonta-btn-bg);
+  color: var(--zonta-btn-bg);
 }
 
 html[data-theme="dark"] .btn-custom-secondary:hover,
 html[data-theme="dark"] .btn-outline-primary:hover,
 html[data-theme="dark"] .btn-outline-dark:hover {
-  background: #e8e2d5;
-  border-color: #e8e2d5;
-  color: #000;
+  background: var(--zonta-btn-bg);
+  border-color: var(--zonta-btn-bg);
+  color: var(--zonta-btn-text);
 }
 
 /* Toggle button + spinning icon animation */
@@ -1131,7 +1165,7 @@ html[data-theme="dark"] .btn-outline-dark:hover {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--zonta-black);
+  background: var(--zonta-btn-bg);
 }
 
 html {
