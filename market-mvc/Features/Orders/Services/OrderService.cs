@@ -131,8 +131,7 @@ namespace market_mvc.Features.Orders.Services
                     });
                 }
 
-                var shipping = _config.GetValue<decimal>("Zonta:ShippingFee", 0m);
-                if (shipping < 0) shipping = 0;
+                var shipping = Features.Shipping.ZontaShipping.Compute(subTotal, _config).Amount;
 
                 // Link to Customer record when the checkout email matches a registered customer.
                 var customer = await _db.Customers

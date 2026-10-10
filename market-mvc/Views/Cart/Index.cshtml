@@ -1,4 +1,5 @@
 @model market_mvc.Domain.ViewModels.Cart.CartVM
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
     ViewData["Title"] = "Cart";
@@ -83,7 +84,7 @@
             <div class="d-flex justify-content-end">
                 <div class="text-end">
                     <p class="mb-1">Subtotal: <strong>@Model.SubTotal.ToString("N2") EGP</strong></p>
-                    <p class="mb-1">Shipping: <strong>@Model.ShippingAmount.ToString("N2") EGP</strong></p>
+                    <p class="mb-1">Shipping: <strong>@(Model.ShippingAmount == 0 ? L.Get("Cart.FreeShipNote") + " (0.00 EGP)" : Model.ShippingAmount.ToString("N2") + " EGP")</strong></p>
                     <p class="h5">Total: <strong>@Model.Total.ToString("N2") EGP</strong></p>
                     <p class="small text-muted">Totals are recalculated on the server at checkout.</p>
                     <div class="d-flex gap-2 justify-content-end flex-wrap">

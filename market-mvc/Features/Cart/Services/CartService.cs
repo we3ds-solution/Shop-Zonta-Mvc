@@ -63,7 +63,7 @@ namespace market_mvc.Features.Cart.Services
             var lines = GetLines();
             var vm = new CartVM
             {
-                ShippingAmount = _config.GetValue<decimal>("Zonta:ShippingFee", 0m)
+                ShippingAmount = 0m // computed below from verified free-shipping rule
             };
             if (!lines.Any()) return vm;
 
@@ -121,6 +121,7 @@ namespace market_mvc.Features.Cart.Services
                 });
             }
 
+            vm.ShippingAmount = Features.Shipping.ZontaShipping.Compute(vm.SubTotal, _config).Amount;
             return vm;
         }
 

@@ -3,6 +3,7 @@ using market_mvc.Domain.ObjectValues;
 using market_mvc.Domain.ViewModels.Cart;
 using market_mvc.Domain.ViewModels.Auth;
 using market_mvc.Domain.Validation;
+using market_mvc.Features.Shipping;
 
 namespace Zonta.Tests;
 
@@ -79,5 +80,24 @@ public class CommerceRulesTests
         var ctx = new System.ComponentModel.DataAnnotations.ValidationContext(model);
         Assert.False(System.ComponentModel.DataAnnotations.Validator.TryValidateObject(model, ctx, results, true));
         Assert.Contains(results, r => r.ErrorMessage != null && r.ErrorMessage.Contains("agree"));
+    }
+
+    [Fact]
+    public void Shipping_Free_At_And_Above_750()
+    {
+        Assert.Equal((0m, true), ZontaShipping.Compute(750m, 60m, 750m));
+        Assert.Equal((0m, true), ZontaShipping.Compute(1900m, 60m, 750m));
+    }
+
+    [Fact]
+    public void Shipping_FlatFee_Below_Threshold()
+    {
+        Assert.Equal((60m, false), ZontaShipping.Compute(749.99m, 60m, 750m));
+    }
+
+    [Fact]
+    public void Shipping_Never_Negative()
+    {
+        Assert.Equal((0m, false), ZontaShipping.Compute(100m, -5m, 750m));
     }
 }

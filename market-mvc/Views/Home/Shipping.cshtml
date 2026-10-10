@@ -7,13 +7,14 @@
 <div class="container">
     <div class="content-card">
         <div class="col-md-8 mx-auto">
-            <div class="alert alert-warning" role="note"><strong>Draft — requires business confirmation.</strong> Shipping fees, zones, and timelines below are not yet approved company policy.</div>
+            <div class="alert alert-success" role="note"><strong>Verified store rule:</strong> free shipping on all orders over 750 EGP (official announcement, archived 2024-12-21).</div>
             <h2 class="h4">How delivery works</h2>
             <ul>
-                <li>Cash on delivery within Egypt (zones and fees to be confirmed).</li>
-                <li>Orders are confirmed by phone/message before dispatch (process to be confirmed).</li>
-                <li>Shipping fee is shown at checkout and included in the server-calculated total. Current configured fee: see appsettings <code>Zonta:ShippingFee</code> (default 0 until confirmed).</li>
+                <li>Cash on delivery within Egypt.</li>
+                <li>Orders of <strong>750 EGP or more ship free</strong>; a flat fee may apply below that (currently configured: <code>Zonta:ShippingFee</code>, default 0 — needs business confirmation).</li>
+                <li>Shipping is shown at checkout and included in the server-calculated total.</li>
             </ul>
+            <div class="alert alert-warning" role="note"><strong>Draft — requires business confirmation.</strong> Zones, timelines and the below-threshold fee are not yet approved company policy.</div>
             <a asp-controller="Home" asp-action="Index" class="btn btn-custom-primary">Back to home</a>
         </div>
     </div>
