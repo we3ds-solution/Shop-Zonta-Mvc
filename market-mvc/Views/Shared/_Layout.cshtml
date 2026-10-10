@@ -109,35 +109,35 @@
 
     @await Html.PartialAsync("_DeleteConfirmation")
 
-    <footer class="border-top footer text-muted zonta-footer">
-        <div class="container py-4">
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <h5 class="text-white">ZONTA <span lang="ar">زونتا</span></h5>
+    <footer class="footer text-muted zonta-footer mt-auto">
+        <div class="container py-5">
+            <div class="row g-4">
+                <div class="col-12 col-md-4 footer-col text-center text-md-start">
+                    <h5>ZONTA <span lang="ar">زونتا</span></h5>
                     <p class="small">@L.Get("Footer.Tag") — Hob (love), Shaghaf (passion), Fakhr (pride). Produced by Arab hands.</p>
                     <p class="small mb-0">Sources: scenestyled.com (13 Feb 2025), LinkedIn. Prices/availability require official confirmation.</p>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <h6 class="text-white">@L.Get("Nav.Shop")</h6>
+                <div class="col-6 col-md-4 footer-col text-center">
+                    <h6>@L.Get("Nav.Shop")</h6>
                     <ul class="list-unstyled small">
-                        <li><a asp-controller="Products" asp-action="Index">All products</a></li>
-                        <li><a asp-controller="Cart" asp-action="Index">@L.Get("Nav.Cart")</a></li>
-                        <li><a asp-controller="Orders" asp-action="Index">@L.Get("Nav.Orders")</a></li>
+                        <li class="mb-1"><a asp-controller="Products" asp-action="Index">All products</a></li>
+                        <li class="mb-1"><a asp-controller="Cart" asp-action="Index">@L.Get("Nav.Cart")</a></li>
+                        <li class="mb-1"><a asp-controller="Orders" asp-action="Index">@L.Get("Nav.Orders")</a></li>
                         <li><a asp-controller="Home" asp-action="Contact">@L.Get("Nav.Contact")</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <h6 class="text-white">Follow</h6>
+                <div class="col-6 col-md-4 footer-col text-center text-md-end">
+                    <h6>Follow</h6>
                     <ul class="list-unstyled small">
-                        <li><a href="https://www.instagram.com/shop.zonta/?hl=en" target="_blank" rel="noopener">Instagram — @@shop.zonta</a></li>
-                        <li><a href="https://shopzonta.com" target="_blank" rel="noopener">Official store (shopzonta.com)</a></li>
+                        <li class="mb-1"><a href="https://www.instagram.com/shop.zonta/?hl=en" target="_blank" rel="noopener"><i class="fab fa-instagram me-1" aria-hidden="true"></i>@@shop.zonta</a></li>
+                        <li><a href="https://shopzonta.com" target="_blank" rel="noopener"><i class="fas fa-store me-1" aria-hidden="true"></i>shopzonta.com</a></li>
                     </ul>
                     <p class="small"><a asp-controller="Home" asp-action="Privacy">Privacy</a> · <a asp-controller="Home" asp-action="Shipping">Shipping</a> · <a asp-controller="Home" asp-action="Returns">Returns</a></p>
                 </div>
             </div>
-            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+            <div class="footer-bottom d-flex justify-content-between align-items-center pt-3 mt-4">
                 <span class="small">&copy; 2026 - Zonta Egypt</span>
-                <span class="small">@L.Get("Common.Cod") · @L.CurrencyLabel</span>
+                <span class="small">@L.Get("Common.Cod") · @L.CurrencyLabel <span class="text-white-50">(to be confirmed)</span></span>
             </div>
         </div>
     </footer>
