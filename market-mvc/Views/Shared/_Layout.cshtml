@@ -19,6 +19,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Somar+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <script>
+      // Pre-apply saved/OS theme before first paint (avoids light flash). Full logic: ~/js/site.js
+      (function () {
+        try {
+          var t = window.localStorage.getItem('zonta-theme');
+          if (t !== 'dark' && t !== 'light') {
+            t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+          }
+          if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+        } catch (e) { /* ignore */ }
+      })();
+    </script>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -66,6 +78,11 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav align-items-center">
+                        <li class="nav-item me-2">
+                            <button id="themeToggle" type="button" class="btn btn-outline-dark btn-sm" aria-label="Toggle dark mode" aria-pressed="false" title="Switch to dark mode">
+                                <i id="themeToggleIcon" class="fas fa-moon" aria-hidden="true"></i>
+                            </button>
+                        </li>
                         <li class="nav-item me-2">
                             <form asp-controller="Culture" asp-action="Set" method="post" class="d-inline">
                                 @Html.AntiForgeryToken()
