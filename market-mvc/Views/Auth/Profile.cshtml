@@ -1,12 +1,14 @@
 @model market_mvc.Domain.entity.ApplicationUser
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
-    ViewData["Title"] = "My account";
-    ViewBag.PageTitle = "My account";
+    ViewData["Title"] = L.Get("Profile.Title");
+    ViewBag.PageTitle = L.Get("Profile.Title");
     ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
     {
-        ("Account", "Auth", "Profile")
+        (L.Get("Profile.Title"), "Auth", "Profile")
     };
+    var isAr = L.Culture == "ar";
 }
 
 @await Html.PartialAsync("_PageHeader")
@@ -15,23 +17,23 @@
     <div class="row g-4">
         <div class="col-md-6">
             <div class="content-card">
-                <h2 class="h4">Profile</h2>
+                <h2 class="h4">@(isAr ? "الملف الشخصي" : "Profile")</h2>
                 <dl class="row">
-                    <dt class="col-sm-4">Name</dt>
+                    <dt class="col-sm-4">@(isAr ? "الاسم" : "Name")</dt>
                     <dd class="col-sm-8">@Model.FullName</dd>
-                    <dt class="col-sm-4">Email</dt>
+                    <dt class="col-sm-4">@(isAr ? "البريد" : "Email")</dt>
                     <dd class="col-sm-8">@Model.Email</dd>
-                    <dt class="col-sm-4">Status</dt>
-                    <dd class="col-sm-8">@(Model.IsActive ? "Active" : "Deactivated")</dd>
+                    <dt class="col-sm-4">@(isAr ? "الحالة" : "Status")</dt>
+                    <dd class="col-sm-8">@(Model.IsActive ? (isAr ? "نشط" : "Active") : (isAr ? "موقوف" : "Deactivated"))</dd>
                 </dl>
             </div>
         </div>
         <div class="col-md-6">
             <div class="content-card">
-                <h2 class="h4">My orders</h2>
-                <p class="text-muted">View your order history. You can only access your own orders.</p>
-                <a asp-controller="Orders" asp-action="Index" class="btn btn-custom-primary">Order history</a>
-                <a asp-controller="Cart" asp-action="Index" class="btn btn-custom-secondary ms-2">Cart</a>
+                <h2 class="h4">@L.Get("Profile.Orders")</h2>
+                <p class="text-muted">@(isAr ? "اعرض سجل طلباتك. لا يمكنك الوصول إلا لطلباتك الخاصة." : "View your order history. You can only access your own orders.")</p>
+                <a asp-controller="Orders" asp-action="Index" class="btn btn-custom-primary">@L.Get("Orders.History")</a>
+                <a asp-controller="Cart" asp-action="Index" class="btn btn-custom-secondary ms-2">@L.Get("Nav.Cart")</a>
             </div>
         </div>
     </div>

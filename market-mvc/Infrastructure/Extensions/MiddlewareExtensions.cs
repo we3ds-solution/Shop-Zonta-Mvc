@@ -57,11 +57,14 @@ namespace market_mvc.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Configure routing and authentication
+        /// Configure routing and authentication.
+        /// UseRateLimiter MUST run after UseRouting so endpoint metadata
+        /// ([EnableRateLimiting]) is visible; before it, policies never apply.
         /// </summary>
         public static IApplicationBuilder UseRoutingConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseRouting();
+            app.UseRateLimiter();
             app.UseAuthentication();
             app.UseAuthorization();
             return app;

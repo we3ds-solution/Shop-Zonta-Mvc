@@ -1,13 +1,14 @@
 @model market_mvc.Domain.ViewModels.Cart.CheckoutVM
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
-    ViewData["Title"] = "Checkout";
+    ViewData["Title"] = L.Get("Checkout.Title");
     ViewData["Description"] = "Zonta Egypt checkout — cash on delivery.";
-    ViewBag.PageTitle = "Checkout";
+    ViewBag.PageTitle = L.Get("Checkout.Title");
     ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
     {
-        ("Cart", "Cart", "Index"),
-        ("Checkout", "Cart", "Checkout")
+        (L.Get("Cart.Title"), "Cart", "Index"),
+        (L.Get("Checkout.Title"), "Cart", "Checkout")
     };
 }
 
@@ -17,7 +18,7 @@
     <div class="row g-4">
         <div class="col-12 col-lg-7">
             <div class="form-enhanced">
-                <h2 class="h4 mb-3">Contact & shipping</h2>
+                <h2 class="h4 mb-3">@L.Get("Checkout.Contact")</h2>
                 <form asp-action="Checkout" method="post">
                     @Html.AntiForgeryToken()
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
@@ -79,21 +80,21 @@
                     </div>
                     <div class="alert alert-info" role="note">
                         <i class="fas fa-money-bill-wave me-2" aria-hidden="true"></i>
-                        Cash on delivery — payment is collected on delivery. No online payment is processed and no card details are collected.
+                        @L.Get("Checkout.CodNote")
                     </div>
                     <div class="d-flex gap-2 flex-wrap">
-                        <button type="submit" class="btn btn-custom-primary btn-lg">Place order</button>
-                        <a asp-action="Index" class="btn btn-custom-secondary">Back to cart</a>
+                        <button type="submit" class="btn btn-custom-primary btn-lg">@L.Get("Checkout.Place")</button>
+                        <a asp-action="Index" class="btn btn-custom-secondary">@L.Get("Checkout.Back")</a>
                     </div>
                 </form>
             </div>
         </div>
         <div class="col-12 col-lg-5">
             <div class="content-card">
-                <h2 class="h4 mb-3">Order summary</h2>
+                <h2 class="h4 mb-3">@L.Get("Checkout.Summary")</h2>
                 @if (Model.Cart.IsEmpty)
                 {
-                    <p class="text-muted">Your cart is empty.</p>
+                    <p class="text-muted">@L.Get("Cart.Empty")</p>
                 }
                 else
                 {
@@ -106,10 +107,10 @@
                             </li>
                         }
                     </ul>
-                    <p class="mb-1">Subtotal: <strong>@Model.Cart.SubTotal.ToString("N2") EGP</strong></p>
-                    <p class="mb-1">Shipping: <strong>@Model.Cart.ShippingAmount.ToString("N2") EGP</strong></p>
-                    <p class="h5">Total: <strong>@Model.Cart.Total.ToString("N2") EGP</strong></p>
-                    <p class="small text-muted mb-0">Final total is calculated on the server from database prices and stock.</p>
+                    <p class="mb-1">@L.Get("Cart.Subtotal"): <strong>@Model.Cart.SubTotal.ToString("N2") EGP</strong></p>
+                    <p class="mb-1">@L.Get("Cart.Shipping"): <strong>@Model.Cart.ShippingAmount.ToString("N2") EGP</strong></p>
+                    <p class="h5">@L.Get("Cart.Total"): <strong>@Model.Cart.Total.ToString("N2") EGP</strong></p>
+                    <p class="small text-muted mb-0">@L.Get("Checkout.ServerNote")</p>
                 }
             </div>
         </div>

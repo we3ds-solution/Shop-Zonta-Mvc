@@ -132,7 +132,9 @@ copy the repo to an approved path and run `dotnet test` there (verified 14/14).
 - [ ] Confirm `Zonta:Currency` (default EGP) + `Zonta:ShippingFee` (default 0) with business.
 - [ ] Import verified catalog from shopzonta.com (`docs/ZONTA-CATALOG.md`, `import-catalog` command),
       then set stock counts and activate products/variants only after confirming availability.
-- [ ] Configure payment/shipping providers if COD is insufficient (currently COD only).
+- [ ] Configure production SMTP (`Smtp:Host/Port/User/Pass/From`) and flip on email-confirmation
+  enforcement; until then confirmation/reset emails use the dev file sender and login stays open.
+- [ ] Configure payment/shipping providers if COD is insufficient (currently COD only, behind `IPaymentProvider`).
 - [ ] Point domain + verify SEO/canonical URLs.
 
 ## Security notes
@@ -143,7 +145,12 @@ copy the repo to an approved path and run `dotnet test` there (verified 14/14).
 - Remediated: order creation no longer trusts client totals; server prices/stock/transaction; COD pending (never paid from client).
 - Remediated: order listing/details enforce ownership (no IDOR enumeration); admin edits are status-only.
 - Remediated: `EnsureCreatedAsync` replaced with explicit `MigrateAsync`; startup fails fast on DB errors.
-- Remaining risks: git history still contains old secrets (rewrite needs approval); no email confirmation/2FA/password-reset; no rate-limiting; uploads need AV/size review for large catalogs.
+- Auth hardening: email confirmation + password reset flows implemented (`IEmailSender`;
+  SMTP when `Smtp:*` configured, dev file-sender otherwise; enforcement stays off until
+  production SMTP exists so registration never locks out). Login/register/checkout POSTs
+  rate-limited (5/min/IP, HTTP 429). Account lockout (5 attempts/15 min) unchanged.
+- Remaining risks: git history still contains old secrets (rewrite needs approval, see issue #3);
+  no 2FA; uploads need AV/size review for large catalogs.
 
 ## Known limitations
 
