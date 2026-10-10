@@ -19,7 +19,7 @@
                         <td class="d-none d-md-table-cell">
                             @if (!string.IsNullOrEmpty(item.ImageUrl))
                             {
-                                <img src="@item.ImageUrl" alt="@item.Name" class="product-image" />
+                                <img src="@item.ImageUrl" alt="@item.Name" class="product-image" loading="lazy" onerror="this.onerror=null;this.src='/images/products/placeholder.svg';" />
                             }
                             else
                             {
@@ -33,7 +33,7 @@
                                 <div class="d-md-none me-2">
                                     @if (!string.IsNullOrEmpty(item.ImageUrl))
                                     {
-                                        <img src="@item.ImageUrl" alt="@item.Name" class="product-image" />
+                                        <img src="@item.ImageUrl" alt="@item.Name" class="product-image" loading="lazy" onerror="this.onerror=null;this.src='/images/products/placeholder.svg';" />
                                     }
                                     else
                                     {

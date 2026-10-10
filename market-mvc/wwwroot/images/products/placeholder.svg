@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#f5f5f5"/>
+  <g fill="none" stroke="#222222" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M250 400 L250 330 Q250 300 280 295 L320 290 L360 250 Q370 240 385 240 L470 240 Q490 240 495 260 L505 310 Q508 330 490 335 L300 380 Q250 390 250 400 Z"/>
+    <path d="M250 400 L520 400"/>
+    <circle cx="330" cy="400" r="14" fill="#222222" stroke="none"/>
+    <circle cx="460" cy="400" r="14" fill="#222222" stroke="none"/>
+  </g>
+  <text x="400" y="470" font-family="Tahoma, Arial, sans-serif" font-size="40" font-weight="800" fill="#222222" text-anchor="middle">ZONTA</text>
+  <text x="400" y="515" font-family="Tahoma, Arial, sans-serif" font-size="28" fill="#666666" text-anchor="middle">زونتا</text>
+</svg>
