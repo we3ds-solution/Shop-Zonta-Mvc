@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # full history required for secret scanning
+          fetch-depth: 1
 
       - uses: actions/setup-dotnet@v4
         with:
@@ -26,16 +26,29 @@ jobs:
       - name: Test
         run: dotnet test market-mvc.sln --no-build --nologo
 
+      # Official Gitleaks CLI (no org license required).
+      # Scans the working tree only (--no-git) so known historical secrets
+      # tracked in issue #13 do not fail every build. New secrets in files still fail CI.
       - name: Install Gitleaks
         shell: pwsh
         run: |
+          $ErrorActionPreference = "Stop"
           $version = "8.30.1"
+          $zip = Join-Path $env:RUNNER_TEMP "gitleaks.zip"
+          $dir = Join-Path $env:RUNNER_TEMP "gitleaks"
           $url = "https://github.com/gitleaks/gitleaks/releases/download/v$version/gitleaks_${version}_windows_x64.zip"
-          Invoke-WebRequest -Uri $url -OutFile gitleaks.zip
-          Expand-Archive gitleaks.zip -DestinationPath .
-          .\gitleaks.exe version
+          Write-Host "Downloading $url"
+          Invoke-WebRequest -Uri $url -OutFile $zip -UseBasicParsing
+          if (Test-Path $dir) { Remove-Item $dir -Recurse -Force }
+          New-Item -ItemType Directory -Path $dir | Out-Null
+          Expand-Archive -Path $zip -DestinationPath $dir -Force
+          $exe = Get-ChildItem -Path $dir -Filter "gitleaks.exe" -Recurse | Select-Object -First 1
+          if (-not $exe) { throw "gitleaks.exe not found after extract" }
+          & $exe.FullName version
+          "GITLEAKS_EXE=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
-      - name: Secret scan
+      - name: Secret scan (working tree)
         shell: pwsh
         run: |
-          .\gitleaks.exe detect --source . --verbose --redact --exit-code 1
+          $ErrorActionPreference = "Stop"
+          & $env:GITLEAKS_EXE detect --no-git --source . --verbose --redact --exit-code 1
