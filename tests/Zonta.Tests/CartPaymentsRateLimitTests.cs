@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using market_mvc.Controllers;
 using market_mvc.Domain.ViewModels.Cart;
@@ -130,7 +131,7 @@ public class EmailSenderTests
     [Fact]
     public void SmtpSender_Reports_Unconfigured_Without_Host()
     {
-        var config = new Microsoft.Extensions.Configuration.ConfigurationBuilder().Build();
+        IConfiguration config = PaymobProviderTests.FakeConfig(new Dictionary<string, string?>());
         var sender = new SmtpEmailSender(config, NullLogger<SmtpEmailSender>.Instance);
         Assert.False(sender.IsConfigured);
     }

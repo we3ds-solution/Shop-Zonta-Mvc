@@ -72,3 +72,8 @@ await app.SeedDatabaseAsync();
 
 app.Run();
 return 0;
+
+public partial class Program
+{
+    // Exposed for WebApplicationFactory integration tests (issue #8).
+}

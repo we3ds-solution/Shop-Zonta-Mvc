@@ -85,6 +85,18 @@ namespace market_mvc.Controllers
                         new { userId = user.Id, returnUrl, rememberMe = model.RememberMe });
                 }
 
+                // Email-confirmation enforcement activates only when production SMTP
+                // is configured; otherwise login stays open (see README).
+                if (_emailSender.IsConfigured && !user.EmailConfirmed)
+                {
+                    ModelState.AddModelError(string.Empty,
+                        "Please confirm your email before signing in. " +
+                        "Need another link? Use Resend confirmation below.");
+                    ViewBag.ShowResend = true;
+                    ViewBag.ResendEmail = model.Email;
+                    return View(model);
+                }
+
                 user.LastLoginAt = DateTime.UtcNow;
                 await _userManager.UpdateAsync(user);
                 await _signInManager.SignInAsync(user, model.RememberMe);
@@ -316,6 +328,28 @@ namespace market_mvc.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        /// <summary>
+        /// Resend the email-confirmation link (same response either way).
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [EnableRateLimiting(RateLimiting.AuthPolicy)]
+        public async Task<IActionResult> ResendConfirmation(string email)
+        {
+            var user = string.IsNullOrWhiteSpace(email) ? null : await _userManager.FindByEmailAsync(email);
+            if (user != null && !user.EmailConfirmed)
+            {
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var link = Url.Action("ConfirmEmail", "Auth",
+                    new { userId = user.Id, token }, Request.Scheme);
+                await _emailSender.SendAsync(user.Email!, "Confirm your Zonta account",
+                    $"Please confirm your account by <a href='{link}'>clicking here</a>.");
+            }
+
+            TempData["SuccessMessage"] = "If the address is registered, a confirmation link is on its way.";
+            return RedirectToAction(nameof(Login));
         }
 
         /// <summary>
