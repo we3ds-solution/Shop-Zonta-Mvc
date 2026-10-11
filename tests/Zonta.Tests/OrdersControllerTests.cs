@@ -7,6 +7,7 @@ using market_mvc.Domain;
 using market_mvc.Domain.entity;
 using market_mvc.Domain.Enums;
 using market_mvc.Features.Orders.Services;
+using market_mvc.Infrastructure.Localization;
 
 namespace Zonta.Tests;
 
@@ -89,7 +90,7 @@ public class OrdersControllerTests
 
     private static OrdersController Controller(FakeOrderService svc, ClaimsPrincipal user)
     {
-        var c = new OrdersController(svc)
+        var c = new OrdersController(svc, new ZontaLocalizer(new HttpContextAccessor()))
         {
             ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext { User = user } },
             TempData = new TempDataDictionary(new DefaultHttpContext(), new FakeTempDataProvider())

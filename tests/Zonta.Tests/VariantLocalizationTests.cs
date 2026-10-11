@@ -88,4 +88,36 @@ public class LocalizationTests
         Assert.Equal("السلة", l.Get("Nav.Cart"));
         Assert.Equal("ج.م", l.CurrencyLabel);
     }
+
+    [Fact]
+    public void Status_And_Payment_Names_Switch_Culture()
+    {
+        var l = EnLocalizer();
+        Assert.Equal("Pending", l.StatusName(market_mvc.Domain.Enums.OrderStatus.Pending));
+        Assert.Equal("Paid", l.PayName(market_mvc.Domain.Enums.PaymentStatus.Paid));
+
+        var ctx = new DefaultHttpContext();
+        ctx.Request.Headers.Cookie = "zonta_culture=ar";
+        var ar = new ZontaLocalizer(new HttpContextAccessor { HttpContext = ctx });
+        Assert.Equal("بانتظار التأكيد", ar.StatusName(market_mvc.Domain.Enums.OrderStatus.Pending));
+        Assert.Equal("مدفوع", ar.PayName(market_mvc.Domain.Enums.PaymentStatus.Paid));
+    }
+
+    [Fact]
+    public void ErrorVM_Speaks_Current_Culture()
+    {
+        var prev = System.Globalization.CultureInfo.CurrentUICulture;
+        try
+        {
+            System.Globalization.CultureInfo.CurrentUICulture = new System.Globalization.CultureInfo("ar-EG");
+            var vm = new market_mvc.Domain.ViewModels.Error.ErrorVM { StatusCode = 404 };
+            Assert.Equal("الصفحة غير موجودة", vm.DisplayTitle);
+            System.Globalization.CultureInfo.CurrentUICulture = new System.Globalization.CultureInfo("en");
+            Assert.Equal("Page Not Found", new market_mvc.Domain.ViewModels.Error.ErrorVM { StatusCode = 404 }.DisplayTitle);
+        }
+        finally
+        {
+            System.Globalization.CultureInfo.CurrentUICulture = prev;
+        }
+    }
 }

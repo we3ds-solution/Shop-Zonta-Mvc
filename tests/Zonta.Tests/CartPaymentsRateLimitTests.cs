@@ -9,6 +9,7 @@ using market_mvc.Features.Auth.Email;
 using market_mvc.Features.Cart.Services;
 using market_mvc.Features.Orders.Services;
 using market_mvc.Features.Payments;
+using market_mvc.Infrastructure.Localization;
 using market_mvc.Infrastructure.Security;
 
 namespace Zonta.Tests;
@@ -39,7 +40,7 @@ public class CartControllerTests
 {
     private static CartController Controller(FakeCartService cart)
     {
-        var c = new CartController(cart, new FakeOrderService(), null!)
+        var c = new CartController(cart, new FakeOrderService(), null!, new ZontaLocalizer(new HttpContextAccessor()))
         {
             ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext { User = ClaimsHelper.User("a@example.com") } },
             TempData = new TempDataDictionary(new DefaultHttpContext(), new FakeTempDataProvider())

@@ -30,8 +30,11 @@
         syncIcon(next, animate !== false);
         var btn = document.getElementById('themeToggle');
         if (btn) {
+            var s = window.zontaStrings || {};
             btn.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
-            btn.setAttribute('title', next === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+            btn.setAttribute('title', next === 'dark'
+                ? (s.themeLight || 'Switch to light mode')
+                : (s.themeDark || 'Switch to dark mode'));
         }
     }
 

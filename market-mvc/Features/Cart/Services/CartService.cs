@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using market_mvc.Domain.Enums;
 using market_mvc.Domain.ViewModels.Cart;
 using market_mvc.Infrastructure.Data;
+using market_mvc.Infrastructure.Localization;
 
 namespace market_mvc.Features.Cart.Services
 {
@@ -24,12 +25,14 @@ namespace market_mvc.Features.Cart.Services
         private readonly IHttpContextAccessor _http;
         private readonly AppDbContext _db;
         private readonly IConfiguration _config;
+        private readonly IZontaLocalizer _localizer;
 
-        public CartService(IHttpContextAccessor http, AppDbContext db, IConfiguration config)
+        public CartService(IHttpContextAccessor http, AppDbContext db, IConfiguration config, IZontaLocalizer localizer)
         {
             _http = http;
             _db = db;
             _config = config;
+            _localizer = localizer;
         }
 
         public List<CartLineVM> GetLines()
@@ -128,37 +131,37 @@ namespace market_mvc.Features.Cart.Services
         public async Task<(bool Ok, string? Error)> AddAsync(Guid productId, Guid? variantId, int quantity, CancellationToken ct = default)
         {
             if (quantity < 1 || quantity > MaxQtyPerLine)
-                return (false, "Quantity must be between 1 and 99.");
+                return (false, _localizer.Get("Quantity_Range"));
 
             var product = await _db.Products
                 .Include(p => p.Variants)
                 .FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted, ct);
-            if (product == null) return (false, "Product not found.");
-            if (product.Status != ProductStatus.Active) return (false, "Product is not available.");
+            if (product == null) return (false, _localizer.Get("Msg.ProductNotFound"));
+            if (product.Status != ProductStatus.Active) return (false, _localizer.Get("Msg.ProductNA"));
 
             int availableStock;
             if (variantId.HasValue)
             {
                 var v = product.Variants.FirstOrDefault(x => x.Id == variantId.Value && !x.IsDeleted && x.IsActive);
-                if (v == null) return (false, "Selected size/color is not available.");
+                if (v == null) return (false, _localizer.Get("Msg.PickVariant"));
                 availableStock = v.StockQuantity;
-                if (availableStock <= 0) return (false, $"This size/color ({v.Label}) is out of stock.");
+                if (availableStock <= 0) return (false, string.Format(_localizer.Get("Msg.OnlyN"), 0));
             }
             else
             {
-                if (product.HasVariants) return (false, "Please select a size/color.");
-                if (product.TrackQuantity && product.StockQuantity <= 0) return (false, "Product is out of stock.");
+                if (product.HasVariants) return (false, _localizer.Get("Msg.PickVariant"));
+                if (product.TrackQuantity && product.StockQuantity <= 0) return (false, _localizer.Get("Msg.OOS"));
                 availableStock = product.StockQuantity;
             }
 
             var lines = GetLines();
             var existing = lines.FirstOrDefault(l => SameLine(l, productId, variantId));
             var newQty = (existing?.Quantity ?? 0) + quantity;
-            if (newQty > MaxQtyPerLine) return (false, "Maximum 99 units per line.");
+            if (newQty > MaxQtyPerLine) return (false, _localizer.Get("Msg.Max99"));
             if (variantId.HasValue || product.TrackQuantity)
             {
                 if (newQty > availableStock)
-                    return (false, $"Only {availableStock} unit(s) available.");
+                    return (false, string.Format(_localizer.Get("Msg.OnlyN"), availableStock));
             }
 
             if (existing == null) lines.Add(new CartLineVM { ProductId = productId, VariantId = variantId, Quantity = quantity });
@@ -171,11 +174,11 @@ namespace market_mvc.Features.Cart.Services
         public async Task<(bool Ok, string? Error)> UpdateQuantityAsync(Guid productId, Guid? variantId, int quantity, CancellationToken ct = default)
         {
             if (quantity < 0 || quantity > MaxQtyPerLine)
-                return (false, "Quantity must be between 0 and 99.");
+                return (false, _localizer.Get("Quantity_Range"));
 
             var lines = GetLines();
             var existing = lines.FirstOrDefault(l => SameLine(l, productId, variantId));
-            if (existing == null) return (false, "Item not in cart.");
+            if (existing == null) return (false, _localizer.Get("Msg.NotInCart"));
 
             if (quantity == 0)
             {
@@ -187,23 +190,23 @@ namespace market_mvc.Features.Cart.Services
             var product = await _db.Products
                 .Include(p => p.Variants)
                 .FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted, ct);
-            if (product == null) return (false, "Product not found.");
+            if (product == null) return (false, _localizer.Get("Msg.ProductNotFound"));
 
             int stock;
             if (variantId.HasValue)
             {
                 var v = product.Variants.FirstOrDefault(x => x.Id == variantId.Value && !x.IsDeleted && x.IsActive);
-                if (v == null) return (false, "Selected size/color is not available.");
+                if (v == null) return (false, _localizer.Get("Msg.PickVariant"));
                 stock = v.StockQuantity;
             }
             else
             {
-                if (product.HasVariants) return (false, "Please select a size/color.");
+                if (product.HasVariants) return (false, _localizer.Get("Msg.PickVariant"));
                 stock = product.StockQuantity;
             }
 
             if ((variantId.HasValue || product.TrackQuantity) && quantity > stock)
-                return (false, $"Only {stock} unit(s) available.");
+                return (false, string.Format(_localizer.Get("Msg.OnlyN"), stock));
 
             existing.Quantity = quantity;
             SaveLines(lines);

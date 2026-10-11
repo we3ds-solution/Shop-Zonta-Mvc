@@ -102,8 +102,8 @@
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Auth" asp-action="Profile" title="Account">
-                                    <i class="fas fa-user me-1" aria-hidden="true"></i>@(User.Identity.Name ?? "Account")
+                                <a class="nav-link" asp-controller="Auth" asp-action="Profile" title="@L.Get("Nav.Account")">
+                                    <i class="fas fa-user me-1" aria-hidden="true"></i>@(User.Identity.Name ?? L.Get("Nav.Account"))
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -154,7 +154,7 @@
                     </ul>
                 </div>
                 <div class="col-6 col-md-4 footer-col text-center text-md-end">
-                    <h6>Follow</h6>
+                    <h6>@L.Get("Nav.Follow")</h6>
                     <ul class="list-unstyled small">
                         <li class="mb-1"><a href="https://www.instagram.com/shop.zonta/?hl=en" target="_blank" rel="noopener"><i class="fab fa-instagram me-1" aria-hidden="true"></i>@@shop.zonta</a></li>
                         <li><a href="https://shopzonta.com" target="_blank" rel="noopener"><i class="fas fa-store me-1" aria-hidden="true"></i>shopzonta.com</a></li>
@@ -173,6 +173,20 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/shared.js" asp-append-version="true"></script>
 
+    <script>
+        window.zontaStrings = {
+            success: '@L.Get("Js.Success")',
+            error: '@L.Get("Js.Error")',
+            warning: '@L.Get("Js.Warning")',
+            info: '@L.Get("Js.Info")',
+            searchError: '@L.Get("Js.SearchError")',
+            resultsFound: '@L.Get("Js.ResultsFound")',
+            nameLabel: '@L.Get("Js.Name")',
+            detailsLabel: '@L.Get("Js.Details")',
+            themeDark: '@L.Get("Js.ThemeDark")',
+            themeLight: '@L.Get("Js.ThemeLight")'
+        };
+    </script>
     @if (TempData.Any())
     {
         <script>

@@ -1,3 +1,5 @@
+using market_mvc.Domain.Enums;
+
 namespace market_mvc.Infrastructure.Localization
 {
     /// <summary>
@@ -13,6 +15,8 @@ namespace market_mvc.Infrastructure.Localization
         string Get(string key);
         string CurrencyLabel { get; }
         string FormatPrice(decimal amount);
+        string StatusName(OrderStatus status);
+        string PayName(PaymentStatus status);
     }
 
     public class ZontaLocalizer : IZontaLocalizer
@@ -264,6 +268,70 @@ namespace market_mvc.Infrastructure.Localization
             ["Filter.Range3"] = ("2,000 - 5,000 EGP", "2000 - 5000 جنيه"),
             ["Filter.Range4"] = ("Over 5,000 EGP", "أكثر من 5000 جنيه"),
             ["Filter.Loading"] = ("Searching...", "جارٍ البحث..."),
+            ["Msg.InvalidQty"] = ("Invalid quantity.", "كمية غير صالحة."),
+            ["Msg.Added"] = ("Added to cart.", "أُضيف إلى السلة."),
+            ["Msg.CartUpdated"] = ("Cart updated.", "حُدّثت السلة."),
+            ["Msg.CheckoutFail"] = ("Checkout failed. Please try again.", "فشل إتمام الشراء. يرجى المحاولة مجددا."),
+            ["Msg.ProductNA"] = ("Product is not available.", "المنتج غير متاح."),
+            ["Msg.OOS"] = ("Product is out of stock.", "المنتج نفد."),
+            ["Msg.Max99"] = ("Maximum 99 units per line.", "بحد أقصى 99 قطعة."),
+            ["Msg.OnlyN"] = ("Only {0} unit(s) available.", "المتاح {0} فقط."),
+            ["Msg.PickVariant"] = ("Please select a size/color.", "يرجى اختيار المقاس/اللون."),
+            ["Msg.NotInCart"] = ("Item not in cart.", "المنتج ليس في السلة."),
+            ["Msg.CartGone"] = ("Some items in your cart are no longer available.", "بعض منتجات السلة لم تعد متاحة."),
+            ["Msg.GoneNamed"] = ("Product '{0}' is no longer available.", "المنتج '{0}' لم يعد متاحا."),
+            ["Msg.NotAvailNamed"] = ("Product '{0}' is not available.", "المنتج '{0}' غير متاح."),
+            ["Msg.ItemRemoved"] = ("Item removed.", "أُزيل المنتج."),
+            ["Msg.CartEmpty"] = ("Your cart is empty.", "سلتك فارغة."),
+            ["Msg.OrderPlaced"] = ("Order placed. Cash on delivery - payment pending.", "تم الطلب. الدفع عند الاستلام - بانتظار الدفع."),
+            ["Msg.SizeColorRequired"] = ("Size or color is required.", "المقاس أو اللون مطلوب."),
+            ["Msg.InvalidVariant"] = ("Invalid variant data.", "بيانات المتغير غير صالحة."),
+            ["Msg.VariantExists"] = ("This size/color already exists for this product.", "هذا المقاس/اللون موجود بالفعل لهذا المنتج."),
+            ["Msg.VariantAdded"] = ("Variant added.", "أُضيف المتغير."),
+            ["Msg.VariantDeactivated"] = ("Variant is used in orders - deactivated instead of deleted.", "المتغير مستخدم في طلبات - عُطّل بدلا من حذفه."),
+            ["Msg.VariantDeleted"] = ("Variant deleted.", "حُذف المتغير."),
+            ["Msg.ProductCreated"] = ("Product '{0}' created successfully.", "أُنشئ المنتج '{0}' بنجاح."),
+            ["Msg.ProductUpdated"] = ("Product '{0}' updated successfully.", "حُدّث المنتج '{0}' بنجاح."),
+            ["Msg.ProductDeleted"] = ("Product '{0}' deleted successfully.", "حُذف المنتج '{0}' بنجاح."),
+            ["Msg.ProductDeleteFail"] = ("Failed to delete product.", "فشل حذف المنتج."),
+            ["Msg.ProductNotFound"] = ("Product not found.", "المنتج غير موجود."),
+            ["Msg.TwoFaOn"] = ("Two-factor authentication enabled.", "تم تفعيل المصادقة الثنائية."),
+            ["Msg.TwoFaOff"] = ("Two-factor authentication disabled.", "تم إلغاء المصادقة الثنائية."),
+            ["Msg.StatusUpdated"] = ("Order status updated.", "حُدّثت حالة الطلب."),
+            ["Msg.OrderDeleted"] = ("Order deleted successfully.", "حُذف الطلب بنجاح."),
+            ["Msg.InvalidLogin"] = ("Invalid login attempt.", "محاولة دخول غير صالحة."),
+            ["Msg.Deactivated"] = ("Account is deactivated.", "الحساب موقوف."),
+            ["Msg.Locked"] = ("Account locked. Please try again later.", "الحساب مقفل. حاول لاحقا."),
+            ["Msg.BadCode"] = ("Invalid authenticator code.", "رمز مصادقة غير صالح."),
+            ["Msg.EmailTaken"] = ("Email is already registered.", "البريد مسجل بالفعل."),
+            ["Msg.CheckoutFail"] = ("Checkout failed. Please try again.", "فشل إتمام الشراء. يرجى المحاولة مجددا."),
+            ["Msg.ImageFail"] = ("Failed to upload image. Please try again.", "فشل رفع الصورة. حاول مجددا."),
+            ["Js.Success"] = ("Success", "نجاح"),
+            ["Js.Error"] = ("Error", "خطأ"),
+            ["Js.Warning"] = ("Warning", "تحذير"),
+            ["Js.Info"] = ("Information", "معلومة"),
+            ["Js.SearchError"] = ("An error occurred while searching. Please try again.", "حدث خطأ أثناء البحث. حاول مجددا."),
+            ["Js.ResultsFound"] = ("results found", "نتيجة"),
+            ["Js.Name"] = ("Name:", "الاسم:"),
+            ["Js.Details"] = ("Details:", "التفاصيل:"),
+            ["Js.ThemeDark"] = ("Switch to dark mode", "التبديل للوضع الليلي"),
+            ["Js.ThemeLight"] = ("Switch to light mode", "التبديل للوضع النهاري"),
+            ["Nav.Follow"] = ("Follow", "تابعنا"),
+            ["Nav.Account"] = ("Account", "الحساب"),
+            ["Var.OOS"] = ("(out of stock)", "(نفد المخزون)"),
+            ["Var.Avail"] = ("({0} available)", "(متاح {0})"),
+            ["Ord.St_Pending"] = ("Pending", "بانتظار التأكيد"),
+            ["Ord.St_Confirmed"] = ("Confirmed", "مؤكد"),
+            ["Ord.St_Processing"] = ("Processing", "قيد التجهيز"),
+            ["Ord.St_Shipped"] = ("Shipped", "تم الشحن"),
+            ["Ord.St_Delivered"] = ("Delivered", "تم التوصيل"),
+            ["Ord.St_Cancelled"] = ("Cancelled", "ملغي"),
+            ["Ord.St_Refunded"] = ("Refunded", "مسترد"),
+            ["Ord.Pay_Pending"] = ("Pending", "بانتظار الدفع"),
+            ["Ord.Pay_Paid"] = ("Paid", "مدفوع"),
+            ["Ord.Pay_Failed"] = ("Failed", "فشل"),
+            ["Ord.Pay_Refunded"] = ("Refunded", "مسترد"),
+            ["Ord.Pay_Partial"] = ("Partially Refunded", "مسترد جزئيا"),
         };
 
         public ZontaLocalizer(IHttpContextAccessor http)
@@ -289,6 +357,16 @@ namespace market_mvc.Infrastructure.Localization
         }
 
         public string CurrencyLabel => Culture == "ar" ? "ج.م" : "EGP";
+
+        public string StatusName(OrderStatus status) => Get("Ord.St_" + status);
+        public string PayName(PaymentStatus status) => Get("Ord.Pay_" + status switch
+        {
+            PaymentStatus.Pending => "Pending",
+            PaymentStatus.Paid => "Paid",
+            PaymentStatus.Failed => "Failed",
+            PaymentStatus.Refunded => "Refunded",
+            _ => "Partial"
+        });
 
         public string FormatPrice(decimal amount)
         {
