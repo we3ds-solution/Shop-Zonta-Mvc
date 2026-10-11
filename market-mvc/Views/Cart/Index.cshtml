@@ -45,7 +45,11 @@
                                     <div class="d-flex align-items-center gap-3">
                                         @if (!string.IsNullOrEmpty(item.ImageUrl))
                                         {
-                                            <img src="@item.ImageUrl" alt="@(item.ImageAlt ?? item.ProductName)" width="64" height="64" style="object-fit: cover;" class="rounded" loading="lazy" onerror="this.onerror=null;this.src='/images/products/placeholder.svg';" />
+                                            <img src="@item.ImageUrl" alt="@(item.ImageAlt ?? item.ProductName)" width="64" height="64" style="object-fit: cover;" class="rounded" loading="lazy" onerror="this.onerror=null;this.src='/images/categories/footwear/habibi-sneakers.jpg';" />
+                                        }
+                                        else
+                                        {
+                                            <img src="/images/categories/footwear/habibi-sneakers.jpg" alt="@(item.ImageAlt ?? item.ProductName)" width="64" height="64" style="object-fit: cover;" class="rounded" loading="lazy" />
                                         }
                                         <div>
                                             <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">@item.DisplayName</a>

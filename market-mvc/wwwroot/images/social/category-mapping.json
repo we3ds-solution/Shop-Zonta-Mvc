@@ -1,0 +1,95 @@
+﻿{
+  "mapping": "Instagram @shop.zonta images mapped to Zonta MVC category folders",
+  "source": "Downloaded from https://www.instagram.com/shop.zonta/?hl=en on 2026-10-11",
+  "total_images": 12,
+  "categories": {
+    "footwear": {
+      "count": 2,
+      "images": [
+        {
+          "file": "habibi-sneakers.jpg",
+          "kb": 34,
+          "instagram_code": "DVlmRgiCrhY",
+          "caption": "Habibi❤️👟",
+          "alt": "Photo by Zonta على March 07, 2026"
+        },
+        {
+          "file": "premium-leather.jpg",
+          "kb": 78,
+          "instagram_code": "DVTkxUqiuAJ",
+          "caption": "Habibi — Premium, genuine leather",
+          "alt": "Photo by Zonta على February 28, 2026"
+        }
+      ]
+    },
+    "accessories": {
+      "count": 2,
+      "images": [
+        {
+          "file": "wear-language.jpg",
+          "kb": 42,
+          "instagram_code": "DVZNBFrig66",
+          "caption": "Wear your language",
+          "alt": "Photo by Zonta على February 02, 2026"
+        },
+        {
+          "file": "rep-language.jpg",
+          "kb": 42,
+          "instagram_code": "DSp9gAmCsSo",
+          "caption": "Rep your language❤️👟",
+          "alt": "Photo by Zonta على December 24, 2025"
+        }
+      ]
+    },
+    "collections": {
+      "count": 3,
+      "images": [
+        {
+          "file": "arab-heritage.jpg",
+          "kb": 72,
+          "instagram_code": "DVq9iPTCpNI",
+          "caption": "Born in the Arab world, worn around the globe",
+          "alt": "Photo by Zonta على March 09, 2026"
+        },
+        {
+          "file": "pride-collection.jpg",
+          "kb": 35,
+          "instagram_code": "DVObHkpiobs",
+          "caption": "Fakhr - Made for you. Made for our people.",
+          "alt": "Photo by Zonta على February 26, 2026"
+        },
+        {
+          "file": "shop-collection.jpg",
+          "kb": 78,
+          "instagram_code": "DVGsTNaCn-w",
+          "caption": "Shop the collection",
+          "alt": "Photo by Zonta على February 23, 2026"
+        }
+      ]
+    },
+    "apparel": {
+      "count": 1,
+      "images": [
+        {
+          "file": "lifestyle-brunch.jpg",
+          "kb": 64,
+          "instagram_code": "DUio-AeioFx",
+          "caption": "Brunch at Maha's with the gang",
+          "alt": "Photo by Zonta على February 09, 2026"
+        }
+      ]
+    },
+    "brand": {
+      "count": 1,
+      "images": [
+        {
+          "file": "profile.jpg",
+          "kb": 8,
+          "instagram_code": "profile",
+          "caption": "Zonta Instagram profile",
+          "alt": "Zonta brand profile picture"
+        }
+      ]
+    }
+  }
+}

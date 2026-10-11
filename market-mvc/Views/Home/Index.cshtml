@@ -29,7 +29,32 @@
             <i class="fas fa-shoe-prints fa-3x mb-3" aria-hidden="true"></i>
             <h2>@L.Get("Home.CatalogSoon")</h2>
             <p class="text-muted">@L.Get("Home.CatalogSoonHint") Instagram <a href="https://www.instagram.com/shop.zonta/?hl=en" target="_blank" rel="noopener">@@shop.zonta</a>.</p>
-            <a asp-controller="Products" asp-action="Index" class="btn btn-custom-primary mt-2">@L.Get("Home.Browse")</a>
+
+            @* Real brand imagery pulled from @shop.zonta (local assets, no fabricated art) *@
+            <div class="row row-cols-2 row-cols-md-4 g-3 mt-3 justify-content-center">
+                <div class="col-6 col-md-3">
+                    <img src="/images/categories/footwear/habibi-sneakers.jpg"
+                         alt="@L.Get("Gallery.AltHabibi")" loading="lazy"
+                         class="img-fluid rounded shadow-sm w-100" style="aspect-ratio: 1/1; object-fit: cover;" />
+                </div>
+                <div class="col-6 col-md-3">
+                    <img src="/images/categories/collections/arab-heritage.jpg"
+                         alt="@L.Get("Gallery.AltHeritage")" loading="lazy"
+                         class="img-fluid rounded shadow-sm w-100" style="aspect-ratio: 1/1; object-fit: cover;" />
+                </div>
+                <div class="col-6 col-md-3">
+                    <img src="/images/categories/accessories/wear-language.jpg"
+                         alt="@L.Get("Gallery.AltLanguage")" loading="lazy"
+                         class="img-fluid rounded shadow-sm w-100" style="aspect-ratio: 1/1; object-fit: cover;" />
+                </div>
+                <div class="col-6 col-md-3">
+                    <img src="/images/categories/collections/pride-collection.jpg"
+                         alt="@L.Get("Gallery.AltPride")" loading="lazy"
+                         class="img-fluid rounded shadow-sm w-100" style="aspect-ratio: 1/1; object-fit: cover;" />
+                </div>
+            </div>
+
+            <a asp-controller="Products" asp-action="Index" class="btn btn-custom-primary mt-3">@L.Get("Home.Browse")</a>
         </div>
     }
 

@@ -20,15 +20,15 @@ namespace market_mvc.Infrastructure.Data.Seeds
             var db = context as AppDbContext
                 ?? throw new InvalidOperationException("Context must be AppDbContext");
 
-            var zontaCategories = new List<(string Name, string Description, CategoryType Type, string Slug, int Sort)>
+            var zontaCategories = new List<(string Name, string Description, CategoryType Type, string Slug, int Sort, string Image, string Alt)>
             {
-                ("Sneakers", "Zonta Arabic sneakers — premium streetwear footwear.", CategoryType.Footwear, "sneakers", 1),
-                ("Apparel", "Zonta streetwear apparel.", CategoryType.Apparel, "apparel", 2),
-                ("Accessories", "Zonta accessories.", CategoryType.Accessories, "accessories", 3),
-                ("Collections", "Zonta drops and curated collections (e.g. Drop 1.0).", CategoryType.Collections, "collections", 4),
+                ("Sneakers", "Zonta Arabic sneakers — premium streetwear footwear.", CategoryType.Footwear, "sneakers", 1, "/images/categories/footwear/habibi-sneakers.jpg", "Habibi Arabic sneakers by Zonta"),
+                ("Apparel", "Zonta streetwear apparel.", CategoryType.Apparel, "apparel", 2, "/images/categories/apparel/lifestyle-brunch.jpg", "Zonta streetwear lifestyle"),
+                ("Accessories", "Zonta accessories.", CategoryType.Accessories, "accessories", 3, "/images/categories/accessories/wear-language.jpg", "Wear your language — Zonta accessories"),
+                ("Collections", "Zonta drops and curated collections (e.g. Drop 1.0).", CategoryType.Collections, "collections", 4, "/images/categories/collections/arab-heritage.jpg", "Born in the Arab world, worn around the globe"),
             };
 
-            foreach (var (name, desc, type, slug, sort) in zontaCategories)
+            foreach (var (name, desc, type, slug, sort, image, alt) in zontaCategories)
             {
                 var existing = await db.Categories.FirstOrDefaultAsync(c => c.Name == name);
                 if (existing == null)
@@ -42,14 +42,25 @@ namespace market_mvc.Infrastructure.Data.Seeds
                         Slug = slug,
                         IsActive = true,
                         SortOrder = sort,
+                        ImageUrl = image,
+                        ImageAlt = alt,
                         CreatedAt = DateTime.UtcNow,
                         CreatedBy = "Seeder"
                     });
                 }
-                else if (!existing.IsActive)
+                else
                 {
-                    existing.IsActive = true;
-                    existing.Type = type;
+                    // Backfill Instagram brand images onto existing rows (idempotent).
+                    if (string.IsNullOrWhiteSpace(existing.ImageUrl))
+                    {
+                        existing.ImageUrl = image;
+                        existing.ImageAlt = alt;
+                    }
+                    if (!existing.IsActive)
+                    {
+                        existing.IsActive = true;
+                        existing.Type = type;
+                    }
                     if (string.IsNullOrWhiteSpace(existing.Slug)) existing.Slug = slug;
                 }
             }

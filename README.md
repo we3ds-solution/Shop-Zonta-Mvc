@@ -175,3 +175,27 @@ copy the repo to an approved path and run `dotnet test` there (verified 14/14).
 See `docs/ZONTA-CATALOG.md` + `market-mvc/Infrastructure/Data/Catalog/ZontaCatalog.json`.
 Record source URL + date per product; match by SKU; never duplicate or overwrite manual inventory blindly.
 New variants import as inactive/zero-stock for admin confirmation.
+
+## Brand imagery (local assets)
+
+Real brand photos scraped from the official Instagram (@shop.zonta) and stored locally — no fabricated art,
+no hotlinked social URLs at runtime:
+
+- `market-mvc/wwwroot/images/social/` — 11 product posts + profile picture (`ig-{shortcode}.jpg`)
+  with `ig-map.json` (shortcode, caption, alt text, source URL, KB size).
+- `market-mvc/wwwroot/images/categories/{footwear,accessories,collections,apparel}/` — same photos
+  mapped to the four seeded categories (Habibi/Fakhr/Shaghaf themes).
+- `market-mvc/wwwroot/images/brand/profile.jpg` — brand avatar.
+- `market-mvc/wwwroot/images/social/category-mapping.json` — full caption/alt/source mapping.
+
+Wired into views (all `loading="lazy"`, localized EN/AR alt text via `Gallery.*` / `Card.BrandAlt` keys):
+
+| Surface | Fallback behavior |
+|---|---|
+| `_ProductCard` / `_ProductList` / `Cart` / `Products/Details` | Brand photo instead of grey placeholder icon |
+| Home + Products empty states | 4-up brand gallery (keeps SEO + brand feel while catalog is empty) |
+| Footer | 6-image brand strip on every page |
+| About + Contact | Verified hero/collection banner |
+| `_Layout` `<head>` | `og:image` + `twitter:image` for social sharing |
+
+Refresh: re-run the Instagram extraction (codes in `ig-map.json`), replace files in-place, keep same names.

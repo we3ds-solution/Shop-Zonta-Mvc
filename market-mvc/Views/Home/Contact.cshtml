@@ -25,6 +25,12 @@
                 <div class="alert alert-warning" role="note">
                     @L.Get("Contact.Warn")
                 </div>
+
+                @* Verified brand imagery from @shop.zonta (local asset) *@
+                <img src="/images/categories/collections/shop-collection.jpg"
+                     alt="@L.Get("Gallery.AltShop")" loading="lazy"
+                     class="img-fluid rounded shadow-sm w-100 mb-3" style="aspect-ratio: 16/9; object-fit: cover;" />
+
                 <a asp-controller="Home" asp-action="Index" class="btn btn-custom-primary">@L.Get("Page.BackHome")</a>
             </div>
         </div>

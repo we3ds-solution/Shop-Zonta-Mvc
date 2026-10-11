@@ -14,6 +14,8 @@
     <meta property="og:locale" content="@(L.Culture == "ar" ? "ar_EG" : "en_EG")" />
     <meta property="og:locale:alternate" content="@(L.Culture == "ar" ? "en_EG" : "ar_EG")" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:image" content="@(Cfg["Zonta:PublicUrl"] ?? "https://shopzonta.com")/images/categories/collections/arab-heritage.jpg" />
+    <meta name="twitter:image" content="@(Cfg["Zonta:PublicUrl"] ?? "https://shopzonta.com")/images/categories/collections/arab-heritage.jpg" />
     <link rel="canonical" href="@(ViewData["CanonicalUrl"] ?? (Cfg["Zonta:PublicUrl"] ?? "https://shopzonta.com") + "/")" />
     <link rel="icon" type="image/svg+xml" href="~/favicon.svg" asp-append-version="true" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -165,6 +167,16 @@
             <div class="footer-bottom d-flex justify-content-between align-items-center pt-3 mt-4">
                 <span class="small">&copy; 2026 - Zonta Egypt</span>
                 <span class="small">@L.Get("Common.Cod") · @L.CurrencyLabel <span class="text-muted">(to be confirmed)</span></span>
+            </div>
+
+            @* Verified brand imagery from @shop.zonta (local assets) *@
+            <div class="footer-gallery row row-cols-3 row-cols-md-6 g-2 mt-3">
+                <div class="col"><img src="/images/categories/footwear/habibi-sneakers.jpg" alt="@L.Get("Gallery.AltHabibi")" loading="lazy" class="img-fluid rounded w-100" style="aspect-ratio: 1/1; object-fit: cover;" /></div>
+                <div class="col"><img src="/images/categories/collections/arab-heritage.jpg" alt="@L.Get("Gallery.AltHeritage")" loading="lazy" class="img-fluid rounded w-100" style="aspect-ratio: 1/1; object-fit: cover;" /></div>
+                <div class="col"><img src="/images/categories/accessories/wear-language.jpg" alt="@L.Get("Gallery.AltLanguage")" loading="lazy" class="img-fluid rounded w-100" style="aspect-ratio: 1/1; object-fit: cover;" /></div>
+                <div class="col"><img src="/images/categories/collections/pride-collection.jpg" alt="@L.Get("Gallery.AltPride")" loading="lazy" class="img-fluid rounded w-100" style="aspect-ratio: 1/1; object-fit: cover;" /></div>
+                <div class="col"><img src="/images/categories/apparel/lifestyle-brunch.jpg" alt="@L.Get("Gallery.AltShop")" loading="lazy" class="img-fluid rounded w-100" style="aspect-ratio: 1/1; object-fit: cover;" /></div>
+                <div class="col"><img src="/images/brand/profile.jpg" alt="@L.Get("Gallery.AltShop")" loading="lazy" class="img-fluid rounded w-100" style="aspect-ratio: 1/1; object-fit: cover;" /></div>
             </div>
         </div>
     </footer>
