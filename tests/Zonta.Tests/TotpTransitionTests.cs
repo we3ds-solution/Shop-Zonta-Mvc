@@ -7,7 +7,8 @@ namespace Zonta.Tests;
 public class TotpServiceTests
 {
     // RFC 6238 Appendix B, SHA-1 vectors (secret ASCII "12345678901234567890").
-    private const string RfcSecret = "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ";
+    // Public test vector — not a production secret.
+    private const string RfcSecret = "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ"; // gitleaks:allow
 
     [Theory]
     [InlineData(59, "287082")]

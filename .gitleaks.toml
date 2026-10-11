@@ -1,12 +1,14 @@
-title = "Zonta Egypt secret-scan policy (gitleaks)"
+# Project gitleaks config — extends defaults.
+# https://github.com/gitleaks/gitleaks#configuration
 
-# Part of issue #3 follow-up: history rewrite still needs maintainer approval,
-# but no NEW secrets may be committed. CI runs gitleaks with this config.
+title = "Shop-Zonta-Mvc"
 
 [extend]
 useDefault = true
 
 [allowlist]
-description = "Test/placeholder credentials in docs and examples"
-paths = ['''\.env\.example$''', '''docs/.*\.md$''', '''README\.md$''', '''QUICKSTART\.md$''']
-regexes = ['''(?i)(ChangeMe|YOUR_|EXAMPLE|placeholder|admin@example\.com)''']
+description = "Generated / test-only paths and known public vectors"
+paths = [
+  '''(?i)App_Data[/\\]mail''',
+  '''(?i)\.eml$''',
+]

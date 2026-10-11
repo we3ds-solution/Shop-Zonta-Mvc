@@ -58,6 +58,10 @@ appsettings.Development.local.json
 secrets.json
 *.publishsettings
 
+# Dev file-based email sender output (tokens in confirmation links)
+**/App_Data/mail/
+*.eml
+
 # Database files
 *.mdf
 *.ldf

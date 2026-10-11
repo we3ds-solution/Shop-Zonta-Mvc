@@ -17,18 +17,9 @@ jobs:
         with:
           dotnet-version: "9.0.x"
 
-      - name: Restore
-        run: dotnet restore market-mvc.sln
-
-      - name: Build
-        run: dotnet build market-mvc.sln --no-restore --nologo
-
-      - name: Test
-        run: dotnet test market-mvc.sln --no-build --nologo
-
       # Official Gitleaks CLI (no org license required).
-      # Scans the working tree only (--no-git) so known historical secrets
-      # tracked in issue #13 do not fail every build. New secrets in files still fail CI.
+      # Run BEFORE tests so App_Data/mail/*.eml written by the dev email
+      # sender are not scanned. History secrets are tracked in issue #13.
       - name: Install Gitleaks
         shell: pwsh
         run: |
@@ -52,3 +43,12 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           & $env:GITLEAKS_EXE detect --no-git --source . --verbose --redact --exit-code 1
+
+      - name: Restore
+        run: dotnet restore market-mvc.sln
+
+      - name: Build
+        run: dotnet build market-mvc.sln --no-restore --nologo
+
+      - name: Test
+        run: dotnet test market-mvc.sln --no-build --nologo
