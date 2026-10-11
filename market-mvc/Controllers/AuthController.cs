@@ -5,6 +5,7 @@ using market_mvc.Domain.entity;
 using market_mvc.Domain.ViewModels.Auth;
 using market_mvc.Features.Auth.Email;
 using market_mvc.Features.Auth.Totp;
+using market_mvc.Infrastructure.Localization;
 using market_mvc.Infrastructure.Security;
 
 namespace market_mvc.Controllers
@@ -17,17 +18,21 @@ namespace market_mvc.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly IZontaLocalizer _localizer;
         private readonly ILogger<AuthController> _logger;
+        private string _L(string key) => _localizer.Get(key);
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
+            IZontaLocalizer localizer,
             ILogger<AuthController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _localizer = localizer;
             _logger = logger;
         }
 
@@ -57,13 +62,13 @@ namespace market_mvc.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                ModelState.AddModelError(string.Empty, _L("Msg.InvalidLogin"));
                 return View(model);
             }
 
             if (!user.IsActive)
             {
-                ModelState.AddModelError(string.Empty, "Account is deactivated.");
+                ModelState.AddModelError(string.Empty, _L("Msg.Deactivated"));
                 _logger.LogWarning($"Attempted login for deactivated account: {user.Email}");
                 return View(model);
             }
@@ -95,11 +100,11 @@ namespace market_mvc.Controllers
             if (result.IsLockedOut)
             {
                 _logger.LogWarning($"User account {user.Email} locked out");
-                ModelState.AddModelError(string.Empty, "Account locked. Please try again later.");
+                ModelState.AddModelError(string.Empty, _L("Msg.Locked"));
                 return View(model);
             }
 
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            ModelState.AddModelError(string.Empty, _L("Msg.InvalidLogin"));
             return View(model);
         }
 
@@ -129,7 +134,7 @@ namespace market_mvc.Controllers
             var user = await _userManager.FindByIdAsync(model.UserId);
             if (user == null || !user.IsActive || !user.TwoFactorEnabled || string.IsNullOrEmpty(user.TwoFactorSecret))
             {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                ModelState.AddModelError(string.Empty, _L("Msg.InvalidLogin"));
                 return View(model);
             }
 
@@ -147,7 +152,7 @@ namespace market_mvc.Controllers
             }
 
             await _userManager.AccessFailedAsync(user);
-            ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
+            ModelState.AddModelError(string.Empty, _L("Msg.BadCode"));
             return View(model);
         }
 
@@ -198,7 +203,7 @@ namespace market_mvc.Controllers
             user.TwoFactorEnabled = true;
             await _userManager.UpdateAsync(user);
             _logger.LogInformation($"User {user.Email} enabled 2FA");
-            TempData["SuccessMessage"] = "Two-factor authentication enabled.";
+            TempData["SuccessMessage"] = _L("Msg.TwoFaOn");
             return RedirectToAction(nameof(Profile));
         }
 
@@ -216,7 +221,7 @@ namespace market_mvc.Controllers
             user.TwoFactorEnabled = false;
             await _userManager.UpdateAsync(user);
             _logger.LogInformation($"User {user.Email} disabled 2FA");
-            TempData["SuccessMessage"] = "Two-factor authentication disabled.";
+            TempData["SuccessMessage"] = _L("Msg.TwoFaOff");
             return RedirectToAction(nameof(Profile));
         }
 
@@ -243,7 +248,7 @@ namespace market_mvc.Controllers
             var existingUser = await _userManager.FindByEmailAsync(model.Email);
             if (existingUser != null)
             {
-                ModelState.AddModelError("Email", "Email is already registered.");
+                ModelState.AddModelError("Email", _L("Msg.EmailTaken"));
                 return View(model);
             }
 
@@ -423,3 +428,4 @@ namespace market_mvc.Controllers
         }
     }
 }
+

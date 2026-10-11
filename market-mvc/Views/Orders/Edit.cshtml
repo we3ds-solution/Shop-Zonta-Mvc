@@ -25,7 +25,7 @@
                     <dt class="col-sm-4">@L.Get("Orders.Total") (@(L.Culture == "ar" ? "محسوب خادميا" : "server-calculated"))</dt>
                     <dd class="col-sm-8 fw-bold">@Model.Total.ToString("N2") EGP</dd>
                     <dt class="col-sm-4">@L.Get("Orders.Status")</dt>
-                    <dd class="col-sm-8">@Model.Status · @Model.PaymentStatus</dd>
+                    <dd class="col-sm-8">@L.StatusName(Model.Status) · @L.PayName(Model.PaymentStatus)</dd>
                 </dl>
                 <p class="small text-muted mb-0 mt-2">Totals, payment status, and customer are never edited here — only the fulfillment status transitions.</p>
             </div>

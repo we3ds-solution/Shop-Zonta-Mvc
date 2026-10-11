@@ -26,6 +26,7 @@ namespace market_mvc.Controllers
         private readonly IMapper _mapper;
         private readonly IImageService _imageService;
         private readonly IZontaLocalizer _localizer;
+        private string _L(string key) => _localizer.Get(key);
         private readonly ILogger<ProductsController> _logger;
 
         public ProductsController(
@@ -127,7 +128,7 @@ namespace market_mvc.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("ImageFile", "Failed to upload image. Please try again.");
+                        ModelState.AddModelError("ImageFile", _L("Msg.ImageFail"));
                         await SetupCreateEditViewBag();
                         return View(viewModel);
                     }
@@ -138,7 +139,7 @@ namespace market_mvc.Controllers
                 }
 
                 var product = await _mediator.Send(command);
-                TempData["SuccessMessage"] = $"Product '{product.Name}' created successfully.";
+                TempData["SuccessMessage"] = string.Format(_L("Msg.ProductCreated"), product.Name);
                 return RedirectToAction(nameof(Index));
             }
             
@@ -197,7 +198,7 @@ namespace market_mvc.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("ImageFile", "Failed to upload image. Please try again.");
+                        ModelState.AddModelError("ImageFile", _L("Msg.ImageFail"));
                         await SetupCreateEditViewBag(viewModel.Id);
                         return View(viewModel);
                     }
@@ -215,7 +216,7 @@ namespace market_mvc.Controllers
                 }
 
                 var product = await _mediator.Send(command);
-                TempData["SuccessMessage"] = $"Product '{product.Name}' updated successfully.";
+                TempData["SuccessMessage"] = string.Format(_L("Msg.ProductUpdated"), product.Name);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -261,19 +262,20 @@ namespace market_mvc.Controllers
                 var success = await _mediator.Send(new DeleteProductCommand(id));
                 if (success)
                 {
-                    TempData["SuccessMessage"] = $"Product '{product.Name}' deleted successfully.";
+                    TempData["SuccessMessage"] = string.Format(_L("Msg.ProductDeleted"), product.Name);
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Failed to delete product.";
+                    TempData["ErrorMessage"] = _L("Msg.ProductDeleteFail");
                 }
             }
             else
             {
-                TempData["ErrorMessage"] = "Product not found.";
+                TempData["ErrorMessage"] = _L("Msg.ProductNotFound");
             }
             return RedirectToAction(nameof(Index));
         }
     }
 }
+
 
