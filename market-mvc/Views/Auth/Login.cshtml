@@ -46,6 +46,17 @@
                         <a asp-action="ForgotPassword" asp-controller="Auth" class="text-decoration-none">@L.Get("Auth.Forgot")</a>
                     </div>
 
+                    @if (ViewBag.ShowResend == true)
+                    {
+                        <div class="alert alert-warning mt-3" role="alert">
+                            <form asp-action="ResendConfirmation" asp-controller="Auth" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="email" value="@ViewBag.ResendEmail" />
+                                <button type="submit" class="btn btn-link p-0 align-baseline">Resend confirmation</button>
+                            </form>
+                        </div>
+                    }
+
                     <hr class="my-4" />
 
                     <div class="text-center">

@@ -100,8 +100,11 @@ dotnet test market-mvc.sln --no-build
 ```
 
 Tests cover: server-side order totals, cart totals, stock validation, EGP default,
-order-item snapshots, variant labels/pricing/availability, EN/AR localization switching.
-CI (`.github/workflows/build-test.yml`) runs build+test.
+order-item snapshots, variant labels/pricing/availability, EN/AR localization switching
+(including validation messages), TOTP vectors, order transitions, controller ownership,
+full HTTP flows (register/login/checkout/ownership/authorization) via WebApplicationFactory
++ SQLite, Paymob provider with mocked gateway, rate-limit keys, email senders, shipping rules.
+CI (`.github/workflows/build-test.yml`) runs build+test+secret-scan.
 Note: on locked-down Windows paths (e.g. Downloads) WDAC may block the test runner;
 copy the repo to an approved path and run `dotnet test` there (verified 14/14).
 
@@ -161,7 +164,8 @@ copy the repo to an approved path and run `dotnet test` there (verified 14/14).
   invented); variants start inactive/zero-stock for admin confirmation.
 - EN/AR UI switching is implemented (real cookie-driven culture + RTL + localized nav/hero/
   currency, product names never translated); deeper view-by-view translation is follow-up.
-- No online payment gateway — COD workflow only.
+- No online payment gateway configured — COD default behind `IPaymentProvider`;
+  a Paymob provider is implemented and mock-tested, awaiting live API keys.
 - No AR/EN language switcher (no fake selector); layout is LTR with RTL-ready CSS basics.
 - Legal/shipping/returns pages are drafts, not approved policy.
 - No authorized shopzonta.com sync API — manual import only (no fragile scraper).

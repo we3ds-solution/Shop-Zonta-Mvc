@@ -20,20 +20,27 @@ namespace market_mvc.Infrastructure.Security
             return remoteIp.Trim().ToLowerInvariant();
         }
 
-        public static IServiceCollection AddAuthRateLimiting(this IServiceCollection services)
+        public static IServiceCollection AddAuthRateLimiting(this IServiceCollection services, IConfiguration? config = null)
         {
+            // Configurable so integration tests can raise the ceiling
+            // (Zonta:RateLimit:PermitLimit / WindowMinutes, defaults 5/1).
+            // Read per-request (not at startup) so test/host configuration
+            // overrides always apply.
             services.AddRateLimiter(options =>
             {
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
                 options.AddPolicy(AuthPolicy, context =>
                 {
+                    var cfg = context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration ?? config;
+                    var permits = cfg?.GetValue<int?>("Zonta:RateLimit:PermitLimit") is { } p && p > 0 ? p : 5;
+                    var minutes = cfg?.GetValue<int?>("Zonta:RateLimit:WindowMinutes") is { } m && m > 0 ? m : 1;
                     var ip = context.Connection.RemoteIpAddress;
                     return RateLimitPartition.GetFixedWindowLimiter(
                         PartitionKey(ip?.ToString()),
                         _ => new FixedWindowRateLimiterOptions
                         {
-                            PermitLimit = 5,
-                            Window = TimeSpan.FromMinutes(1),
+                            PermitLimit = permits,
+                            Window = TimeSpan.FromMinutes(minutes),
                             QueueLimit = 0,
                             AutoReplenishment = true
                         });

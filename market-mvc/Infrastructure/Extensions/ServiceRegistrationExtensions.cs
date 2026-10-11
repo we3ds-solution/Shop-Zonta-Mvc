@@ -75,8 +75,16 @@ namespace market_mvc.Infrastructure.Extensions
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<ICatalogImportService, CatalogImportService>();
-            // Payment readiness (#9): COD default; swap registration to add online providers.
-            services.AddScoped<IPaymentProvider, CashOnDeliveryProvider>();
+            // Payment readiness (#9): COD default; set Payments:Provider=Paymob (plus
+            // Paymob:* secrets) to switch without touching checkout code.
+            services.AddHttpClient<PaymobProvider>();
+            services.AddScoped<IPaymentProvider>(sp =>
+            {
+                var config = sp.GetRequiredService<IConfiguration>();
+                if (string.Equals(config["Payments:Provider"], "Paymob", StringComparison.OrdinalIgnoreCase))
+                    return (IPaymentProvider)sp.GetRequiredService<PaymobProvider>();
+                return new CashOnDeliveryProvider();
+            });
             services.AddScoped<IProductServ, ProductServ>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IHomeService, HomeService>();
@@ -112,15 +120,21 @@ namespace market_mvc.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Register database context
+        /// Register database context. Provider is explicit via Database:Provider
+        /// (SqlServer default; Sqlite for hermetic integration tests) so test
+        /// overrides never fight the production registration (issue #8).
         /// </summary>
         public static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)
         {
+            var provider = configuration.GetValue<string>("Database:Provider");
+            var connection = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection")
-                )
-            );
+            {
+                if (string.Equals(provider, "Sqlite", StringComparison.OrdinalIgnoreCase))
+                    options.UseSqlite(connection);
+                else
+                    options.UseSqlServer(connection);
+            });
             return services;
         }
 
@@ -142,7 +156,7 @@ namespace market_mvc.Infrastructure.Extensions
 
             // Session-backed cart (no extra infrastructure).
             services.AddDistributedMemoryCache();
-            services.AddAuthRateLimiting();
+            services.AddAuthRateLimiting(configuration);
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromHours(4);
