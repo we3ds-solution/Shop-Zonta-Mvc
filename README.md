@@ -141,6 +141,44 @@ copy the repo to an approved path and run `dotnet test` there (verified 14/14).
 - [ ] Point domain + verify SEO/canonical URLs.
 - [ ] Optional: purge git history after rotation — `docs/HISTORY-PURGE.md`.
 
+## Deploying to MonsterASP (runasp.net)
+
+The app ships with an IIS-ready `market-mvc/web.config` (InProcess, `AspNetCoreModuleV2`) and
+`Properties/PublishProfiles/MonsterAsp.pubxml`.
+
+1. **Publish** from Visual Studio: `Build → Publish` using the publish profile you downloaded
+   from the MonsterASP Control Panel (Web Deploy), or `dotnet publish market-mvc/market-mvc.csproj -c Release`
+   and upload the output folder via the Control Panel's File Manager / FTP.
+2. **Website settings** (Control Panel): runtime `.NET 9`, hosting model `InProcess` (recommended),
+   32-bit default is fine.
+3. **Database**: create an MSSQL database in the Control Panel. Its hostname resolves to a
+   private IP (`10.x`) — reachable only from MonsterASP web servers, not from your PC.
+   Copy the connection string and set it as an **environment variable** on the website
+   (Control Panel → environment variables, applied on next start):
+
+   | Name | Value |
+   |------|-------|
+   | `ConnectionStrings__DefaultConnection` | `Server=dbXXXXX.databaseasp.net;Database=dbXXXXX;User Id=dbXXXXX;Password=...;Encrypt=False;MultipleActiveResultSets=True` |
+
+   Never put the connection string in `appsettings.Production.json` in the repo (secrets stay out of git).
+4. **First start — schema is created automatically**: the app detects a fresh/empty database,
+   applies all migrations and seeds roles + the 4 brand categories itself
+   (no `ZONTA_AUTO_MIGRATE` needed for an empty database; that flag is only required to migrate an
+   *existing* production database, after backup + review).
+5. **First admin** (optional, first boot only): also set `ZONTA_SEED_ADMIN=true`,
+   `ZONTA_ADMIN_EMAIL=...`, `ZONTA_ADMIN_PASSWORD=<strong>`, then unset them after login works.
+6. **HTTPS**: Control Panel → SSL → issue the free Let's Encrypt certificate; the app enforces
+   HTTPS + HSTS in production.
+7. **If the site returns HTTP 500.30** (app failed to start): open the Control Panel File Manager
+   and read `logs/stdout_*.log` — the exact startup exception is written there
+   (`web.config` has `stdoutLogEnabled="true"` for this purpose; flip it to `false` once the site runs).
+8. **Swagger** (optional): set `Swagger__Enabled=true` to expose `/swagger` on the server;
+   it is off in production by default.
+9. **SMTP**: set `Smtp__Host/Port/User/Pass/From` to enable real confirmation/reset emails
+   (issue #4) — until then login works without email confirmation.
+
+Free plan note: 256 MB dedicated RAM. The stack fits, but upgrade if the app pool recycles under load.
+
 ## Security notes
 
 - Remediated: live DB connection string removed from `appsettings.json` (treat as compromised, rotate now).

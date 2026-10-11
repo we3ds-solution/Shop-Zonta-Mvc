@@ -12,7 +12,8 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
-[Ll]ogs/
+[Ll]ogs/*
+!**/logs/README.md
 
 # Visual Studio
 .vs/
@@ -99,3 +100,6 @@ publish/
 # Database backups
 *.bak
 *.backup
+
+# Per-site publish profiles downloaded from the hosting panel (contain site/account IDs)
+**/*-WebDeploy.pubxml

@@ -23,7 +23,8 @@ public class ZontaWebFactory : WebApplicationFactory<Program>
                 {
                   "Zonta": { "RateLimit": { "PermitLimit": 1000 }, "FreeShippingThreshold": 750, "ShippingFee": 0 },
                   "Database": { "Provider": "Sqlite" },
-                  "ConnectionStrings": { "DefaultConnection": "Data Source: __DB__" }
+                  "ConnectionStrings": { "DefaultConnection": "Data Source: __DB__" },
+                  "Swagger": { "Enabled": false }
                 }
                 """.Replace("__DB__", _dbPath.Replace("\\", "\\\\"));
             var bytes = System.Text.Encoding.UTF8.GetBytes(json);

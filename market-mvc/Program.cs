@@ -46,6 +46,9 @@ var app = builder.Build();
 // --------------------
 // Middleware pipeline
 // --------------------
+// IIS/MonsterASP: trust X-Forwarded-* from reverse proxy FIRST (fixes client IPs + HTTPS detection).
+app.UseForwardedHeadersConfiguration();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseProductionPipeline();
@@ -53,6 +56,14 @@ if (!app.Environment.IsDevelopment())
 else
 {
     app.UseDevelopmentPipeline();
+}
+
+// Swagger UI gated by Swagger:Enabled. The config check runs HERE (before the
+// method is JIT-compiled) so the SwaggerUI assembly is never loaded when disabled
+// — required for WDAC-restricted environments and safe production defaults.
+if (app.Configuration.GetValue<bool>("Swagger:Enabled"))
+{
+    app.UseSwaggerConfiguration(app.Configuration);
 }
 
 app.UseCustomMiddleware();
@@ -66,6 +77,9 @@ app.UseRoutingConfiguration(app.Environment);
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Health check for uptime monitoring (no auth, no rate limit, no DB dependency).
+app.MapHealthEndpoint();
 
 // Seed data
 await app.SeedDatabaseAsync();

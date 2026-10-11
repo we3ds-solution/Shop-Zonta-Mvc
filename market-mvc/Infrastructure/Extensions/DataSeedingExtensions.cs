@@ -33,15 +33,28 @@ namespace market_mvc.Infrastructure.Extensions
                     var autoMigrate = string.Equals(
                         Environment.GetEnvironmentVariable("ZONTA_AUTO_MIGRATE"),
                         "true", StringComparison.OrdinalIgnoreCase);
-                    var pending = await context.Database.GetPendingMigrationsAsync();
-                    if (pending.Any() && !autoMigrate)
+
+                    var pending = (await context.Database.GetPendingMigrationsAsync()).ToList();
+
+                    // Fresh/empty database (first deploy): no migrations applied yet, so
+                    // auto-migrate is safe — there's no production data to break.
+                    var isFreshDatabase = !(await context.Database.GetAppliedMigrationsAsync()).Any();
+
+                    if (pending.Any() && !autoMigrate && !isFreshDatabase)
                     {
                         logger.LogCritical(
-                            "Pending migrations detected in production ({Migrations}) but ZONTA_AUTO_MIGRATE is not 'true'. " +
+                            "Pending migrations detected in production on an EXISTING database ({Migrations}) but ZONTA_AUTO_MIGRATE is not 'true'. " +
                             "Refusing to auto-migrate. Apply with backup + reviewed plan: dotnet ef database update.",
                             string.Join(", ", pending));
                         throw new InvalidOperationException(
-                            "Pending production migrations require explicit authorization (ZONTA_AUTO_MIGRATE=true) with backup + review.");
+                            "Pending production migrations on an existing database require explicit authorization (ZONTA_AUTO_MIGRATE=true) with backup + review.");
+                    }
+
+                    if (pending.Any() && isFreshDatabase)
+                    {
+                        logger.LogInformation(
+                            "Fresh/empty production database detected (no applied migrations). Auto-migrating safely: {Migrations}.",
+                            string.Join(", ", pending));
                     }
                 }
 

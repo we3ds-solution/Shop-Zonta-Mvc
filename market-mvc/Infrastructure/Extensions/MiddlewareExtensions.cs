@@ -57,6 +57,49 @@ namespace market_mvc.Infrastructure.Extensions
         }
 
         /// <summary>
+        /// Trust IIS/X-Forwarded headers (MonsterASP reverse proxy) for correct
+        /// client IPs + HTTPS detection. Must run FIRST in the pipeline.
+        /// </summary>
+        public static IApplicationBuilder UseForwardedHeadersConfiguration(this IApplicationBuilder app)
+        {
+            var opts = app.ApplicationServices.GetRequiredService<Microsoft.Extensions.Options.IOptions<Microsoft.AspNetCore.Builder.ForwardedHeadersOptions>>();
+            app.UseForwardedHeaders(opts.Value);
+            return app;
+        }
+
+        /// <summary>
+        /// Swagger UI + JSON endpoint. Gated by Swagger:Enabled (bool).
+        /// Off in Production by default; enabled in Development or when config says true.
+        /// </summary>
+        public static IApplicationBuilder UseSwaggerConfiguration(this IApplicationBuilder app, IConfiguration config)
+        {
+            if (!config.GetValue<bool>("Swagger:Enabled")) return app;
+
+            app.UseSwagger(options =>
+            {
+                options.RouteTemplate = "swagger/{documentName}/swagger.json";
+            });
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Zonta Egypt API v1");
+                options.RoutePrefix = "swagger";
+                options.DocumentTitle = "Zonta Egypt — API Docs";
+                options.DisplayRequestDuration();
+                options.EnableDeepLinking();
+            });
+            return app;
+        }
+
+        /// <summary>
+        /// Health check endpoint for uptime monitoring (MonsterASP/load balancer).
+        /// </summary>
+        public static IEndpointRouteBuilder MapHealthEndpoint(this IEndpointRouteBuilder endpoints)
+        {
+            endpoints.MapHealthChecks("/health");
+            return endpoints;
+        }
+
+        /// <summary>
         /// Configure routing and authentication.
         /// UseRateLimiter MUST run after UseRouting so endpoint metadata
         /// ([EnableRateLimiting]) is visible; before it, policies never apply.

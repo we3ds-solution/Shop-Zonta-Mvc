@@ -175,6 +175,40 @@ namespace market_mvc.Infrastructure.Extensions
                 options.RequestCultureProviders.Insert(0, new Microsoft.AspNetCore.Localization.CookieRequestCultureProvider());
             });
 
+            // IIS/MonsterASP behind Kestrel: trust loopback proxy for real client IPs
+            // (fixes rate-limit partition + HTTPS redirect detection behind reverse proxy).
+            services.Configure<Microsoft.AspNetCore.Builder.ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor
+                    | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+                    | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedHost;
+                // Default KnownProxies already includes loopback (IIS on same box).
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+                options.KnownProxies.Add(System.Net.IPAddress.Loopback);
+                options.KnownProxies.Add(System.Net.IPAddress.IPv6Loopback);
+            });
+
+            // Swagger/OpenAPI (gated by Swagger:Enabled config — off in Production by default).
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
+                {
+                    Title = "Zonta Egypt API",
+                    Version = "v1",
+                    Description = "Zonta Egypt — Arabic sneakers & streetwear. COD/Paymob payments, EN/AR localization.",
+                    Contact = new Microsoft.OpenApi.OpenApiContact
+                    {
+                        Name = "Zonta Egypt",
+                        Url = new Uri("https://shopzonta.com")
+                    }
+                });
+            });
+
+            // Lightweight health check for uptime monitoring (no external dependencies).
+            services.AddHealthChecks();
+
             return services;
         }
     }
