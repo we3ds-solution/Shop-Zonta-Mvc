@@ -1,12 +1,14 @@
 @model IEnumerable<market_mvc.Domain.entity.Order>
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
-    ViewData["Title"] = "Orders";
-    ViewBag.PageTitle = "Order Management";
+    ViewData["Title"] = L.Get("Orders.Title");
+    ViewBag.PageTitle = L.Culture == "ar" ? "إدارة الطلبات" : "Order Management";
     ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
     {
-        ("Orders", "Orders", "Index")
+        (L.Get("Orders.Title"), "Orders", "Index")
     };
+    var canManage = User.IsInRole("Admin") || User.IsInRole("Manager");
 }
 
 @await Html.PartialAsync("_PageHeader")
@@ -23,7 +25,7 @@
     <div class="content-card">
         <div class="action-buttons">
             <a asp-controller="Cart" asp-action="Index" class="btn btn-custom-primary">
-                <i class="fas fa-plus me-2"></i>Start new order
+                <i class="fas fa-plus me-2"></i>@(L.Culture == "ar" ? "بدء طلب جديد" : "Start new order")
             </a>
         </div>
 
@@ -33,10 +35,10 @@
                 <table class="table table-enhanced mb-0">
                     <thead>
                         <tr>
-                            <th><i class="fas fa-hashtag me-2"></i>Order ID</th>
-                            <th><i class="fas fa-dollar-sign me-2"></i>Total</th>
-                            <th><i class="fas fa-calendar me-2"></i>Created Date</th>
-                            <th><i class="fas fa-cogs me-2"></i>Actions</th>
+                            <th><i class="fas fa-hashtag me-2"></i>@(L.Culture == "ar" ? "رقم الطلب" : "Order ID")</th>
+                            <th><i class="fas fa-dollar-sign me-2"></i>@L.Get("Orders.Total")</th>
+                            <th><i class="fas fa-calendar me-2"></i>@L.Get("Orders.Date")</th>
+                            <th><i class="fas fa-cogs me-2"></i></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,16 +56,19 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-dark btn-sm" title="View Details">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-dark btn-sm" title="@L.Get("Orders.ViewDetails")">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-dark btn-sm" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <button type="button" class="btn btn-danger btn-sm" title="Delete"
-                                                onclick="showDeleteModal('Order', '@item.Id', 'Order #@item.Id.ToString().Substring(0, 8)', '@Url.Action("Delete", "Orders", new { id = item.Id })', 'Total: @item.Total.ToString("N2") EGP - Created: @item.CreatedAt.ToString("yyyy-MM-dd")')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        @if (canManage)
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-dark btn-sm" title="@L.Get("Orders.UpdateStatus")">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-danger btn-sm" title="@L.Get("Del.Title")"
+                                                    onclick="showDeleteModal('Order', '@item.Id', 'Order #@item.Id.ToString().Substring(0, 8)', '@Url.Action("Delete", "Orders", new { id = item.Id })', 'Total: @item.Total.ToString("N2") EGP - Created: @item.CreatedAt.ToString("yyyy-MM-dd")')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        }
                                     </div>
                                 </td>
                             </tr>
@@ -76,10 +81,10 @@
         {
             <div class="text-center py-5">
                 <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
-                <h4 class="text-muted">No Orders Found</h4>
-                <p class="text-muted">Start by creating your first order.</p>
-                <a asp-action="Create" class="btn btn-custom-primary">
-                    <i class="fas fa-plus me-2"></i>Create First Order
+                <h4 class="text-muted">@L.Get("Orders.Empty")</h4>
+                <p class="text-muted">@L.Get("Orders.EmptyHint")</p>
+                <a asp-controller="Cart" asp-action="Index" class="btn btn-custom-primary">
+                    <i class="fas fa-plus me-2"></i>@L.Get("Cart.Checkout")
                 </a>
             </div>
         }

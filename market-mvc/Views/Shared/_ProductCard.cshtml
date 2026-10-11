@@ -1,4 +1,5 @@
 @model market_mvc.Domain.ViewModels.Product.ProductCardVM
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 <div class="col">
     <div class="card product-card h-100 shadow-sm">
@@ -12,7 +13,7 @@
                     }
                     else
                     {
-                        <text>Sale</text>
+                        <text>@L.Get("Card.Sale")</text>
                     }
                 </span>
             </div>
@@ -22,7 +23,7 @@
         {
             <div class="position-absolute top-0 end-0 m-2">
                 <span class="badge bg-warning text-dark">
-                    <i class="fas fa-star"></i> Featured
+                    <i class="fas fa-star"></i> @L.Get("Card.Featured")
                 </span>
             </div>
         }
@@ -30,7 +31,7 @@
         @if (Model.IsOutOfStock)
         {
             <div class="position-absolute top-50 start-50 translate-middle">
-                <span class="badge bg-danger fs-6 px-3 py-2">Out of Stock</span>
+                <span class="badge bg-danger fs-6 px-3 py-2">@L.Get("Card.OOS")</span>
             </div>
         }
 
@@ -75,7 +76,7 @@
                             <span class="text-muted text-decoration-line-through">@Model.CompareAtPrice.Value.ToString("N2") EGP</span>
                             @if (Model.SavingsAmount.HasValue)
                             {
-                                <small class="text-success fw-bold">Save @Model.SavingsAmount.Value.ToString("N2") EGP</small>
+                                <small class="text-success fw-bold">@L.Get("Card.Save") @Model.SavingsAmount.Value.ToString("N2") EGP</small>
                             }
                         }
                     </div>
@@ -84,7 +85,7 @@
                 <div class="d-flex gap-2">
                     <a asp-controller="Products" asp-action="Details" asp-route-id="@Model.Id"
                        class="btn btn-outline-primary btn-sm flex-fill" aria-label="View @Model.Name">
-                        <i class="fas fa-eye me-1"></i>View
+                        <i class="fas fa-eye me-1"></i>@L.Get("Card.View")
                     </a>
                     @if (!Model.IsOutOfStock && !Model.HasVariants)
                     {
@@ -93,7 +94,7 @@
                             <input type="hidden" name="ProductId" value="@Model.Id" />
                             <input type="hidden" name="Quantity" value="1" />
                             <button type="submit" class="btn btn-primary btn-sm flex-fill" aria-label="Add @Model.Name to cart">
-                                <i class="fas fa-shopping-bag me-1"></i>Add to Cart
+                                <i class="fas fa-shopping-bag me-1"></i>@L.Get("Card.Add")
                             </button>
                         </form>
                     }
@@ -101,13 +102,13 @@
                     {
                         <a asp-controller="Products" asp-action="Details" asp-route-id="@Model.Id"
                            class="btn btn-primary btn-sm flex-fill" aria-label="Select options for @Model.Name">
-                            <i class="fas fa-list me-1"></i>Options
+                            <i class="fas fa-list me-1"></i>@L.Get("Card.Options")
                         </a>
                     }
                     else
                     {
                         <button class="btn btn-secondary btn-sm flex-fill" disabled>
-                            <i class="fas fa-times me-1"></i>Out of Stock
+                            <i class="fas fa-times me-1"></i>@L.Get("Card.OOS")
                         </button>
                     }
                 </div>

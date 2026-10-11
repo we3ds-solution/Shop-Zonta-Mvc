@@ -11,7 +11,7 @@
     <div class="row align-items-end">
         <div class="col-12 col-md-4 col-lg-3">
             <label for="searchInput" class="form-label">
-                <i class="fas fa-search me-1"></i>Search
+                <i class="fas fa-search me-1"></i>@L.Get("Filter.Search")
             </label>
             <input type="text" id="searchInput" class="form-control search-input" placeholder="@searchPlaceholder" />
         </div>
@@ -21,9 +21,9 @@
             @foreach (var filter in filterOptions)
             {
                 <div class="col-12 col-md-6 col-lg-2">
-                    <label for="@filter.Key" class="form-label">@filter.Key.Replace("Filter", "")</label>
+                    <label for="@filter.Key" class="form-label">@(filter.Key == "PriceRange" ? L.Get("Filter.PriceRange") : filter.Key.Replace("Filter", ""))</label>
                     <select id="@filter.Key" name="@filter.Key" class="form-select filter-select">
-                        <option value="">All</option>
+                        <option value="">@L.Get("Shop.All")</option>
                         @foreach (var option in filter.Value)
                         {
                             <option value="@option.Value">@option.Text</option>
@@ -34,7 +34,7 @@
         }
         
         <div class="col-12 col-md-6 col-lg-2">
-            <label for="pageSize" class="form-label">Per Page</label>
+            <label for="pageSize" class="form-label">@L.Get("Filter.PerPage")</label>
             <select id="pageSize" class="form-select filter-select">
                 <option value="5">5</option>
                 <option value="10" selected>10</option>
@@ -46,10 +46,10 @@
         <div class="col-12 col-md-12 col-lg-3">
             <div class="d-flex gap-2 flex-column flex-lg-row">
                 <button type="button" id="searchBtn" class="btn btn-custom-primary search-btn flex-fill">
-                    <i class="fas fa-search me-1"></i>Search
+                    <i class="fas fa-search me-1"></i>@L.Get("Filter.SearchBtn")
                 </button>
                 <button type="button" id="clearFilters" class="btn btn-outline-secondary clear-btn flex-fill">
-                    <i class="fas fa-times me-1"></i>Clear
+                    <i class="fas fa-times me-1"></i>@L.Get("Filter.Clear")
                 </button>
             </div>
         </div>
@@ -62,5 +62,5 @@
     <div class="spinner-border spinner-border-custom" role="status">
         <span class="visually-hidden">Loading...</span>
     </div>
-    <p class="mt-2 text-muted">Searching...</p>
+    <p class="mt-2 text-muted">@L.Get("Filter.Loading")</p>
 </div>

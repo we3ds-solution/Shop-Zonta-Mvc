@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using market_mvc.Domain.entity;
 using market_mvc.Domain.ViewModels.Auth;
+using market_mvc.Features.Auth.Email;
+using market_mvc.Features.Auth.Totp;
+using market_mvc.Infrastructure.Security;
 
 namespace market_mvc.Controllers
 {
@@ -12,15 +16,18 @@ namespace market_mvc.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailSender _emailSender;
         private readonly ILogger<AuthController> _logger;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
+            IEmailSender emailSender,
             ILogger<AuthController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
             _logger = logger;
         }
 
@@ -39,6 +46,7 @@ namespace market_mvc.Controllers
         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting(RateLimiting.AuthPolicy)]
         public async Task<IActionResult> Login(LoginVM model, string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -60,12 +68,21 @@ namespace market_mvc.Controllers
                 return View(model);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: true);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure: true);
 
             if (result.Succeeded)
             {
+                // TOTP second factor (issue #4): users with an enrolled secret must
+                // present a current code before any cookie is issued.
+                if (user.TwoFactorEnabled && !string.IsNullOrEmpty(user.TwoFactorSecret))
+                {
+                    return RedirectToAction(nameof(LoginWith2fa),
+                        new { userId = user.Id, returnUrl, rememberMe = model.RememberMe });
+                }
+
                 user.LastLoginAt = DateTime.UtcNow;
                 await _userManager.UpdateAsync(user);
+                await _signInManager.SignInAsync(user, model.RememberMe);
 
                 _logger.LogInformation($"User {user.Email} logged in successfully");
 
@@ -82,13 +99,125 @@ namespace market_mvc.Controllers
                 return View(model);
             }
 
-            if (result.RequiresTwoFactor)
-            {
-                return RedirectToAction("LoginWith2fa", new { returnUrl, model.RememberMe });
-            }
-
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return View(model);
+        }
+
+        /// <summary>
+        /// Display second-factor code form (only reachable after a valid password).
+        /// </summary>
+        [HttpGet]
+        public IActionResult LoginWith2fa(string userId, string? returnUrl = null, bool rememberMe = false)
+        {
+            if (string.IsNullOrEmpty(userId))
+                return RedirectToAction(nameof(Login));
+            ViewData["ReturnUrl"] = returnUrl;
+            return View(new TwoFactorVM { UserId = userId, RememberMe = rememberMe });
+        }
+
+        /// <summary>
+        /// Verify TOTP code and complete sign-in. Failures count toward lockout.
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [EnableRateLimiting(RateLimiting.AuthPolicy)]
+        public async Task<IActionResult> LoginWith2fa(TwoFactorVM model, string? returnUrl = null)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null || !user.IsActive || !user.TwoFactorEnabled || string.IsNullOrEmpty(user.TwoFactorSecret))
+            {
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return View(model);
+            }
+
+            if (TotpService.VerifyCode(user.TwoFactorSecret, model.Code.Trim(), DateTimeOffset.UtcNow))
+            {
+                await _userManager.ResetAccessFailedCountAsync(user);
+                user.LastLoginAt = DateTime.UtcNow;
+                await _userManager.UpdateAsync(user);
+                await _signInManager.SignInAsync(user, model.RememberMe);
+                _logger.LogInformation($"User {user.Email} logged in with 2FA");
+
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    return Redirect(returnUrl);
+                return RedirectToAction("Index", "Home");
+            }
+
+            await _userManager.AccessFailedAsync(user);
+            ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
+            return View(model);
+        }
+
+        /// <summary>
+        /// Display 2FA enrollment (secret + otpauth link for manual entry).
+        /// </summary>
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Setup2fa()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+            var secret = TotpService.GenerateSecret();
+            return View(new Setup2faVM
+            {
+                Secret = secret,
+                KeyUri = TotpService.BuildKeyUri(user.Email ?? user.UserName ?? "user", "Zonta", secret),
+                IsEnabled = user.TwoFactorEnabled
+            });
+        }
+
+        /// <summary>
+        /// Enable 2FA after verifying a code from the freshly enrolled secret.
+        /// </summary>
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Setup2fa(Setup2faVM model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+            if (!ModelState.IsValid)
+            {
+                model.KeyUri = TotpService.BuildKeyUri(user.Email ?? "user", "Zonta", model.Secret);
+                model.IsEnabled = user.TwoFactorEnabled;
+                return View(model);
+            }
+
+            if (!TotpService.VerifyCode(model.Secret, model.Code.Trim(), DateTimeOffset.UtcNow))
+            {
+                ModelState.AddModelError(nameof(model.Code), "Code does not match this secret. Try again.");
+                model.KeyUri = TotpService.BuildKeyUri(user.Email ?? "user", "Zonta", model.Secret);
+                model.IsEnabled = user.TwoFactorEnabled;
+                return View(model);
+            }
+
+            user.TwoFactorSecret = model.Secret;
+            user.TwoFactorEnabled = true;
+            await _userManager.UpdateAsync(user);
+            _logger.LogInformation($"User {user.Email} enabled 2FA");
+            TempData["SuccessMessage"] = "Two-factor authentication enabled.";
+            return RedirectToAction(nameof(Profile));
+        }
+
+        /// <summary>
+        /// Disable 2FA and discard the secret.
+        /// </summary>
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Disable2fa()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+            user.TwoFactorSecret = null;
+            user.TwoFactorEnabled = false;
+            await _userManager.UpdateAsync(user);
+            _logger.LogInformation($"User {user.Email} disabled 2FA");
+            TempData["SuccessMessage"] = "Two-factor authentication disabled.";
+            return RedirectToAction(nameof(Profile));
         }
 
         /// <summary>
@@ -105,6 +234,7 @@ namespace market_mvc.Controllers
         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting(RateLimiting.AuthPolicy)]
         public async Task<IActionResult> Register(RegisterVM model)
         {
             if (!ModelState.IsValid)
@@ -135,6 +265,15 @@ namespace market_mvc.Controllers
                 await _userManager.AddToRoleAsync(user, "Customer");
 
                 _logger.LogInformation($"New user registered: {user.Email}");
+
+                // Email confirmation (issue #4): token flow works with any IEmailSender.
+                // RequireConfirmedEmail stays false until production SMTP is configured,
+                // so registration never locks users out (see README).
+                var confirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var confirmLink = Url.Action("ConfirmEmail", "Auth",
+                    new { userId = user.Id, token = confirmToken }, Request.Scheme);
+                await _emailSender.SendAsync(user.Email!, "Confirm your Zonta account",
+                    $"Please confirm your account by <a href='{confirmLink}'>clicking here</a>.");
 
                 // Sign in the user
                 await _signInManager.SignInAsync(user, isPersistent: false);
@@ -170,6 +309,103 @@ namespace market_mvc.Controllers
         /// Access denied page
         /// </summary>
         public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Confirm email address (token link from registration email).
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+                return RedirectToAction("Index", "Home");
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return NotFound();
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            return View(result.Succeeded);
+        }
+
+        /// <summary>
+        /// Display forgot-password form.
+        /// </summary>
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Handle forgot-password submission. Always shows the same confirmation
+        /// (never reveals whether the email is registered).
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [EnableRateLimiting(RateLimiting.AuthPolicy)]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordVM model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user != null)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var resetLink = Url.Action("ResetPassword", "Auth",
+                    new { email = user.Email, token }, Request.Scheme);
+                await _emailSender.SendAsync(model.Email, "Reset your Zonta password",
+                    $"Reset your password by <a href='{resetLink}'>clicking here</a>. " +
+                    "If you did not request this, ignore this email.");
+            }
+
+            return RedirectToAction(nameof(ForgotPasswordConfirmation));
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Display password-reset form (token link from email).
+        /// </summary>
+        [HttpGet]
+        public IActionResult ResetPassword(string? email, string? token)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+                return BadRequest();
+            return View(new ResetPasswordVM { Email = email, Token = token });
+        }
+
+        /// <summary>
+        /// Handle password reset. Invalid tokens show a generic error.
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [EnableRateLimiting(RateLimiting.AuthPolicy)]
+        public async Task<IActionResult> ResetPassword(ResetPasswordVM model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return RedirectToAction(nameof(ResetPasswordConfirmation));
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            if (result.Succeeded)
+                return RedirectToAction(nameof(ResetPasswordConfirmation));
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(string.Empty, error.Description);
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ResetPasswordConfirmation()
         {
             return View();
         }

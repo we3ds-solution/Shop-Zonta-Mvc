@@ -1,0 +1,26 @@
+@model bool
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
+
+@{
+    ViewData["Title"] = L.Get("Auth.ConfirmTitle");
+    ViewBag.PageTitle = L.Get("Auth.ConfirmTitle");
+}
+
+@await Html.PartialAsync("_PageHeader")
+
+<div class="container">
+    <div class="content-card text-center py-5">
+        @if (Model)
+        {
+            <i class="fas fa-check-circle fa-3x text-success mb-3" aria-hidden="true"></i>
+            <h2>@L.Get("Auth.Confirmed")</h2>
+        }
+        else
+        {
+            <i class="fas fa-times-circle fa-3x text-danger mb-3" aria-hidden="true"></i>
+            <h2>@L.Get("Auth.ConfirmBad")</h2>
+            <p class="text-muted">@L.Get("Auth.ConfirmHint")</p>
+        }
+        <a asp-action="Login" class="btn btn-custom-primary mt-3">@L.Get("Auth.BackLogin")</a>
+    </div>
+</div>

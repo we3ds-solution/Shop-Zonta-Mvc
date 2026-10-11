@@ -570,6 +570,32 @@ textarea:focus-visible,
   }
 }
 
+/* ---------- Delete modal (centralized; was inline styles) ---------- */
+.delete-modal {
+  border-radius: var(--zonta-radius);
+  border: none;
+  box-shadow: var(--zonta-shadow-lg);
+}
+
+.delete-modal-header {
+  background: var(--zonta-danger);
+  color: #fff;
+  border-radius: var(--zonta-radius) var(--zonta-radius) 0 0;
+}
+
+.delete-modal-header .modal-title {
+  color: #fff;
+}
+
+.delete-modal-body {
+  padding: 2rem;
+}
+
+.delete-modal-footer {
+  border: none;
+  padding: 1rem 2rem 2rem;
+}
+
 /* ---------- Toasts (used by TempData notifications) ---------- */
 .toast-container {
   position: fixed;

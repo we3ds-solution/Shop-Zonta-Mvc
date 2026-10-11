@@ -1,13 +1,14 @@
 @model market_mvc.Domain.entity.Order
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
-    ViewData["Title"] = "Order confirmation";
+    ViewData["Title"] = L.Get("Orders.Thanks");
     ViewData["Description"] = "Your Zonta Egypt order confirmation.";
-    ViewBag.PageTitle = "Thank you — order received";
+    ViewBag.PageTitle = L.Get("Orders.Thanks");
     ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
     {
-        ("Orders", "Orders", "Index"),
-        ("Confirmation", "Cart", "Confirmation")
+        (L.Get("Orders.Title"), "Orders", "Index"),
+        (L.Get("Orders.Received"), "Cart", "Confirmation")
     };
 }
 
@@ -16,18 +17,18 @@
 <div class="container">
     <div class="content-card text-center py-4">
         <i class="fas fa-check-circle fa-3x text-success mb-3" aria-hidden="true"></i>
-        <h2>Order @Model.OrderNumber received</h2>
-        <p class="text-muted">Cash on delivery — payment pending. We will contact you to confirm delivery.</p>
+        <h2>@L.Get("Orders.Received") @Model.OrderNumber</h2>
+        <p class="text-muted">@L.Get("Orders.CodPending")</p>
         <div class="row justify-content-center text-start mt-4">
             <div class="col-md-8">
                 <dl class="row">
-                    <dt class="col-sm-4">Order number</dt>
+                    <dt class="col-sm-4">@L.Get("Orders.Number")</dt>
                     <dd class="col-sm-8"><code>@Model.OrderNumber</code></dd>
-                    <dt class="col-sm-4">Total</dt>
+                    <dt class="col-sm-4">@L.Get("Orders.Total")</dt>
                     <dd class="col-sm-8 fw-bold">@Model.Total.ToString("N2") EGP</dd>
-                    <dt class="col-sm-4">Payment</dt>
-                    <dd class="col-sm-8">@(Model.PaymentMethod ?? "Cash on Delivery") (@Model.PaymentStatus)</dd>
-                    <dt class="col-sm-4">Status</dt>
+                    <dt class="col-sm-4">@L.Get("Orders.Payment")</dt>
+                    <dd class="col-sm-8">@(Model.PaymentMethod ?? L.Get("Common.Cod")) (@Model.PaymentStatus)</dd>
+                    <dt class="col-sm-4">@L.Get("Orders.Status")</dt>
                     <dd class="col-sm-8">@Model.Status</dd>
                 </dl>
                 @if (Model.OrderItems.Any())
@@ -43,8 +44,8 @@
                     </ul>
                 }
                 <div class="d-flex gap-2 flex-wrap">
-                    <a asp-controller="Orders" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-custom-primary">View order</a>
-                    <a asp-controller="Products" asp-action="Index" class="btn btn-custom-secondary">Continue shopping</a>
+                    <a asp-controller="Orders" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-custom-primary">@L.Get("Orders.ViewOrder")</a>
+                    <a asp-controller="Products" asp-action="Index" class="btn btn-custom-secondary">@L.Get("Cart.Continue")</a>
                 </div>
             </div>
         </div>

@@ -1,12 +1,13 @@
 @model market_mvc.Domain.ViewModels.Product.ProductCreateVM
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
-    ViewData["Title"] = "Create Product";
-    ViewBag.PageTitle = "Create New Product";
+    ViewData["Title"] = L.Get("ProdForm.CreateTitle");
+    ViewBag.PageTitle = L.Get("ProdForm.CreateNew");
     ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
     {
-        ("Products", "Products", "Index"),
-        ("Create", "Products", "Create")
+        (L.Get("Shop.Title"), "Products", "Index"),
+        (L.Get("ProdForm.CreateTitle"), "Products", "Create")
     };
 }
 
@@ -18,82 +19,79 @@
             <div class="form-enhanced">
                 <form asp-action="Create" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger-enhanced"></div>
-                    
+
                     <div class="row">
                         <div class="col-md-8">
-                            <!-- Basic Information -->
-                            <h5 class="mb-3"><i class="fas fa-info-circle me-2"></i>Basic Information</h5>
-                            
+                            <h5 class="mb-3"><i class="fas fa-info-circle me-2"></i>@L.Get("ProdForm.Basic")</h5>
+
                             <div class="form-group">
                                 <label asp-for="Name" class="control-label">
-                                    <i class="fas fa-tag me-2"></i>Product Name *
+                                    <i class="fas fa-tag me-2"></i>
                                 </label>
-                                <input asp-for="Name" class="form-control" placeholder="Enter product name" />
+                                <input asp-for="Name" class="form-control" placeholder="@L.Get("ProdForm.NamePh")" />
                                 <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label asp-for="Description" class="control-label">
-                                    <i class="fas fa-align-left me-2"></i>Description
+                                    <i class="fas fa-align-left me-2"></i>
                                 </label>
-                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter product description"></textarea>
+                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="@L.Get("ProdForm.DescPh")"></textarea>
                                 <span asp-validation-for="Description" class="text-danger"></span>
                             </div>
 
                             <div class="form-group">
                                 <label asp-for="CategoryId" class="control-label">
-                                    <i class="fas fa-folder me-2"></i>Category
+                                    <i class="fas fa-folder me-2"></i>
                                 </label>
                                 <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories">
-                                    <option value="">Select a category</option>
+                                    <option value="">@L.Get("ProdForm.CatPh")</option>
                                 </select>
                                 <span asp-validation-for="CategoryId" class="text-danger"></span>
                             </div>
 
-                            <!-- Pricing -->
-                            <h5 class="mb-3 mt-4"><i class="fas fa-dollar-sign me-2"></i>Pricing</h5>
-                            
+                            <h5 class="mb-3 mt-4"><i class="fas fa-dollar-sign me-2"></i>@L.Get("ProdForm.Pricing")</h5>
+
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label asp-for="Price" class="control-label">Price *</label>
+                                        <label asp-for="Price" class="control-label"></label>
                                         <input asp-for="Price" class="form-control" placeholder="0.00" step="0.01" />
                                         <span asp-validation-for="Price" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label asp-for="CompareAtPrice" class="control-label">Compare At Price</label>
+                                        <label asp-for="CompareAtPrice" class="control-label"></label>
                                         <input asp-for="CompareAtPrice" class="form-control" placeholder="0.00" step="0.01" />
                                         <span asp-validation-for="CompareAtPrice" class="text-danger"></span>
-                                        <small class="form-text text-muted">Original price for sale items</small>
+                                        <small class="form-text text-muted">@L.Get("ProdForm.CompareHint")</small>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label asp-for="CostPrice" class="control-label">Cost Price</label>
+                                        <label asp-for="CostPrice" class="control-label"></label>
                                         <input asp-for="CostPrice" class="form-control" placeholder="0.00" step="0.01" />
                                         <span asp-validation-for="CostPrice" class="text-danger"></span>
-                                        <small class="form-text text-muted">Your cost for this product</small>
+                                        <small class="form-text text-muted">@L.Get("ProdForm.CostHint")</small>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Inventory -->
-                            <h5 class="mb-3 mt-4"><i class="fas fa-boxes me-2"></i>Inventory</h5>
-                            
+                            <h5 class="mb-3 mt-4"><i class="fas fa-boxes me-2"></i>@L.Get("ProdForm.Inventory")</h5>
+
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label asp-for="Sku" class="control-label">SKU</label>
-                                        <input asp-for="Sku" class="form-control" placeholder="Auto-generated if empty" />
+                                        <label asp-for="Sku" class="control-label"></label>
+                                        <input asp-for="Sku" class="form-control" placeholder="@L.Get("ProdForm.SkuPh")" />
                                         <span asp-validation-for="Sku" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label asp-for="Barcode" class="control-label">Barcode</label>
-                                        <input asp-for="Barcode" class="form-control" placeholder="Product barcode" />
+                                        <label asp-for="Barcode" class="control-label"></label>
+                                        <input asp-for="Barcode" class="form-control" placeholder="@L.Get("ProdForm.BarcodePh")" />
                                         <span asp-validation-for="Barcode" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -101,7 +99,7 @@
                                     <div class="form-group">
                                         <div class="form-check mt-4">
                                             <input asp-for="TrackQuantity" class="form-check-input" />
-                                            <label asp-for="TrackQuantity" class="form-check-label">Track Quantity</label>
+                                            <label asp-for="TrackQuantity" class="form-check-label"></label>
                                         </div>
                                     </div>
                                 </div>
@@ -110,54 +108,52 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label asp-for="StockQuantity" class="control-label">Stock Quantity</label>
+                                        <label asp-for="StockQuantity" class="control-label"></label>
                                         <input asp-for="StockQuantity" class="form-control" />
                                         <span asp-validation-for="StockQuantity" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label asp-for="LowStockThreshold" class="control-label">Low Stock Threshold</label>
+                                        <label asp-for="LowStockThreshold" class="control-label"></label>
                                         <input asp-for="LowStockThreshold" class="form-control" />
                                         <span asp-validation-for="LowStockThreshold" class="text-danger"></span>
-                                        <small class="form-text text-muted">Alert when stock falls below this number</small>
+                                        <small class="form-text text-muted">@L.Get("ProdForm.LowHint")</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-4">
-                            <!-- Image Upload -->
-                            <h5 class="mb-3"><i class="fas fa-image me-2"></i>Product Image</h5>
-                            
+                            <h5 class="mb-3"><i class="fas fa-image me-2"></i>@L.Get("ProdForm.Image")</h5>
+
                             <div class="form-group">
-                                <label class="control-label">Upload Image</label>
+                                <label class="control-label">@L.Get("ProdForm.Upload")</label>
                                 <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
                                 <span asp-validation-for="ImageFile" class="text-danger"></span>
-                                <small class="form-text text-muted">Max 5MB. Supported: JPG, PNG, GIF, WebP</small>
+                                <small class="form-text text-muted">@L.Get("ProdForm.MaxHint")</small>
                             </div>
 
                             <div class="text-center my-3">
-                                <strong>OR</strong>
+                                <strong>@L.Get("ProdForm.Or")</strong>
                             </div>
 
                             <div class="form-group">
-                                <label asp-for="ImageUrl" class="control-label">Image URL</label>
+                                <label asp-for="ImageUrl" class="control-label"></label>
                                 <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/image.jpg" />
                                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
                             </div>
 
                             <div class="form-group">
-                                <label asp-for="ImageAlt" class="control-label">Image Alt Text</label>
-                                <input asp-for="ImageAlt" class="form-control" placeholder="Describe the image" />
+                                <label asp-for="ImageAlt" class="control-label"></label>
+                                <input asp-for="ImageAlt" class="form-control" placeholder="@L.Get("ProdForm.AltPh")" />
                                 <span asp-validation-for="ImageAlt" class="text-danger"></span>
                             </div>
 
-                            <!-- Status & Settings -->
-                            <h5 class="mb-3 mt-4"><i class="fas fa-cog me-2"></i>Settings</h5>
-                            
+                            <h5 class="mb-3 mt-4"><i class="fas fa-cog me-2"></i>@L.Get("ProdForm.Settings")</h5>
+
                             <div class="form-group">
-                                <label asp-for="Status" class="control-label">Status</label>
+                                <label asp-for="Status" class="control-label"></label>
                                 <select asp-for="Status" class="form-select" asp-items="ViewBag.ProductStatuses"></select>
                                 <span asp-validation-for="Status" class="text-danger"></span>
                             </div>
@@ -165,56 +161,55 @@
                             <div class="form-group">
                                 <div class="form-check">
                                     <input asp-for="IsFeatured" class="form-check-input" />
-                                    <label asp-for="IsFeatured" class="form-check-label">Featured Product</label>
+                                    <label asp-for="IsFeatured" class="form-check-label"></label>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label asp-for="SortOrder" class="control-label">Sort Order</label>
+                                <label asp-for="SortOrder" class="control-label"></label>
                                 <input asp-for="SortOrder" class="form-control" />
                                 <span asp-validation-for="SortOrder" class="text-danger"></span>
-                                <small class="form-text text-muted">Lower numbers appear first</small>
+                                <small class="form-text text-muted">@L.Get("ProdForm.SortHint")</small>
                             </div>
                         </div>
                     </div>
 
-                    <!-- SEO Section -->
                     <div class="row mt-4">
                         <div class="col-12">
-                            <h5 class="mb-3"><i class="fas fa-search me-2"></i>SEO & Marketing</h5>
-                            
+                            <h5 class="mb-3"><i class="fas fa-search me-2"></i>@L.Get("ProdForm.Seo")</h5>
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label asp-for="MetaTitle" class="control-label">Meta Title</label>
-                                        <input asp-for="MetaTitle" class="form-control" placeholder="SEO title" />
+                                        <label asp-for="MetaTitle" class="control-label"></label>
+                                        <input asp-for="MetaTitle" class="form-control" placeholder="@L.Get("ProdForm.MetaTPh")" />
                                         <span asp-validation-for="MetaTitle" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label asp-for="Tags" class="control-label">Tags</label>
-                                        <input asp-for="Tags" class="form-control" placeholder="tag1, tag2, tag3" />
+                                        <label asp-for="Tags" class="control-label"></label>
+                                        <input asp-for="Tags" class="form-control" placeholder="@L.Get("ProdForm.TagsPh")" />
                                         <span asp-validation-for="Tags" class="text-danger"></span>
-                                        <small class="form-text text-muted">Comma-separated tags</small>
+                                        <small class="form-text text-muted">@L.Get("ProdForm.TagsHint")</small>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label asp-for="MetaDescription" class="control-label">Meta Description</label>
-                                <textarea asp-for="MetaDescription" class="form-control" rows="3" placeholder="SEO description"></textarea>
+                                <label asp-for="MetaDescription" class="control-label"></label>
+                                <textarea asp-for="MetaDescription" class="form-control" rows="3" placeholder="@L.Get("ProdForm.MetaDPh")"></textarea>
                                 <span asp-validation-for="MetaDescription" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="form-group d-flex gap-3 flex-column flex-sm-row mt-4">
                         <button type="submit" class="btn btn-custom-primary flex-fill">
-                            <i class="fas fa-save me-2"></i>Create Product
+                            <i class="fas fa-save me-2"></i>@L.Get("ProdForm.CreateBtn")
                         </button>
                         <a asp-action="Index" class="btn btn-custom-secondary flex-fill">
-                            <i class="fas fa-arrow-left me-2"></i>Back to List
+                            <i class="fas fa-arrow-left me-2"></i>@L.Get("ProdForm.BackList")
                         </a>
                     </div>
                 </form>

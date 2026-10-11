@@ -1,0 +1,12 @@
+title = "Zonta Egypt secret-scan policy (gitleaks)"
+
+# Part of issue #3 follow-up: history rewrite still needs maintainer approval,
+# but no NEW secrets may be committed. CI runs gitleaks with this config.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Test/placeholder credentials in docs and examples"
+paths = ['''\.env\.example$''', '''docs/.*\.md$''', '''README\.md$''', '''QUICKSTART\.md$''']
+regexes = ['''(?i)(ChangeMe|YOUR_|EXAMPLE|placeholder|admin@example\.com)''']

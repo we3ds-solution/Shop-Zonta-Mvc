@@ -1,13 +1,15 @@
 @model market_mvc.Domain.entity.Order
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
-    ViewData["Title"] = "Order Details";
-    ViewBag.PageTitle = "Order Details";
+    ViewData["Title"] = L.Get("Orders.Details");
+    ViewBag.PageTitle = L.Get("Orders.Details");
     ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
     {
-        ("Orders", "Orders", "Index"),
-        ("Details", "Orders", "Details")
+        (L.Get("Orders.Title"), "Orders", "Index"),
+        (L.Get("Orders.Details"), "Orders", "Details")
     };
+    var canManage = User.IsInRole("Admin") || User.IsInRole("Manager");
 }
 
 @await Html.PartialAsync("_PageHeader")
@@ -25,7 +27,7 @@
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="detail-label">
-                                <i class="fas fa-fingerprint me-2"></i>Order ID
+                                <i class="fas fa-fingerprint me-2"></i>@(L.Culture == "ar" ? "رقم الطلب" : "Order ID")
                             </div>
                         </div>
                         <div class="col-sm-9">
@@ -40,7 +42,7 @@
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="detail-label">
-                                <i class="fas fa-dollar-sign me-2"></i>Total Amount
+                                <i class="fas fa-dollar-sign me-2"></i>@L.Get("Orders.Total")
                             </div>
                         </div>
                         <div class="col-sm-9">
@@ -55,7 +57,7 @@
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="detail-label">
-                                <i class="fas fa-calendar me-2"></i>Created Date
+                                <i class="fas fa-calendar me-2"></i>@L.Get("Orders.Date")
                             </div>
                         </div>
                         <div class="col-sm-9">
@@ -70,7 +72,7 @@
                 @if (Model.OrderItems.Any())
                 {
                     <div class="detail-row">
-                        <div class="detail-label mb-2"><i class="fas fa-box-open me-2"></i>Items</div>
+                        <div class="detail-label mb-2"><i class="fas fa-box-open me-2"></i>@L.Get("Orders.Items")</div>
                         <ul class="list-group">
                             @foreach (var item in Model.OrderItems)
                             {
@@ -84,11 +86,14 @@
                 }
                 
                 <div class="d-flex gap-3 justify-content-center mt-4">
-                    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-custom-secondary">
-                        <i class="fas fa-edit me-2"></i>Edit Order
-                    </a>
+                    @if (canManage)
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-custom-secondary">
+                            <i class="fas fa-edit me-2"></i>@L.Get("Orders.UpdateStatus")
+                        </a>
+                    }
                     <a asp-action="Index" class="btn btn-custom-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                        <i class="fas fa-arrow-left me-2"></i>@L.Get("Orders.Back")
                     </a>
                 </div>
             </div>

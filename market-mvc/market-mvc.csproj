@@ -21,5 +21,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <!-- Explicit logical names: the assembly is market-mvc (hyphen) but the
+         ResourceManager base name is market_mvc.Resources.SharedValidation. -->
+    <EmbeddedResource Update="Resources\SharedValidation.resx" LogicalName="market_mvc.Resources.SharedValidation.resources" />
+    <EmbeddedResource Update="Resources\SharedValidation.en.resx" LogicalName="market_mvc.Resources.SharedValidation.en.resources" />
+    <EmbeddedResource Update="Resources\SharedValidation.ar.resx" LogicalName="market_mvc.Resources.SharedValidation.ar.resources" />
+  </ItemGroup>
 
 </Project>

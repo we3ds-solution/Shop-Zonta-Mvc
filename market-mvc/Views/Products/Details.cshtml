@@ -1,4 +1,5 @@
 @model market_mvc.Domain.entity.Product
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
     ViewData["Title"] = Model.Name;
@@ -41,7 +42,7 @@
             <h1 class="h2">@Model.Name</h1>
             @if (!string.IsNullOrWhiteSpace(Model.Sku))
             {
-                <p class="text-muted small">SKU: @Model.Sku</p>
+                <p class="text-muted small">@L.Get("Prod.Sku"): @Model.Sku</p>
             }
             <div class="d-flex align-items-center gap-2 my-3">
                 <span class="h3 mb-0 zonta-price">@Model.Price.ToString("N2") EGP</span>
@@ -58,19 +59,19 @@
             <p class="small">
                 @if (unavailable)
                 {
-                    <span class="badge bg-secondary">Unavailable</span>
+                    <span class="badge bg-secondary">@(L.Culture == "ar" ? "غير متاح" : "Unavailable")</span>
                 }
                 else if (hasVariants)
                 {
-                    <span class="badge bg-success">Select size/color below</span>
+                    <span class="badge bg-success">@(L.Culture == "ar" ? "اختر المقاس/اللون بالأسفل" : "Select size/color below")</span>
                 }
                 else if (Model.TrackQuantity)
                 {
-                    <span class="badge bg-success">In stock (@Model.StockQuantity)</span>
+                    <span class="badge bg-success">@L.Get("Prod.InStock") (@Model.StockQuantity)</span>
                 }
                 else
                 {
-                    <span class="badge bg-success">Available</span>
+                    <span class="badge bg-success">@L.Get("Prod.Available")</span>
                 }
             </p>
 
@@ -82,9 +83,9 @@
                     @if (hasVariants)
                     {
                         <div class="mb-3">
-                            <label for="variant" class="form-label">Size / Color</label>
+                            <label for="variant" class="form-label">@L.Get("Prod.SelectVariant")</label>
                             <select id="variant" name="VariantId" class="form-select" required>
-                                <option value="">Select an option</option>
+                                <option value="">@L.Get("Prod.SelectOption")</option>
                                 @foreach (var v in variants)
                                 {
                                     var price = v.EffectivePrice(Model.Price);
@@ -96,11 +97,11 @@
                     }
                     <div class="d-flex gap-2 align-items-end">
                         <div>
-                            <label for="qty" class="form-label">Quantity</label>
+                            <label for="qty" class="form-label">@L.Get("Prod.Quantity")</label>
                             <input id="qty" name="Quantity" type="number" value="1" min="1" max="99" class="form-control" style="width: 110px;" required />
                         </div>
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fas fa-shopping-bag me-2" aria-hidden="true"></i>Add to cart
+                            <i class="fas fa-shopping-bag me-2" aria-hidden="true"></i>@L.Get("Prod.AddToCart")
                         </button>
                     </div>
                 </form>
@@ -108,12 +109,12 @@
             }
             else
             {
-                <div class="alert alert-secondary mt-3" role="status">This product is currently unavailable.</div>
+                <div class="alert alert-secondary mt-3" role="status">@L.Get("Prod.Unavailable")</div>
             }
 
             <div class="d-flex gap-2 mt-3 flex-wrap">
                 <a asp-action="Index" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-2" aria-hidden="true"></i>Back to shop
+                    <i class="fas fa-arrow-left me-2" aria-hidden="true"></i>@L.Get("Prod.BackShop")
                 </a>
                 @if (isAdmin)
                 {

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using market_mvc.Resources;
 
 namespace market_mvc.Domain.ViewModels.Cart
 {
@@ -6,7 +7,7 @@ namespace market_mvc.Domain.ViewModels.Cart
     {
         public Guid ProductId { get; set; }
         public Guid? VariantId { get; set; }
-        [Range(1, 99)]
+        [Range(1, 99, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Quantity_Range")]
         public int Quantity { get; set; } = 1;
     }
 
@@ -42,29 +43,48 @@ namespace market_mvc.Domain.ViewModels.Cart
         [Required]
         public Guid ProductId { get; set; }
         public Guid? VariantId { get; set; }
-        [Range(1, 99, ErrorMessage = "Quantity must be between 1 and 99.")]
+        [Range(1, 99, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Quantity_Range")]
         public int Quantity { get; set; } = 1;
     }
 
     public class CheckoutVM
     {
-        [Required, StringLength(100)]
+        [Required(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "FirstName_Required")]
+        [StringLength(100, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "FirstName_Length")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "FirstName_Display")]
         public string FirstName { get; set; } = string.Empty;
-        [Required, StringLength(100)]
+        [Required(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "LastName_Required")]
+        [StringLength(100, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "LastName_Length")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "LastName_Display")]
         public string LastName { get; set; } = string.Empty;
-        [Required, EmailAddress, StringLength(200)]
+        [Required(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Email_Required")]
+        [EmailAddress(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Email_Invalid")]
+        [StringLength(200, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Email_Length")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "Email_Display")]
         public string Email { get; set; } = string.Empty;
-        [Phone, StringLength(20)]
+        [Phone(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Phone_Invalid")]
+        [StringLength(20, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Phone_Length")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "Phone_Display")]
         public string? Phone { get; set; }
-        [Required, StringLength(200)]
+        [Required(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Street_Required")]
+        [StringLength(200, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Street_Length")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "Street_Display")]
         public string Street { get; set; } = string.Empty;
-        [Required, StringLength(100)]
+        [Required(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "City_Required")]
+        [StringLength(100, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "City_Length")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "City_Display")]
         public string City { get; set; } = string.Empty;
-        [Required, StringLength(100)]
+        [Required(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "State_Required")]
+        [StringLength(100, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "State_Length")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "State_Display")]
         public string State { get; set; } = string.Empty;
-        [Required, StringLength(20)]
+        [Required(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "ZipCode_Required")]
+        [StringLength(20, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "ZipCode_Length")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "ZipCode_Display")]
         public string ZipCode { get; set; } = string.Empty;
-        [Required, StringLength(100)]
+        [Required(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Country_Required")]
+        [StringLength(100, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Country_Length")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "Country_Display")]
         public string Country { get; set; } = "Egypt";
         [StringLength(1000)]
         public string? Notes { get; set; }

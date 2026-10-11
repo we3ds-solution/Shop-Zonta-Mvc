@@ -33,6 +33,10 @@ namespace market_mvc.Infrastructure.Data.Configurations
                 .HasMaxLength(500)
                 .IsRequired(false);
 
+            builder.Property(u => u.TwoFactorSecret)
+                .HasMaxLength(100)
+                .IsRequired(false);
+
             // Relationships
             builder.HasOne(u => u.Customer)
                 .WithOne(c => c.User)

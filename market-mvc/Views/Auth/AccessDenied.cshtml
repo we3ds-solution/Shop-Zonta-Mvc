@@ -1,21 +1,21 @@
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 @{
-    ViewData["Title"] = "Access Denied";
+    ViewData["Title"] = L.Get("Auth.DeniedTitle");
 }
 
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6 text-center">
             <div class="alert alert-danger" role="alert">
-                <h2 class="alert-heading mb-3">Access Denied</h2>
+                <h2 class="alert-heading mb-3">@L.Get("Auth.DeniedTitle")</h2>
                 <p class="mb-0">
-                    You do not have permission to access this resource.
+                    @L.Get("Auth.DeniedBody")
                 </p>
                 <hr />
                 <p class="mb-0">
-                    <a asp-action="Index" asp-controller="Home" class="btn btn-primary">Return to Home</a>
+                    <a asp-action="Index" asp-controller="Home" class="btn btn-primary">@L.Get("Common.BackHome")</a>
                 </p>
             </div>
         </div>
     </div>
 </div>
-

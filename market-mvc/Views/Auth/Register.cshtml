@@ -1,7 +1,8 @@
 @model market_mvc.Domain.ViewModels.Auth.RegisterVM
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = L.Get("Auth.CreateAccount");
 }
 
 <div class="container py-5">
@@ -9,55 +10,53 @@
         <div class="col-md-7">
             <div class="card shadow-lg">
                 <div class="card-body p-5">
-                    <h2 class="card-title text-center mb-4">Create Your Account</h2>
+                    <h2 class="card-title text-center mb-4">@L.Get("Auth.RegHeading")</h2>
 
                     <form asp-action="Register" asp-controller="Auth" method="post" novalidate>
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
                         <div class="mb-3">
                             <label asp-for="FullName" class="form-label"></label>
-                            <input asp-for="FullName" type="text" class="form-control" placeholder="Enter your full name" required />
+                            <input asp-for="FullName" type="text" class="form-control" placeholder="@L.Get("Auth.NamePh")" required />
                             <span asp-validation-for="FullName" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" type="email" class="form-control" placeholder="Enter your email" required />
+                            <input asp-for="Email" type="email" class="form-control" placeholder="@L.Get("Auth.EmailPh")" required />
                             <span asp-validation-for="Email" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" type="password" class="form-control" placeholder="Create a password" required />
+                            <input asp-for="Password" type="password" class="form-control" placeholder="@L.Get("Auth.NewPassPh")" required />
                             <span asp-validation-for="Password" class="text-danger small"></span>
                             <small class="form-text text-muted d-block mt-2">
-                                Password must contain: uppercase, lowercase, number, and special character
+                                @L.Get("Auth.PassHint")
                             </small>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="ConfirmPassword" class="form-label"></label>
-                            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm your password" required />
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="@L.Get("Auth.ConfirmPh")" required />
                             <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-4 form-check">
                             <input asp-for="AgreeToTerms" type="checkbox" class="form-check-input" />
-                            <label asp-for="AgreeToTerms" class="form-check-label">
-                                I agree to the terms and conditions
-                            </label>
+                            <label asp-for="AgreeToTerms" class="form-check-label"></label>
                             <span asp-validation-for="AgreeToTerms" class="text-danger small d-block"></span>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 py-2 fs-6">Create Account</button>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fs-6">@L.Get("Auth.CreateAccount")</button>
                     </form>
 
                     <hr class="my-4" />
 
                     <div class="text-center">
                         <p class="mb-0">
-                            Already have an account?
-                            <a asp-action="Login" asp-controller="Auth" class="text-decoration-none fw-bold">Sign in here</a>
+                            @L.Get("Auth.HaveAccount")
+                            <a asp-action="Login" asp-controller="Auth" class="text-decoration-none fw-bold">@L.Get("Auth.SignInHere")</a>
                         </p>
                     </div>
                 </div>
@@ -71,4 +70,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-
