@@ -1,7 +1,8 @@
 @model market_mvc.Domain.ViewModels.Error.ErrorVM
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 @{
-    ViewData["Title"] = Model?.DisplayTitle ?? "Page Not Found";
-    ViewBag.PageTitle = Model?.DisplayTitle ?? "Page Not Found";
+    ViewData["Title"] = Model?.DisplayTitle ?? L.Get("Err.Title404");
+    ViewBag.PageTitle = Model?.DisplayTitle ?? L.Get("Err.Title404");
     ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
     {
         ("Error", "Error", "HttpStatusCodeHandler")
@@ -46,35 +47,35 @@
             
             <div class="d-flex justify-content-center gap-3 flex-wrap">
                 <a asp-controller="Home" asp-action="Index" class="btn btn-custom-primary">
-                    <i class="fas fa-home me-2"></i>Go Home
+                    <i class="fas fa-home me-2"></i>@L.Get("Err.Home")
                 </a>
                 <button onclick="history.back()" class="btn btn-custom-secondary">
-                    <i class="fas fa-arrow-left me-2"></i>Go Back
+                    <i class="fas fa-arrow-left me-2"></i>@L.Get("Err.Back")
                 </button>
                 <button onclick="location.reload()" class="btn btn-outline-primary">
-                    <i class="fas fa-redo me-2"></i>Try Again
+                    <i class="fas fa-redo me-2"></i>@L.Get("Err.Retry")
                 </button>
             </div>
-            
+
             <div class="mt-4">
-                <h5>Quick Links:</h5>
+                <h5>@L.Get("Err.Links")</h5>
                 <div class="d-flex justify-content-center gap-3 mt-3 flex-wrap">
                     <a asp-controller="Products" asp-action="Index" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-box me-1"></i>Shop
+                        <i class="fas fa-box me-1"></i>@L.Get("Err.Shop")
                     </a>
                     <a asp-controller="Orders" asp-action="Index" class="btn btn-outline-success btn-sm">
-                        <i class="fas fa-shopping-cart me-1"></i>Orders
+                        <i class="fas fa-shopping-cart me-1"></i>@L.Get("Nav.Orders")
                     </a>
                     <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-info btn-sm">
-                        <i class="fas fa-shopping-bag me-1"></i>Cart
+                        <i class="fas fa-shopping-bag me-1"></i>@L.Get("Nav.Cart")
                     </a>
                 </div>
             </div>
-            
+
             <div class="mt-4">
                 <small class="text-muted">
                     <i class="fas fa-info-circle me-1"></i>
-                    If you believe this is an error, please contact support with the request ID above.
+                    @L.Get("Err.Support")
                 </small>
             </div>
         </div>

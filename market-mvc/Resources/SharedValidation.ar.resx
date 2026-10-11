@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="FullName_Required" xml:space="preserve"><value>الاسم الكامل مطلوب</value></data>
+  <data name="FullName_Length" xml:space="preserve"><value>الاسم الكامل لا يتجاوز 256 حرفا</value></data>
+  <data name="FullName_Display" xml:space="preserve"><value>الاسم الكامل</value></data>
+  <data name="Email_Required" xml:space="preserve"><value>البريد الإلكتروني مطلوب</value></data>
+  <data name="Email_Invalid" xml:space="preserve"><value>البريد الإلكتروني غير صالح</value></data>
+  <data name="Email_Length" xml:space="preserve"><value>البريد الإلكتروني لا يتجاوز 200 حرف</value></data>
+  <data name="Email_Display" xml:space="preserve"><value>البريد الإلكتروني</value></data>
+  <data name="Password_Required" xml:space="preserve"><value>كلمة المرور مطلوبة</value></data>
+  <data name="Password_Length" xml:space="preserve"><value>كلمة المرور 8 أحرف على الأقل</value></data>
+  <data name="Password_Regex" xml:space="preserve"><value>كلمة المرور يجب أن تحتوي حرفا كبيرا وصغيرا ورقما ورمزا خاصا</value></data>
+  <data name="Password_Display" xml:space="preserve"><value>كلمة المرور</value></data>
+  <data name="ConfirmPassword_Required" xml:space="preserve"><value>تأكيد كلمة المرور مطلوب</value></data>
+  <data name="ConfirmPassword_Match" xml:space="preserve"><value>كلمتا المرور غير متطابقتين</value></data>
+  <data name="ConfirmPassword_Display" xml:space="preserve"><value>تأكيد كلمة المرور</value></data>
+  <data name="Terms_Required" xml:space="preserve"><value>يجب الموافقة على الشروط والأحكام</value></data>
+  <data name="Terms_Display" xml:space="preserve"><value>أوافق على الشروط والأحكام</value></data>
+  <data name="Code_Required" xml:space="preserve"><value>أدخل الرمز المكون من 6 أرقام من تطبيق المصادقة</value></data>
+  <data name="Code_Regex" xml:space="preserve"><value>الرمز يجب أن يكون 6 أرقام</value></data>
+  <data name="Code_Display" xml:space="preserve"><value>رمز المصادقة</value></data>
+  <data name="FirstName_Required" xml:space="preserve"><value>الاسم الأول مطلوب</value></data>
+  <data name="FirstName_Display" xml:space="preserve"><value>الاسم الأول</value></data>
+  <data name="LastName_Required" xml:space="preserve"><value>اسم العائلة مطلوب</value></data>
+  <data name="LastName_Display" xml:space="preserve"><value>اسم العائلة</value></data>
+  <data name="Street_Required" xml:space="preserve"><value>الشارع مطلوب</value></data>
+  <data name="Street_Display" xml:space="preserve"><value>الشارع</value></data>
+  <data name="City_Required" xml:space="preserve"><value>المدينة مطلوبة</value></data>
+  <data name="City_Display" xml:space="preserve"><value>المدينة</value></data>
+  <data name="State_Required" xml:space="preserve"><value>المحافظة مطلوبة</value></data>
+  <data name="State_Display" xml:space="preserve"><value>المحافظة</value></data>
+  <data name="ZipCode_Required" xml:space="preserve"><value>الرمز البريدي مطلوب</value></data>
+  <data name="ZipCode_Display" xml:space="preserve"><value>الرمز البريدي</value></data>
+  <data name="Country_Required" xml:space="preserve"><value>الدولة مطلوبة</value></data>
+  <data name="Country_Display" xml:space="preserve"><value>الدولة</value></data>
+  <data name="Phone_Display" xml:space="preserve"><value>الهاتف</value></data>
+  <data name="Phone_Invalid" xml:space="preserve"><value>رقم الهاتف غير صالح.</value></data>
+  <data name="LoginPassword_Length" xml:space="preserve"><value>كلمة المرور بين 6 و100 حرف</value></data>
+  <data name="RememberMe_Display" xml:space="preserve"><value>تذكرني</value></data>
+  <data name="Quantity_Range" xml:space="preserve"><value>الكمية يجب أن تكون بين 1 و99.</value></data>
+  <data name="FirstName_Length" xml:space="preserve"><value>الاسم الأول لا يتجاوز 100 حرف</value></data>
+  <data name="LastName_Length" xml:space="preserve"><value>اسم العائلة لا يتجاوز 100 حرف</value></data>
+  <data name="Street_Length" xml:space="preserve"><value>الشارع لا يتجاوز 200 حرف</value></data>
+  <data name="City_Length" xml:space="preserve"><value>المدينة لا تتجاوز 100 حرف</value></data>
+  <data name="State_Length" xml:space="preserve"><value>المحافظة لا تتجاوز 100 حرف</value></data>
+  <data name="ZipCode_Length" xml:space="preserve"><value>الرمز البريدي لا يتجاوز 20 حرفا</value></data>
+  <data name="Country_Length" xml:space="preserve"><value>الدولة لا تتجاوز 100 حرف</value></data>
+  <data name="Phone_Length" xml:space="preserve"><value>الهاتف لا يتجاوز 20 حرفا</value></data>
+  <data name="Product_Name_Required" xml:space="preserve"><value>اسم المنتج مطلوب</value></data>
+  <data name="Product_Name_Length" xml:space="preserve"><value>اسم المنتج لا يتجاوز 200 حرف</value></data>
+  <data name="Product_Name_Display" xml:space="preserve"><value>اسم المنتج</value></data>
+  <data name="Product_Desc_Length" xml:space="preserve"><value>الوصف لا يتجاوز 2000 حرف</value></data>
+  <data name="Product_Desc_Display" xml:space="preserve"><value>الوصف</value></data>
+  <data name="Product_Price_Required" xml:space="preserve"><value>السعر مطلوب</value></data>
+  <data name="Product_Price_Range" xml:space="preserve"><value>السعر يجب أن يكون أكبر من 0</value></data>
+  <data name="Product_Price_Display" xml:space="preserve"><value>السعر</value></data>
+  <data name="Product_Compare_Range" xml:space="preserve"><value>سعر المقارنة يجب أن يكون أكبر من 0</value></data>
+  <data name="Product_Compare_Display" xml:space="preserve"><value>سعر المقارنة</value></data>
+  <data name="Product_Cost_Range" xml:space="preserve"><value>سعر التكلفة يجب أن يكون أكبر من 0</value></data>
+  <data name="Product_Cost_Display" xml:space="preserve"><value>سعر التكلفة</value></data>
+  <data name="Product_Url_Invalid" xml:space="preserve"><value>يرجى إدخال رابط صالح</value></data>
+  <data name="Product_ImageUrl_Display" xml:space="preserve"><value>رابط الصورة</value></data>
+  <data name="Product_ImageFile_Display" xml:space="preserve"><value>صورة المنتج</value></data>
+  <data name="Product_Alt_Length" xml:space="preserve"><value>النص البديل لا يتجاوز 200 حرف</value></data>
+  <data name="Product_Alt_Display" xml:space="preserve"><value>النص البديل للصورة</value></data>
+  <data name="Product_Sku_Length" xml:space="preserve"><value>الرمز لا يتجاوز 100 حرف</value></data>
+  <data name="Product_Sku_Display" xml:space="preserve"><value>الرمز</value></data>
+  <data name="Product_Barcode_Length" xml:space="preserve"><value>الباركود لا يتجاوز 100 حرف</value></data>
+  <data name="Product_Barcode_Display" xml:space="preserve"><value>الباركود</value></data>
+  <data name="Product_Stock_Range" xml:space="preserve"><value>المخزون لا يمكن أن يكون سالبا</value></data>
+  <data name="Product_Stock_Display" xml:space="preserve"><value>كمية المخزون</value></data>
+  <data name="Product_LowStock_Range" xml:space="preserve"><value>حد التنبيه لا يمكن أن يكون سالبا</value></data>
+  <data name="Product_LowStock_Display" xml:space="preserve"><value>تنبيه المخزون المنخفض</value></data>
+  <data name="Product_Track_Display" xml:space="preserve"><value>تتبع كمية المخزون</value></data>
+  <data name="Product_Weight_Range" xml:space="preserve"><value>الوزن لا يمكن أن يكون سالبا</value></data>
+  <data name="Product_Weight_Display" xml:space="preserve"><value>الوزن</value></data>
+  <data name="Product_WeightUnit_Length" xml:space="preserve"><value>وحدة الوزن لا تتجاوز 10 أحرف</value></data>
+  <data name="Product_WeightUnit_Display" xml:space="preserve"><value>الوحدة</value></data>
+  <data name="Product_Status_Display" xml:space="preserve"><value>الحالة</value></data>
+  <data name="Product_Featured_Display" xml:space="preserve"><value>منتج مميز</value></data>
+  <data name="Product_Sort_Display" xml:space="preserve"><value>ترتيب العرض</value></data>
+  <data name="Product_MetaTitle_Length" xml:space="preserve"><value>عنوان SEO لا يتجاوز 200 حرف</value></data>
+  <data name="Product_MetaTitle_Display" xml:space="preserve"><value>عنوان SEO</value></data>
+  <data name="Product_MetaDesc_Length" xml:space="preserve"><value>وصف SEO لا يتجاوز 500 حرف</value></data>
+  <data name="Product_MetaDesc_Display" xml:space="preserve"><value>وصف SEO</value></data>
+  <data name="Product_Tags_Length" xml:space="preserve"><value>الوسوم لا تتجاوز 1000 حرف</value></data>
+  <data name="Product_Tags_Display" xml:space="preserve"><value>الوسوم</value></data>
+  <data name="Product_Category_Display" xml:space="preserve"><value>الفئة</value></data>
+</root>

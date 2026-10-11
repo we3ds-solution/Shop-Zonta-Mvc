@@ -15,6 +15,7 @@ using market_mvc.Domain;
 using market_mvc.Domain.Enums;
 using market_mvc.Domain.ViewModels.Product;
 using market_mvc.Features.Products.Services;
+using market_mvc.Infrastructure.Localization;
 using market_mvc.Infrastructure.Services;
 
 namespace market_mvc.Controllers
@@ -24,17 +25,20 @@ namespace market_mvc.Controllers
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
         private readonly IImageService _imageService;
+        private readonly IZontaLocalizer _localizer;
         private readonly ILogger<ProductsController> _logger;
-        
+
         public ProductsController(
             IMediator mediator,
             IMapper mapper,
             IImageService imageService,
+            IZontaLocalizer localizer,
             ILogger<ProductsController> logger)
         {
             _mediator = mediator;
             _mapper = mapper;
             _imageService = imageService;
+            _localizer = localizer;
             _logger = logger;
         }
 
@@ -46,14 +50,14 @@ namespace market_mvc.Controllers
             {
                 ["PriceRange"] = new List<SelectListItem>
                 {
-                    new SelectListItem { Text = "Under 1,000 EGP", Value = "0-1000" },
-                    new SelectListItem { Text = "1,000 - 2,000 EGP", Value = "1000-2000" },
-                    new SelectListItem { Text = "2,000 - 5,000 EGP", Value = "2000-5000" },
-                    new SelectListItem { Text = "Over 5,000 EGP", Value = "5000+" }
+                    new SelectListItem { Text = _localizer.Get("Filter.Range1"), Value = "0-1000" },
+                    new SelectListItem { Text = _localizer.Get("Filter.Range2"), Value = "1000-2000" },
+                    new SelectListItem { Text = _localizer.Get("Filter.Range3"), Value = "2000-5000" },
+                    new SelectListItem { Text = _localizer.Get("Filter.Range4"), Value = "5000+" }
                 }
             };
 
-            ViewBag.SearchPlaceholder = "Search sneakers, apparel...";
+            ViewBag.SearchPlaceholder = _localizer.Get("Search.Placeholder");
 
             var query = new GetProductsQuery
             {
