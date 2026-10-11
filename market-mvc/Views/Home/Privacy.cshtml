@@ -7,6 +7,7 @@
     {
         (isAr ? "الخصوصية" : "Privacy", "Home", "Privacy")
     };
+    var lastUpdated = "2026-10-11";
 }
 
 @await Html.PartialAsync("_PageHeader")
@@ -17,35 +18,102 @@
             <div class="col-md-8 mx-auto">
                 <div class="text-center mb-4">
                     <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <p class="text-muted small">@(isAr ? "آخر تحديث" : "Last updated"): @lastUpdated</p>
                 </div>
 
                 @if (isAr)
                 {
-                    <h4>المعلومات التي نجمعها</h4>
-                    <p>نجمع المعلومات التي تقدمها لنا مباشرة، مثل عند إنشاء حساب أو إجراء عملية شراء أو التواصل معنا للدعم.</p>
-                    <h4>كيف نستخدم معلوماتك</h4>
-                    <p>نستخدم المعلومات لتحسين وتقديم خدماتنا ومعالجة المعاملات والتواصل معك.</p>
-                    <h4>مشاركة المعلومات</h4>
-                    <p>لا نبيع معلوماتك الشخصية أو نتاجر بها أو ننقلها لأطراف ثالثة دون موافقتك، إلا كما هو موضح في هذه السياسة.</p>
-                    <h4>أمن البيانات</h4>
-                    <p>نطبق إجراءات أمنية مناسبة لحماية معلوماتك من الوصول أو التعديل أو الإفصاح غير المصرح به.</p>
-                    <h4>اتصل بنا</h4>
-                    <p>لأي أسئلة حول هذه السياسة راجع <a asp-controller="Home" asp-action="Contact">صفحة التواصل</a>. بيانات التواصل الرسمية تُنشر بعد التحقق فقط.</p>
-                    <div class="alert alert-warning mt-3" role="note"><strong>مسودة — تتطلب مراجعة قانونية (آخر مراجعة 2026-10-10).</strong> هذا النص قالب وليس سياسة معتمدة بعد.</div>
+                    <p>تصف هذه السياسة كيف تجمع متجر زونتا مصر (Zonta Egypt) — المنصة على هذا الموقع — بياناتك الشخصية وتستخدمها وتحميها عند التسوق أو إنشاء حساب أو التواصل معنا.</p>
+
+                    <h4>1. من المسؤول عن البيانات</h4>
+                    <p>المشغّل الفني لهذا المتجر الإلكتروني. لأي طلبات تتعلق بالخصوصية استخدم <a asp-controller="Home" asp-action="Contact">صفحة التواصل</a>.</p>
+
+                    <h4>2. البيانات التي نجمعها</h4>
+                    <ul>
+                        <li><strong>بيانات الحساب:</strong> الاسم، البريد الإلكتروني، وكلمة المرور (مشفّرة).</li>
+                        <li><strong>بيانات الطلبات:</strong> عنوان الشحن، رقم الهاتف، ومحتوى السلة لإتمام التوصيل والدفع عند الاستلام.</li>
+                        <li><strong>بيانات تقنية:</strong> عنوان IP، نوع المتصفح، وملفات تعريف الارتباط اللازمة لجلسة التسوق وتفضيل اللغة.</li>
+                        <li><strong>مراسلات الدعم:</strong> الرسائل التي ترسلها عبر صفحة التواصل أو البريد.</li>
+                    </ul>
+                    <p>لا نجمع بيانات بطاقات ائتمان على هذا الموقع — الدفع الافتراضي هو <strong>الدفع عند الاستلام</strong>.</p>
+
+                    <h4>3. كيف نستخدم البيانات</h4>
+                    <ul>
+                        <li>إنشاء الحساب وتأمينه (بما في ذلك تأكيد البريد وإعادة تعيين كلمة المرور عند تفعيلها).</li>
+                        <li>معالجة الطلبات، حساب الشحن، وإدارة حالة الطلب.</li>
+                        <li>الرد على الاستفسارات وتحسين تجربة المتجر ومنع الإساءة.</li>
+                        <li>الالتزام بالمتطلبات القانونية المعمول بها في جمهورية مصر العربية.</li>
+                    </ul>
+
+                    <h4>4. المشاركة مع أطراف ثالثة</h4>
+                    <p>لا نبيع بياناتك الشخصية. قد نشارك حداً أدنى من البيانات مع:</p>
+                    <ul>
+                        <li>شركات الشحن/التوصيل لتنفيذ الطلب.</li>
+                        <li>مزوّدي الاستضافة والبريد الإلكتروني لتشغيل الموقع.</li>
+                        <li>الجهات المختصة عند وجود التزام قانوني.</li>
+                    </ul>
+
+                    <h4>5. الاحتفاظ والأمان</h4>
+                    <p>نحتفظ ببيانات الحساب والطلبات طالما الحساب نشط أو حسب ما يقتضيه القانون أو حل النزاعات. نستخدم اتصالاً مشفراً (HTTPS)، ملفات تعريف ارتباط آمنة، وتحققاً من جانب الخادم للأسعار والمخزون.</p>
+
+                    <h4>6. حقوقك</h4>
+                    <p>يمكنك طلب الاطلاع على بياناتك أو تصحيحها أو حذف الحساب عبر صفحة التواصل، مع مراعاة القيود القانونية وسجلات الطلبات الضرورية.</p>
+
+                    <h4>7. ملفات تعريف الارتباط</h4>
+                    <p>نستخدم ملفات ضرورية للجلسة (السلة، تسجيل الدخول، اللغة). تعطيلها قد يمنع إتمام الشراء.</p>
+
+                    <h4>8. التعديلات</h4>
+                    <p>قد نحدّث هذه السياسة. يظهر تاريخ «آخر تحديث» أعلى الصفحة. استمرار الاستخدام بعد التحديث يعني الاطلاع على النسخة الجديدة.</p>
+
+                    <h4>9. تواصل</h4>
+                    <p>لأسئلة الخصوصية: <a asp-controller="Home" asp-action="Contact">صفحة التواصل</a>.</p>
                 }
                 else
                 {
-                    <h4>Information We Collect</h4>
-                    <p>We collect information you provide directly to us, such as when you create an account, make a purchase, or contact us for support.</p>
-                    <h4>How We Use Your Information</h4>
-                    <p>We use the information we collect to provide, maintain, and improve our services, process transactions, and communicate with you.</p>
-                    <h4>Information Sharing</h4>
-                    <p>We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy.</p>
-                    <h4>Data Security</h4>
-                    <p>We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p>
-                    <h4>Contact Us</h4>
-                    <p>If you have any questions about this Privacy Policy, please see our <a asp-controller="Home" asp-action="Contact">contact page</a>. Official contact details are published only after verification.</p>
-                    <div class="alert alert-warning mt-3" role="note"><strong>Draft — requires legal review (last reviewed 2026-10-10).</strong> This policy text is a template, not yet approved company policy.</div>
+                    <p>This policy explains how <strong>Zonta Egypt</strong> (this online storefront) collects, uses, and protects personal data when you shop, create an account, or contact us.</p>
+
+                    <h4>1. Data controller</h4>
+                    <p>The operator of this web store. For privacy requests use the <a asp-controller="Home" asp-action="Contact">contact page</a>.</p>
+
+                    <h4>2. Data we collect</h4>
+                    <ul>
+                        <li><strong>Account data:</strong> name, email, and password (stored hashed).</li>
+                        <li><strong>Order data:</strong> shipping address, phone, and cart contents needed for delivery and cash-on-delivery.</li>
+                        <li><strong>Technical data:</strong> IP address, browser type, and cookies required for the shopping session and language preference.</li>
+                        <li><strong>Support messages:</strong> content you send via the contact form or email.</li>
+                    </ul>
+                    <p>We do <strong>not</strong> collect card payment data on this site — the default method is <strong>cash on delivery (COD)</strong>.</p>
+
+                    <h4>3. How we use data</h4>
+                    <ul>
+                        <li>Account creation and security (including email confirmation and password reset when enabled).</li>
+                        <li>Order processing, shipping calculation, and order status management.</li>
+                        <li>Responding to enquiries, improving the store, and preventing abuse.</li>
+                        <li>Complying with applicable law in the Arab Republic of Egypt.</li>
+                    </ul>
+
+                    <h4>4. Sharing with third parties</h4>
+                    <p>We do not sell personal data. We may share the minimum necessary data with:</p>
+                    <ul>
+                        <li>Courier / delivery partners to fulfil orders.</li>
+                        <li>Hosting and email providers that operate the site.</li>
+                        <li>Authorities when required by law.</li>
+                    </ul>
+
+                    <h4>5. Retention and security</h4>
+                    <p>We keep account and order records while the account is active or as needed for legal, tax, or dispute purposes. We use HTTPS, secure cookies, and server-side price/stock validation.</p>
+
+                    <h4>6. Your rights</h4>
+                    <p>You may request access, correction, or account deletion via the contact page, subject to legal limits and necessary order records.</p>
+
+                    <h4>7. Cookies</h4>
+                    <p>We use essential session cookies (cart, login, culture). Blocking them may prevent checkout.</p>
+
+                    <h4>8. Changes</h4>
+                    <p>We may update this policy. The “Last updated” date appears above. Continued use after a change means you have reviewed the new version.</p>
+
+                    <h4>9. Contact</h4>
+                    <p>Privacy questions: <a asp-controller="Home" asp-action="Contact">contact page</a>.</p>
                 }
 
                 <div class="text-center mt-4">

@@ -1,37 +1,91 @@
 @inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 @{
     var isAr = L.Culture == "ar";
-    ViewData["Title"] = isAr ? "الشحن" : "Shipping";
-    ViewBag.PageTitle = isAr ? "الشحن" : "Shipping";
+    ViewData["Title"] = isAr ? "سياسة الشحن" : "Shipping Policy";
+    ViewBag.PageTitle = isAr ? "سياسة الشحن" : "Shipping Policy";
     ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)> { ((isAr ? "الشحن" : "Shipping"), "Home", "Shipping") };
+    var lastUpdated = "2026-10-11";
 }
 @await Html.PartialAsync("_PageHeader")
 <div class="container">
     <div class="content-card">
         <div class="col-md-8 mx-auto">
+            <p class="text-muted small text-center">@(isAr ? "آخر تحديث" : "Last updated"): @lastUpdated</p>
+
             @if (isAr)
             {
-                <div class="alert alert-success" role="note"><strong>قاعدة موثقة:</strong> شحن مجاني لجميع الطلبات فوق 750 جنيه (إعلان رسمي، مؤرشف 2024-12-21).</div>
-                <h2 class="h4">كيف يعمل التوصيل</h2>
+                <div class="alert alert-success" role="note">
+                    <strong>قاعدة المتجر الموثقة:</strong> شحن مجاني لجميع الطلبات فوق <strong>750 جنيه</strong>
+                    (إعلان رسمي لزونتا، مؤرشف 2024-12-21).
+                </div>
+
+                <h2 class="h4">نطاق التوصيل</h2>
                 <ul>
-                    <li>الدفع عند الاستلام داخل مصر.</li>
-                    <li>الطلبات <strong>750 جنيه فأكثر تُشحن مجانا</strong>؛ قد يُطبق رسم ثابت تحت ذلك (الإعداد الحالي <code>Zonta:ShippingFee</code>، الافتراضي 0 — يحتاج تأكيدا).</li>
-                    <li>يظهر الشحن عند الدفع ويُحتسب في الإجمالي على الخادم.</li>
+                    <li>التوصيل داخل <strong>جمهورية مصر العربية</strong> فقط عبر هذه المنصة.</li>
+                    <li>طريقة الدفع الافتراضية: <strong>الدفع عند الاستلام (COD)</strong>.</li>
                 </ul>
-                <div class="alert alert-warning" role="note"><strong>مسودة — تتطلب تأكيدا (آخر مراجعة 2026-10-10).</strong> المناطق والمدد والرسم تحت العتبة ليست سياسة معتمدة بعد.</div>
+
+                <h2 class="h4">تكلفة الشحن</h2>
+                <ul>
+                    <li>طلبات بقيمة <strong>750 جنيه فأكثر</strong>: شحن مجاني.</li>
+                    <li>طلبات أقل من 750 جنيه: يُطبَّق رسم الشحن المضبوط في إعدادات المتجر
+                        (<code>Zonta:ShippingFee</code> — الافتراضي حالياً 0 جنيه حتى يُؤكَّد رسم مختلف من الإدارة).</li>
+                    <li>يُحسب الشحن على <strong>الخادم</strong> عند الدفع ويظهر في ملخص الطلب؛ لا يُقبل إجمالي من العميل.</li>
+                </ul>
+
+                <h2 class="h4">مواعيد التوصيل</h2>
+                <p>تُحدَّد المدة التقديرية حسب المحافظة ومزوّد الشحن بعد تأكيد الطلب. قد تختلف في المواسم أو الظروف الخارجة عن السيطرة (طقس، إجازات رسمية، ازدحام).</p>
+
+                <h2 class="h4">العنوان والاستلام</h2>
+                <ul>
+                    <li>يتحمل العميل دقة عنوان الشحن ورقم الهاتف.</li>
+                    <li>محاولات التوصيل الفاشلة بسبب عنوان غير صحيح أو عدم الرد قد تؤخر الطلب أو تلغيه وفق سياسة الشركة.</li>
+                </ul>
+
+                <h2 class="h4">التلف أو الفقد أثناء الشحن</h2>
+                <p>عند استلام شحنة تالفة أو ناقصة، صوّر العبوة وتواصل فوراً عبر <a asp-controller="Home" asp-action="Contact">صفحة التواصل</a> مع رقم الطلب.</p>
+
+                <h2 class="h4">تغيير العنوان بعد الطلب</h2>
+                <p>يمكن طلب تعديل العنوان قبل خروج الشحنة إن أمكن تشغيلياً؛ بعد التسليم لشركة الشحن قد لا يتاح التعديل.</p>
             }
             else
             {
-                <div class="alert alert-success" role="note"><strong>Verified store rule:</strong> free shipping on all orders over 750 EGP (official announcement, archived 2024-12-21).</div>
-                <h2 class="h4">How delivery works</h2>
+                <div class="alert alert-success" role="note">
+                    <strong>Verified store rule:</strong> free shipping on all orders over <strong>750 EGP</strong>
+                    (official Zonta announcement, archived 2024-12-21).
+                </div>
+
+                <h2 class="h4">Delivery coverage</h2>
                 <ul>
-                    <li>Cash on delivery within Egypt.</li>
-                    <li>Orders of <strong>750 EGP or more ship free</strong>; a flat fee may apply below that (currently configured: <code>Zonta:ShippingFee</code>, default 0 — needs business confirmation).</li>
-                    <li>Shipping is shown at checkout and included in the server-calculated total.</li>
+                    <li>Delivery within the <strong>Arab Republic of Egypt</strong> only on this platform.</li>
+                    <li>Default payment method: <strong>cash on delivery (COD)</strong>.</li>
                 </ul>
-                <div class="alert alert-warning" role="note"><strong>Draft — requires business confirmation (last reviewed 2026-10-10).</strong> Zones, timelines and the below-threshold fee below are not yet approved company policy.</div>
+
+                <h2 class="h4">Shipping cost</h2>
+                <ul>
+                    <li>Orders of <strong>750 EGP or more</strong>: free shipping.</li>
+                    <li>Orders under 750 EGP: the configured flat fee applies
+                        (<code>Zonta:ShippingFee</code> — currently default <strong>0 EGP</strong> until management confirms a different fee).</li>
+                    <li>Shipping is calculated on the <strong>server</strong> at checkout and shown in the order summary; client-supplied totals are never trusted.</li>
+                </ul>
+
+                <h2 class="h4">Delivery times</h2>
+                <p>Estimated timing depends on governorate and the courier after the order is confirmed. Delays may occur in peak seasons, public holidays, or force-majeure events.</p>
+
+                <h2 class="h4">Address and receipt</h2>
+                <ul>
+                    <li>You are responsible for an accurate shipping address and phone number.</li>
+                    <li>Failed delivery attempts due to a wrong address or no response may delay or cancel the order under store operations rules.</li>
+                </ul>
+
+                <h2 class="h4">Damage or loss in transit</h2>
+                <p>If a package arrives damaged or incomplete, photograph the packaging and contact us immediately via the
+                    <a asp-controller="Home" asp-action="Contact">contact page</a> with your order number.</p>
+
+                <h2 class="h4">Changing the address after ordering</h2>
+                <p>Address changes may be possible before the shipment leaves the warehouse; after handover to the courier they often cannot be changed.</p>
             }
-            <a asp-controller="Home" asp-action="Index" class="btn btn-custom-primary">@L.Get("Page.BackHome")</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-custom-primary mt-3">@L.Get("Page.BackHome")</a>
         </div>
     </div>
 </div>
