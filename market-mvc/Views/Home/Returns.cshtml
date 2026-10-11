@@ -1,20 +1,35 @@
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 @{
-    ViewData["Title"] = "Returns & Refunds";
-    ViewBag.PageTitle = "Returns & Refunds";
-    ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)> { ("Returns", "Home", "Returns") };
+    var isAr = L.Culture == "ar";
+    ViewData["Title"] = isAr ? "الاستبدال والاسترجاع" : "Returns & Refunds";
+    ViewBag.PageTitle = isAr ? "الاستبدال والاسترجاع" : "Returns & Refunds";
+    ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)> { ((isAr ? "الاسترجاع" : "Returns"), "Home", "Returns") };
 }
 @await Html.PartialAsync("_PageHeader")
 <div class="container">
     <div class="content-card">
         <div class="col-md-8 mx-auto">
-            <div class="alert alert-warning" role="note"><strong>Draft — requires business confirmation (last reviewed 2026-10-10).</strong> This is not yet approved company policy. Do not treat it as final.</div>
-            <h2 class="h4">Returns</h2>
-            <ul>
-                <li>Eligibility window, size-exchange rules, and refund method are to be confirmed with Zonta.</li>
-                <li>Keep items unworn with tags until the official policy is published.</li>
-                <li>To request a return, use the <a asp-action="Contact">contact page</a> once official channels are verified.</li>
-            </ul>
-            <a asp-controller="Home" asp-action="Index" class="btn btn-custom-primary">Back to home</a>
+            @if (isAr)
+            {
+                <div class="alert alert-warning" role="note"><strong>مسودة — تتطلب تأكيدا (آخر مراجعة 2026-10-10).</strong> ليست سياسة معتمدة بعد.</div>
+                <h2 class="h4">الاستبدال والاسترجاع</h2>
+                <ul>
+                    <li>مدة الاستحقاق وقواعد تبديل المقاسات وطريقة الاسترداد تحتاج تأكيد زونتا.</li>
+                    <li>احتفظ بالمنتجات دون ارتداء مع البطاقات حتى نشر السياسة الرسمية.</li>
+                    <li>لطلب استرجاع استخدم <a asp-action="Contact">صفحة التواصل</a> بعد توثيق القنوات الرسمية.</li>
+                </ul>
+            }
+            else
+            {
+                <div class="alert alert-warning" role="note"><strong>Draft — requires business confirmation (last reviewed 2026-10-10).</strong> This is not yet approved company policy. Do not treat it as final.</div>
+                <h2 class="h4">Returns</h2>
+                <ul>
+                    <li>Eligibility window, size-exchange rules, and refund method are to be confirmed with Zonta.</li>
+                    <li>Keep items unworn with tags until the official policy is published.</li>
+                    <li>To request a return, use the <a asp-action="Contact">contact page</a> once official channels are verified.</li>
+                </ul>
+            }
+            <a asp-controller="Home" asp-action="Index" class="btn btn-custom-primary">@L.Get("Page.BackHome")</a>
         </div>
     </div>
 </div>

@@ -1,12 +1,13 @@
 @model market_mvc.Domain.PaginatedResult<market_mvc.Domain.entity.Product>
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
-    ViewData["Title"] = "Shop";
+    ViewData["Title"] = L.Get("Shop.Title");
     ViewData["Description"] = "Shop Zonta Egypt — Arabic sneakers and streetwear.";
-    ViewBag.PageTitle = "Shop Zonta";
+    ViewBag.PageTitle = L.Get("Shop.Title");
     ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
     {
-        ("Shop", "Products", "Index")
+        (L.Get("Shop.Title"), "Products", "Index")
     };
 }
 
@@ -17,11 +18,11 @@
 
     @* Collections (official store groups: all shoes, men, women — mapped to local categories) *@
     <div class="d-flex gap-2 justify-content-center flex-wrap mb-4" role="navigation" aria-label="Collections">
-        <a asp-action="Index" class="btn btn-sm @(string.IsNullOrEmpty(Context.Request.Query["category"]) ? "btn-custom-primary" : "btn-custom-secondary")">All</a>
+        <a asp-action="Index" class="btn btn-sm @(string.IsNullOrEmpty(Context.Request.Query["category"]) ? "btn-custom-primary" : "btn-custom-secondary")">@L.Get("Shop.All")</a>
         <a asp-action="Index" asp-route-category="Sneakers" class="btn btn-sm @(Context.Request.Query["category"] == "Sneakers" ? "btn-custom-primary" : "btn-custom-secondary")">Sneakers</a>
         <a asp-action="Index" asp-route-category="Apparel" class="btn btn-sm @(Context.Request.Query["category"] == "Apparel" ? "btn-custom-primary" : "btn-custom-secondary")">Apparel</a>
         <a asp-action="Index" asp-route-category="Accessories" class="btn btn-sm @(Context.Request.Query["category"] == "Accessories" ? "btn-custom-primary" : "btn-custom-secondary")">Accessories</a>
-        <a asp-controller="Home" asp-action="SizeGuide" class="btn btn-sm btn-custom-secondary">Size guide</a>
+        <a asp-controller="Home" asp-action="SizeGuide" class="btn btn-sm btn-custom-secondary">@L.Get("Shop.SizeGuide")</a>
     </div>
 
     <div class="content-card">
@@ -29,7 +30,7 @@
         {
             <div class="action-buttons">
                 <a asp-action="Create" class="btn btn-custom-primary">
-                    <i class="fas fa-plus me-2"></i>Add product (admin)
+                    <i class="fas fa-plus me-2"></i>@(L.Culture == "ar" ? "إضافة منتج (إدارة)" : "Add product (admin)")
                 </a>
             </div>
         }
@@ -38,8 +39,8 @@
         {
             <div class="text-center py-5" role="status">
                 <i class="fas fa-shoe-prints fa-3x text-muted mb-3" aria-hidden="true"></i>
-                <h3>No products yet</h3>
-                <p class="text-muted">The verified Zonta catalog is being imported. Please check back soon.</p>
+                <h3>@L.Get("Shop.Empty")</h3>
+                <p class="text-muted">@L.Get("Shop.EmptyHint")</p>
             </div>
         }
 

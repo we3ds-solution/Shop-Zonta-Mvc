@@ -195,15 +195,8 @@ namespace market_mvc.Features.Orders.Services
             var order = await _db.Orders.FirstOrDefaultAsync(o => o.Id == id && !o.IsDeleted, ct)
                 ?? throw new KeyNotFoundException("Order not found.");
 
-            // Valid transitions only.
-            var allowed = order.Status switch
-            {
-                OrderStatus.Pending => new[] { OrderStatus.Confirmed, OrderStatus.Cancelled },
-                OrderStatus.Confirmed => new[] { OrderStatus.Processing, OrderStatus.Cancelled },
-                OrderStatus.Processing => new[] { OrderStatus.Shipped, OrderStatus.Cancelled },
-                OrderStatus.Shipped => new[] { OrderStatus.Delivered },
-                _ => Array.Empty<OrderStatus>()
-            };
+            // Valid transitions only (single source of truth).
+            var allowed = Features.Orders.OrderStatusTransitions.AllowedFrom(order.Status);
             if (!allowed.Contains(status))
                 throw new InvalidOperationException($"Cannot move order from {order.Status} to {status}.");
 

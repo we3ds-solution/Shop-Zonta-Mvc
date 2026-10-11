@@ -52,5 +52,11 @@ namespace market_mvc.Domain.entity
         /// User roles as comma-separated string (denormalized for quick access)
         /// </summary>
         public string? Roles { get; set; }
+
+        /// <summary>
+        /// TOTP authenticator secret (Base32). Null when 2FA is not set up.
+        /// Verified with <see cref="Features.Auth.Totp.TotpService"/>; never logged.
+        /// </summary>
+        public string? TwoFactorSecret { get; set; }
     }
 }

@@ -34,6 +34,7 @@
                 <p class="text-muted">@(isAr ? "اعرض سجل طلباتك. لا يمكنك الوصول إلا لطلباتك الخاصة." : "View your order history. You can only access your own orders.")</p>
                 <a asp-controller="Orders" asp-action="Index" class="btn btn-custom-primary">@L.Get("Orders.History")</a>
                 <a asp-controller="Cart" asp-action="Index" class="btn btn-custom-secondary ms-2">@L.Get("Nav.Cart")</a>
+                <a asp-controller="Auth" asp-action="Setup2fa" class="btn btn-outline-dark btn-sm ms-2">@(isAr ? "المصادقة الثنائية" : "Two-factor auth")</a>
             </div>
         </div>
     </div>

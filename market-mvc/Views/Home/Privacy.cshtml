@@ -1,9 +1,11 @@
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 @{
-    ViewData["Title"] = "Privacy Policy";
-    ViewBag.PageTitle = "Privacy Policy";
+    var isAr = L.Culture == "ar";
+    ViewData["Title"] = isAr ? "سياسة الخصوصية" : "Privacy Policy";
+    ViewBag.PageTitle = isAr ? "سياسة الخصوصية" : "Privacy Policy";
     ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
     {
-        ("Privacy", "Home", "Privacy")
+        (isAr ? "الخصوصية" : "Privacy", "Home", "Privacy")
     };
 }
 
@@ -16,30 +18,42 @@
                 <div class="text-center mb-4">
                     <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
                 </div>
-                
-                <h4>Information We Collect</h4>
-                <p>We collect information you provide directly to us, such as when you create an account, make a purchase, or contact us for support.</p>
-                
-                <h4>How We Use Your Information</h4>
-                <p>We use the information we collect to provide, maintain, and improve our services, process transactions, and communicate with you.</p>
-                
-                <h4>Information Sharing</h4>
-                <p>We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy.</p>
-                
-                <h4>Data Security</h4>
-                <p>We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p>
-                
-                <h4>Contact Us</h4>
-                <p>If you have any questions about this Privacy Policy, please see our <a asp-controller="Home" asp-action="Contact">contact page</a>. Official contact details are published only after verification.</p>
-                <div class="alert alert-warning mt-3" role="note"><strong>Draft — requires legal review (last reviewed 2026-10-10).</strong> This policy text is a template, not yet approved company policy.</div>
-                
+
+                @if (isAr)
+                {
+                    <h4>المعلومات التي نجمعها</h4>
+                    <p>نجمع المعلومات التي تقدمها لنا مباشرة، مثل عند إنشاء حساب أو إجراء عملية شراء أو التواصل معنا للدعم.</p>
+                    <h4>كيف نستخدم معلوماتك</h4>
+                    <p>نستخدم المعلومات لتحسين وتقديم خدماتنا ومعالجة المعاملات والتواصل معك.</p>
+                    <h4>مشاركة المعلومات</h4>
+                    <p>لا نبيع معلوماتك الشخصية أو نتاجر بها أو ننقلها لأطراف ثالثة دون موافقتك، إلا كما هو موضح في هذه السياسة.</p>
+                    <h4>أمن البيانات</h4>
+                    <p>نطبق إجراءات أمنية مناسبة لحماية معلوماتك من الوصول أو التعديل أو الإفصاح غير المصرح به.</p>
+                    <h4>اتصل بنا</h4>
+                    <p>لأي أسئلة حول هذه السياسة راجع <a asp-controller="Home" asp-action="Contact">صفحة التواصل</a>. بيانات التواصل الرسمية تُنشر بعد التحقق فقط.</p>
+                    <div class="alert alert-warning mt-3" role="note"><strong>مسودة — تتطلب مراجعة قانونية (آخر مراجعة 2026-10-10).</strong> هذا النص قالب وليس سياسة معتمدة بعد.</div>
+                }
+                else
+                {
+                    <h4>Information We Collect</h4>
+                    <p>We collect information you provide directly to us, such as when you create an account, make a purchase, or contact us for support.</p>
+                    <h4>How We Use Your Information</h4>
+                    <p>We use the information we collect to provide, maintain, and improve our services, process transactions, and communicate with you.</p>
+                    <h4>Information Sharing</h4>
+                    <p>We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as described in this policy.</p>
+                    <h4>Data Security</h4>
+                    <p>We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p>
+                    <h4>Contact Us</h4>
+                    <p>If you have any questions about this Privacy Policy, please see our <a asp-controller="Home" asp-action="Contact">contact page</a>. Official contact details are published only after verification.</p>
+                    <div class="alert alert-warning mt-3" role="note"><strong>Draft — requires legal review (last reviewed 2026-10-10).</strong> This policy text is a template, not yet approved company policy.</div>
+                }
+
                 <div class="text-center mt-4">
                     <a asp-controller="Home" asp-action="Index" class="btn btn-custom-primary">
-                        <i class="fas fa-home me-2"></i>Back to Home
+                        <i class="fas fa-home me-2"></i>@L.Get("Page.BackHome")
                     </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-

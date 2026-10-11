@@ -1,39 +1,43 @@
 using System.ComponentModel.DataAnnotations;
 using market_mvc.Domain.Validation;
+using market_mvc.Resources;
 
 namespace market_mvc.Domain.ViewModels.Auth
 {
     /// <summary>
-    /// ViewModel for user registration
+    /// ViewModel for user registration. Messages come from SharedValidation
+    /// resources so they follow the current UI culture (EN/AR).
     /// </summary>
     public class RegisterVM
     {
-        [Required(ErrorMessage = "Full name is required")]
-        [StringLength(256, ErrorMessage = "Full name cannot exceed 256 characters")]
-        [Display(Name = "Full Name")]
+        [Required(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "FullName_Required")]
+        [StringLength(256, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "FullName_Length")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "FullName_Display")]
         public string FullName { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid email address")]
-        [StringLength(200, ErrorMessage = "Email cannot exceed 200 characters")]
+        [Required(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Email_Required")]
+        [EmailAddress(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Email_Invalid")]
+        [StringLength(200, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Email_Length")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "Email_Display")]
         public string Email { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Password is required")]
+        [Required(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Password_Required")]
         [DataType(DataType.Password)]
-        [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters")]
+        [StringLength(100, MinimumLength = 8, ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Password_Length")]
         [RegularExpression(
             @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$",
-            ErrorMessage = "Password must contain uppercase, lowercase, digit, and special character")]
+            ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "Password_Regex")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "Password_Display")]
         public string Password { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Password confirmation is required")]
+        [Required(ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "ConfirmPassword_Required")]
         [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Passwords do not match")]
-        [Display(Name = "Confirm Password")]
+        [Compare("Password", ErrorMessageResourceType = typeof(SharedValidation), ErrorMessageResourceName = "ConfirmPassword_Match")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "ConfirmPassword_Display")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
-        [Display(Name = "I agree to the terms and conditions")]
-        [MustBeTrue(ErrorMessage = "You must agree to the terms and conditions")]
+        [Display(ResourceType = typeof(SharedValidation), Name = "Terms_Display")]
+        [MustBeTrue]
         public bool AgreeToTerms { get; set; }
     }
 }
