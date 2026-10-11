@@ -104,7 +104,7 @@ order-item snapshots, variant labels/pricing/availability, EN/AR localization sw
 (including validation messages), TOTP vectors, order transitions, controller ownership,
 full HTTP flows (register/login/checkout/ownership/authorization) via WebApplicationFactory
 + SQLite, Paymob provider with mocked gateway, rate-limit keys, email senders, shipping rules.
-CI (`.github/workflows/build-test.yml`) runs build+test+secret-scan.
+CI (`.github/workflows/build-test.yml`) runs secret-scan (Gitleaks CLI) + build + test.
 Note: on locked-down Windows paths (e.g. Downloads) WDAC may block the test runner;
 copy the repo to an approved path and run `dotnet test` there (verified 14/14).
 
@@ -121,8 +121,8 @@ copy the repo to an approved path and run `dotnet test` there (verified 14/14).
 - Orders `/Orders` — customers see only their own; Admin/Manager/Support see all;
   status updates use valid transitions only (no total/payment overposting).
 - Account `/Auth/Profile`, orders history, login/register/logout, access denied.
-- Contact/Privacy/Shipping/Returns — contact lists only verified channels; legal/shipping
-  pages are marked draft requiring business/legal confirmation.
+- Contact / Privacy / Shipping / Returns — bilingual operational policies (last updated 2026-10-11)
+  based on verified store rules (COD, free shipping ≥ 750 EGP, Egypt-only).
 
 ## Production deployment checklist
 
@@ -139,6 +139,7 @@ copy the repo to an approved path and run `dotnet test` there (verified 14/14).
   enforcement; until then confirmation/reset emails use the dev file sender and login stays open.
 - [ ] Configure payment/shipping providers if COD is insufficient (currently COD only, behind `IPaymentProvider`).
 - [ ] Point domain + verify SEO/canonical URLs.
+- [ ] Optional: purge git history after rotation — `docs/HISTORY-PURGE.md`.
 
 ## Security notes
 
@@ -151,23 +152,22 @@ copy the repo to an approved path and run `dotnet test` there (verified 14/14).
 - Auth hardening: email confirmation + password reset flows implemented (`IEmailSender`;
   SMTP when `Smtp:*` configured, dev file-sender otherwise; enforcement stays off until
   production SMTP exists so registration never locks out). Login/register/checkout POSTs
-  rate-limited (5/min/IP, HTTP 429). Account lockout (5 attempts/15 min) unchanged.
-- Remaining risks: git history still contains old secrets (rewrite needs approval, see issue #3);
-  no 2FA; uploads need AV/size review for large catalogs.
+  rate-limited (5/min/IP, HTTP 429). Account lockout (5 attempts/15 min) unchanged. TOTP 2FA available.
+- CI: Gitleaks CLI secret scan on every push/PR (working tree).
+- Remaining risks: git history may still contain old secrets until a maintainer runs the purge in
+  `docs/HISTORY-PURGE.md` (issue #13); uploads need AV/size review for large catalogs.
 
 ## Known limitations
 
 - Catalog holds 14 products verified from the official homepage archive (2024-12-21);
-  per-product descriptions, materials, sizes, stock counts, and legal texts were never
-  archived — absent fields mean unknown, never guessed. Import more via `import-catalog`.
+  per-product descriptions, materials, sizes, and stock counts were never archived — absent
+  fields mean unknown, never guessed. Import more via `import-catalog`.
 - Imported products show "Available" without quantity claims (stock counts are never
   invented); variants start inactive/zero-stock for admin confirmation.
 - EN/AR UI switching is implemented (real cookie-driven culture + RTL + localized nav/hero/
   currency, product names never translated); deeper view-by-view translation is follow-up.
 - No online payment gateway configured — COD default behind `IPaymentProvider`;
   a Paymob provider is implemented and mock-tested, awaiting live API keys.
-- No AR/EN language switcher (no fake selector); layout is LTR with RTL-ready CSS basics.
-- Legal/shipping/returns pages are drafts, not approved policy.
 - No authorized shopzonta.com sync API — manual import only (no fragile scraper).
 
 ## Product data import
