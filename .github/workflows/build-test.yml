@@ -10,16 +10,32 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history required for secret scanning
+
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "9.0.x"
+
       - name: Restore
         run: dotnet restore market-mvc.sln
+
       - name: Build
         run: dotnet build market-mvc.sln --no-restore --nologo
+
       - name: Test
         run: dotnet test market-mvc.sln --no-build --nologo
+
+      - name: Install Gitleaks
+        shell: pwsh
+        run: |
+          $version = "8.30.1"
+          $url = "https://github.com/gitleaks/gitleaks/releases/download/v$version/gitleaks_${version}_windows_x64.zip"
+          Invoke-WebRequest -Uri $url -OutFile gitleaks.zip
+          Expand-Archive gitleaks.zip -DestinationPath .
+          .\gitleaks.exe version
+
       - name: Secret scan
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          .\gitleaks.exe detect --source . --verbose --redact --exit-code 1
