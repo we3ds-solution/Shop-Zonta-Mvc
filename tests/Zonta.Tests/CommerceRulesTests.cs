@@ -100,4 +100,59 @@ public class CommerceRulesTests
     {
         Assert.Equal((0m, false), ZontaShipping.Compute(100m, -5m, 750m));
     }
+
+    private static List<string> ValidateInCulture(object model, string culture)
+    {
+        var prevCulture = System.Globalization.CultureInfo.CurrentCulture;
+        var prevUi = System.Globalization.CultureInfo.CurrentUICulture;
+        try
+        {
+            var ci = new System.Globalization.CultureInfo(culture);
+            System.Globalization.CultureInfo.CurrentCulture = ci;
+            System.Globalization.CultureInfo.CurrentUICulture = ci;
+            var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+            System.ComponentModel.DataAnnotations.Validator.TryValidateObject(
+                model, new System.ComponentModel.DataAnnotations.ValidationContext(model), results, true);
+            return results.Select(r => r.ErrorMessage ?? "").ToList();
+        }
+        finally
+        {
+            System.Globalization.CultureInfo.CurrentCulture = prevCulture;
+            System.Globalization.CultureInfo.CurrentUICulture = prevUi;
+        }
+    }
+
+    [Fact]
+    public void Register_Empty_Speaks_Current_Culture()
+    {
+        var en = ValidateInCulture(new RegisterVM(), "en");
+        Assert.Contains(en, m => m.Contains("Full name is required"));
+        var ar = ValidateInCulture(new RegisterVM(), "ar-EG");
+        Assert.Contains(ar, m => m.Contains("الاسم الكامل مطلوب"));
+    }
+
+    [Fact]
+    public void MustBeTrue_Speaks_Current_Culture()
+    {
+        var en = ValidateInCulture(new RegisterVM
+        {
+            FullName = "T U", Email = "t@example.com", Password = "TestPass123!",
+            ConfirmPassword = "TestPass123!", AgreeToTerms = false
+        }, "en");
+        Assert.Contains(en, m => m.Contains("agree"));
+        var ar = ValidateInCulture(new RegisterVM
+        {
+            FullName = "T U", Email = "t@example.com", Password = "TestPass123!",
+            ConfirmPassword = "TestPass123!", AgreeToTerms = false
+        }, "ar-EG");
+        Assert.Contains(ar, m => m.Contains("الشروط"));
+    }
+
+    [Fact]
+    public void Checkout_Empty_Speaks_Current_Culture()
+    {
+        var ar = ValidateInCulture(new CheckoutVM(), "ar-EG");
+        Assert.Contains(ar, m => m.Contains("الاسم الأول مطلوب"));
+        Assert.Contains(ar, m => m.Contains("المدينة مطلوبة"));
+    }
 }

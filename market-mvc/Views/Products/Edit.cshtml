@@ -1,12 +1,13 @@
 @model market_mvc.Domain.ViewModels.Product.ProductEditVM
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
-    ViewData["Title"] = "Edit Product";
-    ViewBag.PageTitle = "Edit Product";
+    ViewData["Title"] = L.Get("ProdForm.EditTitle");
+    ViewBag.PageTitle = L.Get("ProdForm.EditTitle");
     ViewBag.Breadcrumbs = new List<(string Name, string Controller, string Action)>
     {
-        ("Products", "Products", "Index"),
-        ("Edit", "Products", "Edit")
+        (L.Get("Shop.Title"), "Products", "Index"),
+        (L.Get("ProdForm.EditTitle"), "Products", "Edit")
     };
 }
 
@@ -21,31 +22,30 @@
                     <input type="hidden" asp-for="Id" />
                     <input type="hidden" asp-for="CreatedAt" />
                     <input type="hidden" asp-for="CurrentImageUrl" />
-                    
+
                     <div class="row">
-                        <!-- Left Column - Basic Info -->
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="Name" class="control-label">
-                                    <i class="fas fa-tag me-2"></i>Product Name *
+                                    <i class="fas fa-tag me-2"></i>
                                 </label>
-                                <input asp-for="Name" class="form-control" placeholder="Enter product name" />
+                                <input asp-for="Name" class="form-control" placeholder="@L.Get("ProdForm.NamePh")" />
                                 <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label asp-for="Description" class="control-label">
-                                    <i class="fas fa-align-left me-2"></i>Description
+                                    <i class="fas fa-align-left me-2"></i>
                                 </label>
-                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter product description"></textarea>
+                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="@L.Get("ProdForm.DescPh")"></textarea>
                                 <span asp-validation-for="Description" class="text-danger"></span>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label asp-for="Price" class="control-label">
-                                            <i class="fas fa-dollar-sign me-2"></i>Price *
+                                            <i class="fas fa-dollar-sign me-2"></i>
                                         </label>
                                         <input asp-for="Price" class="form-control" placeholder="0.00" step="0.01" />
                                         <span asp-validation-for="Price" class="text-danger"></span>
@@ -54,80 +54,75 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label asp-for="CompareAtPrice" class="control-label">
-                                            <i class="fas fa-tags me-2"></i>Compare Price
+                                            <i class="fas fa-tags me-2"></i>
                                         </label>
                                         <input asp-for="CompareAtPrice" class="form-control" placeholder="0.00" step="0.01" />
                                         <span asp-validation-for="CompareAtPrice" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label asp-for="CategoryId" class="control-label">
-                                    <i class="fas fa-folder me-2"></i>Category
+                                    <i class="fas fa-folder me-2"></i>
                                 </label>
                                 <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control">
-                                    <option value="">Select a category</option>
+                                    <option value="">@L.Get("ProdForm.CatPh")</option>
                                 </select>
                                 <span asp-validation-for="CategoryId" class="text-danger"></span>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label asp-for="Status" class="control-label">
-                                    <i class="fas fa-toggle-on me-2"></i>Status
+                                    <i class="fas fa-toggle-on me-2"></i>
                                 </label>
                                 <select asp-for="Status" asp-items="ViewBag.ProductStatuses" class="form-control"></select>
                                 <span asp-validation-for="Status" class="text-danger"></span>
                             </div>
                         </div>
-                        
-                        <!-- Right Column - Images & Inventory -->
+
                         <div class="col-md-6">
-                            <!-- Current Image Display -->
                             @if (!string.IsNullOrEmpty(Model.CurrentImageUrl))
                             {
                                 <div class="form-group">
-                                    <label class="control-label">Current Image</label>
+                                    <label class="control-label">@L.Get("ProdForm.CurImage")</label>
                                     <div class="current-image-container">
                                         <img src="@Model.CurrentImageUrl" alt="@Model.ImageAlt" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;" />
                                     </div>
                                 </div>
                             }
-                            
-                            <!-- Image Upload -->
+
                             <div class="form-group">
                                 <label asp-for="ImageFile" class="control-label">
-                                    <i class="fas fa-upload me-2"></i>Upload New Image
+                                    <i class="fas fa-upload me-2"></i>
                                 </label>
                                 <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
                                 <span asp-validation-for="ImageFile" class="text-danger"></span>
-                                <small class="form-text text-muted">Supported formats: JPG, PNG, GIF, WebP (Max 5MB)</small>
+                                <small class="form-text text-muted">@L.Get("ProdForm.MaxHint")</small>
                             </div>
-                            
-                            <!-- Image URL Alternative -->
+
                             <div class="form-group">
                                 <label asp-for="ImageUrl" class="control-label">
-                                    <i class="fas fa-link me-2"></i>Or Image URL
+                                    <i class="fas fa-link me-2"></i>
                                 </label>
                                 <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/image.jpg" />
                                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
-                                <small class="form-text text-muted">Enter a URL to an image (alternative to upload)</small>
+                                <small class="form-text text-muted">@L.Get("ProdForm.UrlHint")</small>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label asp-for="ImageAlt" class="control-label">
-                                    <i class="fas fa-eye me-2"></i>Image Alt Text
+                                    <i class="fas fa-eye me-2"></i>
                                 </label>
-                                <input asp-for="ImageAlt" class="form-control" placeholder="Describe the image for accessibility" />
+                                <input asp-for="ImageAlt" class="form-control" placeholder="@L.Get("ProdForm.AltPh")" />
                                 <span asp-validation-for="ImageAlt" class="text-danger"></span>
                             </div>
-                            
-                            <!-- Inventory -->
+
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label asp-for="StockQuantity" class="control-label">
-                                            <i class="fas fa-boxes me-2"></i>Stock Quantity
+                                            <i class="fas fa-boxes me-2"></i>
                                         </label>
                                         <input asp-for="StockQuantity" class="form-control" />
                                         <span asp-validation-for="StockQuantity" class="text-danger"></span>
@@ -136,64 +131,59 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label asp-for="LowStockThreshold" class="control-label">
-                                            <i class="fas fa-exclamation-triangle me-2"></i>Low Stock Alert
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
                                         </label>
                                         <input asp-for="LowStockThreshold" class="form-control" />
                                         <span asp-validation-for="LowStockThreshold" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <div class="form-check">
                                     <input asp-for="TrackQuantity" class="form-check-input" />
-                                    <label asp-for="TrackQuantity" class="form-check-label">
-                                        Track inventory quantity
-                                    </label>
+                                    <label asp-for="TrackQuantity" class="form-check-label"></label>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <div class="form-check">
                                     <input asp-for="IsFeatured" class="form-check-input" />
-                                    <label asp-for="IsFeatured" class="form-check-label">
-                                        Featured product
-                                    </label>
+                                    <label asp-for="IsFeatured" class="form-check-label"></label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Advanced Fields (Collapsible) -->
+
                     <div class="mt-4">
                         <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="collapse" data-bs-target="#advancedFields">
-                            <i class="fas fa-cog me-2"></i>Advanced Options
+                            <i class="fas fa-cog me-2"></i>@L.Get("ProdForm.Advanced")
                         </button>
-                        
+
                         <div class="collapse mt-3" id="advancedFields">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label asp-for="Sku" class="control-label">
-                                            <i class="fas fa-barcode me-2"></i>SKU
+                                            <i class="fas fa-barcode me-2"></i>
                                         </label>
-                                        <input asp-for="Sku" class="form-control" placeholder="Product SKU" />
+                                        <input asp-for="Sku" class="form-control" placeholder="@L.Get("ProdForm.SkuPh")" />
                                         <span asp-validation-for="Sku" class="text-danger"></span>
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label asp-for="Barcode" class="control-label">
-                                            <i class="fas fa-qrcode me-2"></i>Barcode
+                                            <i class="fas fa-qrcode me-2"></i>
                                         </label>
-                                        <input asp-for="Barcode" class="form-control" placeholder="Product barcode" />
+                                        <input asp-for="Barcode" class="form-control" placeholder="@L.Get("ProdForm.BarcodePh")" />
                                         <span asp-validation-for="Barcode" class="text-danger"></span>
                                     </div>
-                                    
+
                                     <div class="row">
                                         <div class="col-sm-8">
                                             <div class="form-group">
                                                 <label asp-for="Weight" class="control-label">
-                                                    <i class="fas fa-weight me-2"></i>Weight
+                                                    <i class="fas fa-weight me-2"></i>
                                                 </label>
                                                 <input asp-for="Weight" class="form-control" step="0.01" />
                                                 <span asp-validation-for="Weight" class="text-danger"></span>
@@ -201,7 +191,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label asp-for="WeightUnit" class="control-label">Unit</label>
+                                                <label asp-for="WeightUnit" class="control-label"></label>
                                                 <select asp-for="WeightUnit" class="form-control">
                                                     <option value="kg">kg</option>
                                                     <option value="g">g</option>
@@ -212,75 +202,74 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label asp-for="CostPrice" class="control-label">
-                                            <i class="fas fa-calculator me-2"></i>Cost Price
+                                            <i class="fas fa-calculator me-2"></i>
                                         </label>
                                         <input asp-for="CostPrice" class="form-control" placeholder="0.00" step="0.01" />
                                         <span asp-validation-for="CostPrice" class="text-danger"></span>
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label asp-for="SortOrder" class="control-label">
-                                            <i class="fas fa-sort me-2"></i>Sort Order
+                                            <i class="fas fa-sort me-2"></i>
                                         </label>
                                         <input asp-for="SortOrder" class="form-control" />
                                         <span asp-validation-for="SortOrder" class="text-danger"></span>
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label asp-for="Tags" class="control-label">
-                                            <i class="fas fa-hashtag me-2"></i>Tags
+                                            <i class="fas fa-hashtag me-2"></i>
                                         </label>
-                                        <input asp-for="Tags" class="form-control" placeholder="tag1, tag2, tag3" />
+                                        <input asp-for="Tags" class="form-control" placeholder="@L.Get("ProdForm.TagsPh")" />
                                         <span asp-validation-for="Tags" class="text-danger"></span>
-                                        <small class="form-text text-muted">Separate tags with commas</small>
+                                        <small class="form-text text-muted">@L.Get("ProdForm.TagsHint")</small>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- SEO Fields -->
+
                             <div class="row mt-3">
                                 <div class="col-12">
-                                    <h6><i class="fas fa-search me-2"></i>SEO Settings</h6>
+                                    <h6><i class="fas fa-search me-2"></i>@L.Get("ProdForm.Seo")</h6>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label asp-for="MetaTitle" class="control-label">Meta Title</label>
-                                        <input asp-for="MetaTitle" class="form-control" placeholder="SEO title" />
+                                        <label asp-for="MetaTitle" class="control-label"></label>
+                                        <input asp-for="MetaTitle" class="form-control" placeholder="@L.Get("ProdForm.MetaTPh")" />
                                         <span asp-validation-for="MetaTitle" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label asp-for="MetaDescription" class="control-label">Meta Description</label>
-                                        <textarea asp-for="MetaDescription" class="form-control" rows="2" placeholder="SEO description"></textarea>
+                                        <label asp-for="MetaDescription" class="control-label"></label>
+                                        <textarea asp-for="MetaDescription" class="form-control" rows="2" placeholder="@L.Get("ProdForm.MetaDPh")"></textarea>
                                         <span asp-validation-for="MetaDescription" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="form-group d-flex gap-3 flex-column flex-sm-row mt-4">
                         <button type="submit" class="btn btn-custom-primary flex-fill">
-                            <i class="fas fa-save me-2"></i>Save Changes
+                            <i class="fas fa-save me-2"></i>@L.Get("ProdForm.Save")
                         </button>
                         <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-custom-secondary flex-fill">
-                            <i class="fas fa-eye me-2"></i>View Details
+                            <i class="fas fa-eye me-2"></i>@L.Get("ProdForm.ViewDetails")
                         </a>
                         <a asp-action="Index" class="btn btn-custom-secondary flex-fill">
-                            <i class="fas fa-arrow-left me-2"></i>Back to List
+                            <i class="fas fa-arrow-left me-2"></i>@L.Get("ProdForm.BackList")
                         </a>
                     </div>
                 </form>
 
                 @* Size/color variants (admin). Rendered outside the product form to avoid nested forms. *@
                 <div class="mt-4" id="variants">
-                    <h5><i class="fas fa-list me-2"></i>Size / Color Variants</h5>
-                    <p class="small text-muted">Optional. When variants exist, customers must pick one; variant stock and price override the base product. Deleting a variant used in orders deactivates it instead to preserve history.</p>
+                    <h5><i class="fas fa-list me-2"></i>@L.Get("ProdForm.Variants")</h5>
+                    <p class="small text-muted">@L.Get("ProdForm.VariantsHint")</p>
                     @{
                         var variants = ViewBag.Variants as List<market_mvc.Domain.entity.ProductVariant> ?? new List<market_mvc.Domain.entity.ProductVariant>();
                     }
@@ -288,7 +277,7 @@
                     {
                         <div class="table-responsive">
                             <table class="table table-sm align-middle">
-                                <thead><tr><th>Size</th><th>Color</th><th>SKU</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr></thead>
+                                <thead><tr><th>@L.Get("ProdForm.SizeCol")</th><th>@L.Get("ProdForm.ColorCol")</th><th>@L.Get("ProdForm.SkuCol")</th><th>@L.Get("ProdForm.PriceCol")</th><th>@L.Get("ProdForm.StockCol")</th><th>@L.Get("ProdForm.StatusCol")</th><th></th></tr></thead>
                                 <tbody>
                                 @foreach (var v in variants)
                                 {
@@ -296,17 +285,17 @@
                                         <td>@(v.Size ?? "—")</td>
                                         <td>@(v.Color ?? "—")</td>
                                         <td><small>@(v.Sku ?? "—")</small></td>
-                                        <td>@(v.Price.HasValue ? v.Price.Value.ToString("N2") + " EGP" : "base price")</td>
+                                        <td>@(v.Price.HasValue ? v.Price.Value.ToString("N2") + " EGP" : (L.Culture == "ar" ? "السعر الأساسي" : "base price"))</td>
                                         <td>@v.StockQuantity</td>
-                                        <td>@(v.IsActive ? "Active" : "Inactive")</td>
+                                        <td>@(v.IsActive ? L.Get("ProdForm.Active") : L.Get("ProdForm.Inactive"))</td>
                                         <td class="text-end">
                                             <form asp-controller="ProductVariants" asp-action="ToggleActive" asp-route-id="@v.Id" method="post" class="d-inline">
                                                 @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn btn-outline-secondary btn-sm">@(v.IsActive ? "Deactivate" : "Activate")</button>
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm">@(v.IsActive ? L.Get("ProdForm.Deactivate") : L.Get("ProdForm.Activate"))</button>
                                             </form>
                                             <form asp-controller="ProductVariants" asp-action="Delete" asp-route-id="@v.Id" method="post" class="d-inline">
                                                 @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">@L.Get("ProdForm.Delete")</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -317,33 +306,33 @@
                     }
                     else
                     {
-                        <p class="text-muted small">No variants yet. The product sells at its base price and stock.</p>
+                        <p class="text-muted small">@L.Get("ProdForm.NoVariants")</p>
                     }
                     <form asp-controller="ProductVariants" asp-action="Create" method="post" class="row g-2 mt-2">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="ProductId" value="@Model.Id" />
                         <div class="col-md-2">
-                            <label for="vSize" class="form-label small">Size</label>
-                            <input id="vSize" name="Size" class="form-control form-control-sm" placeholder="EU 42" maxlength="20" />
+                            <label for="vSize" class="form-label small">@L.Get("ProdForm.SizeCol")</label>
+                            <input id="vSize" name="Size" class="form-control form-control-sm" placeholder="@L.Get("ProdForm.SizePh")" maxlength="20" />
                         </div>
                         <div class="col-md-3">
-                            <label for="vColor" class="form-label small">Color</label>
-                            <input id="vColor" name="Color" class="form-control form-control-sm" placeholder="Black" maxlength="50" />
+                            <label for="vColor" class="form-label small">@L.Get("ProdForm.ColorCol")</label>
+                            <input id="vColor" name="Color" class="form-control form-control-sm" placeholder="@L.Get("ProdForm.ColorPh")" maxlength="50" />
                         </div>
                         <div class="col-md-2">
-                            <label for="vSku" class="form-label small">SKU</label>
+                            <label for="vSku" class="form-label small">@L.Get("ProdForm.SkuCol")</label>
                             <input id="vSku" name="Sku" class="form-control form-control-sm" maxlength="100" />
                         </div>
                         <div class="col-md-2">
-                            <label for="vPrice" class="form-label small">Price (EGP, optional)</label>
+                            <label for="vPrice" class="form-label small">@L.Get("ProdForm.PriceOpt")</label>
                             <input id="vPrice" name="Price" type="number" step="0.01" min="0.01" class="form-control form-control-sm" />
                         </div>
                         <div class="col-md-2">
-                            <label for="vStock" class="form-label small">Stock</label>
+                            <label for="vStock" class="form-label small">@L.Get("ProdForm.StockCol")</label>
                             <input id="vStock" name="StockQuantity" type="number" min="0" value="0" class="form-control form-control-sm" required />
                         </div>
                         <div class="col-md-1 d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary btn-sm w-100">Add</button>
+                            <button type="submit" class="btn btn-primary btn-sm w-100">@L.Get("ProdForm.AddVariant")</button>
                         </div>
                     </form>
                 </div>

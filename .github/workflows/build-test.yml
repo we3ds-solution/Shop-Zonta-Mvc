@@ -19,3 +19,7 @@ jobs:
         run: dotnet build market-mvc.sln --no-restore --nologo
       - name: Test
         run: dotnet test market-mvc.sln --no-build --nologo
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

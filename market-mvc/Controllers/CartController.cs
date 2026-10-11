@@ -93,6 +93,7 @@ namespace market_mvc.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
+        [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("auth")]
         public async Task<IActionResult> Checkout(CheckoutVM model, CancellationToken ct)
         {
             var cart = await _cart.GetCartAsync(ct);

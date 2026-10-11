@@ -1,7 +1,8 @@
 @model market_mvc.Domain.ViewModels.Auth.LoginVM
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = L.Get("Auth.SignIn");
 }
 
 <div class="container py-5">
@@ -9,12 +10,12 @@
         <div class="col-md-6">
             <div class="card shadow-lg">
                 <div class="card-body p-5">
-                    <h2 class="card-title text-center mb-4">Login to Your Account</h2>
+                    <h2 class="card-title text-center mb-4">@L.Get("Auth.LoginHeading")</h2>
 
                     @if (ViewData["ReturnUrl"] != null)
                     {
                         <div class="alert alert-info" role="alert">
-                            Please log in to continue.
+                            @L.Get("Auth.LoginInfo")
                         </div>
                     }
 
@@ -23,13 +24,13 @@
 
                         <div class="mb-3">
                             <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" type="email" class="form-control" placeholder="Enter your email" required />
+                            <input asp-for="Email" type="email" class="form-control" placeholder="@L.Get("Auth.EmailPh")" required />
                             <span asp-validation-for="Email" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" required />
+                            <input asp-for="Password" type="password" class="form-control" placeholder="@L.Get("Auth.PassPh")" required />
                             <span asp-validation-for="Password" class="text-danger small"></span>
                         </div>
 
@@ -38,15 +39,19 @@
                             <label asp-for="RememberMe" class="form-check-label"></label>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 py-2 fs-6">Sign In</button>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fs-6">@L.Get("Auth.SignIn")</button>
                     </form>
+
+                    <div class="text-center mt-3">
+                        <a asp-action="ForgotPassword" asp-controller="Auth" class="text-decoration-none">@L.Get("Auth.Forgot")</a>
+                    </div>
 
                     <hr class="my-4" />
 
                     <div class="text-center">
                         <p class="mb-0">
-                            Don't have an account?
-                            <a asp-action="Register" asp-controller="Auth" class="text-decoration-none fw-bold">Register here</a>
+                            @L.Get("Auth.NoAccount")
+                            <a asp-action="Register" asp-controller="Auth" class="text-decoration-none fw-bold">@L.Get("Auth.RegisterHere")</a>
                         </p>
                     </div>
                 </div>
@@ -60,4 +65,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-
