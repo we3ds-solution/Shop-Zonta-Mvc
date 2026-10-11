@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using market_mvc.Domain.Enums;
 using market_mvc.Features.Orders.Services;
+using market_mvc.Infrastructure.Localization;
 
 namespace market_mvc.Controllers
 {
@@ -9,10 +10,13 @@ namespace market_mvc.Controllers
     public class OrdersController : Controller
     {
         private readonly IOrderService _orderService;
+        private readonly IZontaLocalizer _localizer;
+        private string _L(string key) => _localizer.Get(key);
 
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService, IZontaLocalizer localizer)
         {
             _orderService = orderService;
+            _localizer = localizer;
         }
 
         // GET: Orders (scoped: customers see only their own)
@@ -75,7 +79,7 @@ namespace market_mvc.Controllers
             try
             {
                 await _orderService.UpdateStatusAsync(id, input.Status, ct);
-                TempData["SuccessMessage"] = "Order status updated.";
+                TempData["SuccessMessage"] = _L("Msg.StatusUpdated");
                 return RedirectToAction(nameof(Index));
             }
             catch (KeyNotFoundException)
@@ -98,7 +102,7 @@ namespace market_mvc.Controllers
         public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
         {
             await _orderService.DeleteOrderAsync(id, ct);
-            TempData["SuccessMessage"] = "Order deleted successfully.";
+            TempData["SuccessMessage"] = _L("Msg.OrderDeleted");
             return RedirectToAction(nameof(Index));
         }
 
@@ -110,3 +114,4 @@ namespace market_mvc.Controllers
             User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Support");
     }
 }
+

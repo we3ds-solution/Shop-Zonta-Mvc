@@ -37,10 +37,13 @@
 
 <script>
     function showDeleteModal(itemType, itemId, itemName, deleteUrl, additionalInfo = '') {
+        var s = window.zontaStrings || {};
+        var nameLabel = s.nameLabel || 'Name:';
+        var detailsLabel = s.detailsLabel || 'Details:';
         document.getElementById('itemType').textContent = itemType;
         document.getElementById('itemDetails').innerHTML = `
-            <strong><i class="fas fa-info-circle me-1"></i>Name:</strong> ${itemName}
-            ${additionalInfo ? `<br><strong><i class="fas fa-list me-1"></i>Details:</strong> ${additionalInfo}` : ''}
+            <strong><i class="fas fa-info-circle me-1"></i>${nameLabel}</strong> ${itemName}
+            ${additionalInfo ? `<br><strong><i class="fas fa-list me-1"></i>${detailsLabel}</strong> ${additionalInfo}` : ''}
         `;
         document.getElementById('deleteForm').action = deleteUrl;
 

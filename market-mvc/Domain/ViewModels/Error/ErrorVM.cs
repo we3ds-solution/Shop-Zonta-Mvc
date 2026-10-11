@@ -61,8 +61,24 @@ namespace market_mvc.Domain.ViewModels.Error
             _ => "fas fa-exclamation-circle"
         };
         
+        private static bool IsArabic =>
+            System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar";
+
         private string GetDefaultTitle()
         {
+            if (IsArabic)
+            {
+                return StatusCode switch
+                {
+                    400 => "طلب غير صالح",
+                    401 => "غير مصرح",
+                    403 => "ممنوع",
+                    404 => "الصفحة غير موجودة",
+                    500 => "خطأ داخلي في الخادم",
+                    503 => "الخدمة غير متاحة",
+                    _ => "حدث خطأ"
+                };
+            }
             return StatusCode switch
             {
                 400 => "Bad Request",
@@ -74,9 +90,22 @@ namespace market_mvc.Domain.ViewModels.Error
                 _ => "An Error Occurred"
             };
         }
-        
+
         private string GetDefaultMessage()
         {
+            if (IsArabic)
+            {
+                return StatusCode switch
+                {
+                    400 => "تعذر فهم الطلب.",
+                    401 => "غير مصرح لك بالوصول.",
+                    403 => "ليس لديك صلاحية الوصول.",
+                    404 => "الصفحة المطلوبة غير موجودة.",
+                    500 => "حدث خطأ داخلي. حاول لاحقا.",
+                    503 => "الخدمة متوقفة مؤقتا. حاول لاحقا.",
+                    _ => "حدث خطأ غير متوقع. حاول لاحقا."
+                };
+            }
             return StatusCode switch
             {
                 400 => "The request could not be understood by the server.",
@@ -98,6 +127,16 @@ namespace market_mvc.Domain.ViewModels.Error
         // Method to get user-friendly error description
         public string GetUserFriendlyDescription()
         {
+            if (IsArabic)
+            {
+                return StatusCode switch
+                {
+                    404 => "ربما نُقلت الصفحة أو حُذفت أو أدخلت رابطا خاطئا.",
+                    500 => "حدث خطأ من جهتنا. أُخطر الفريق ويعمل على إصلاحه.",
+                    503 => "نجري صيانة حاليا. يرجى العودة بعد دقائق.",
+                    _ => DisplayMessage
+                };
+            }
             return StatusCode switch
             {
                 404 => "The page you're looking for might have been moved, deleted, or you entered the wrong URL.",

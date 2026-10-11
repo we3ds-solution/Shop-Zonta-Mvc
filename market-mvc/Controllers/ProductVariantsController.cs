@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using market_mvc.Infrastructure.Data;
+using market_mvc.Infrastructure.Localization;
 using market_mvc.Domain.entity;
 
 namespace market_mvc.Controllers
@@ -11,10 +12,13 @@ namespace market_mvc.Controllers
     public class ProductVariantsController : Controller
     {
         private readonly AppDbContext _db;
+        private readonly IZontaLocalizer _localizer;
+        private string _L(string key) => _localizer.Get(key);
 
-        public ProductVariantsController(AppDbContext db)
+        public ProductVariantsController(AppDbContext db, IZontaLocalizer localizer)
         {
             _db = db;
+            _localizer = localizer;
         }
 
         public class VariantInput
@@ -40,12 +44,12 @@ namespace market_mvc.Controllers
         {
             if (string.IsNullOrWhiteSpace(input.Size) && string.IsNullOrWhiteSpace(input.Color))
             {
-                TempData["ErrorMessage"] = "Size or color is required.";
+                TempData["ErrorMessage"] = _L("Msg.SizeColorRequired");
                 return RedirectToAction("Edit", "Products", new { id = input.ProductId });
             }
             if (!ModelState.IsValid)
             {
-                TempData["ErrorMessage"] = "Invalid variant data.";
+                TempData["ErrorMessage"] = _L("Msg.InvalidVariant");
                 return RedirectToAction("Edit", "Products", new { id = input.ProductId });
             }
 
@@ -60,7 +64,7 @@ namespace market_mvc.Controllers
                 (v.Size ?? "") == (size ?? "") && (v.Color ?? "") == (color ?? ""), ct);
             if (duplicate)
             {
-                TempData["ErrorMessage"] = "This size/color already exists for this product.";
+                TempData["ErrorMessage"] = _L("Msg.VariantExists");
                 return RedirectToAction("Edit", "Products", new { id = input.ProductId });
             }
 
@@ -77,7 +81,7 @@ namespace market_mvc.Controllers
                 CreatedAt = DateTime.UtcNow
             });
             await _db.SaveChangesAsync(ct);
-            TempData["SuccessMessage"] = "Variant added.";
+            TempData["SuccessMessage"] = _L("Msg.VariantAdded");
             return RedirectToAction("Edit", "Products", new { id = input.ProductId });
         }
 
@@ -94,12 +98,12 @@ namespace market_mvc.Controllers
             if (referenced)
             {
                 variant.IsActive = false; // soft-deactivate instead
-                TempData["SuccessMessage"] = "Variant is used in orders — deactivated instead of deleted.";
+                TempData["SuccessMessage"] = _L("Msg.VariantDeactivated");
             }
             else
             {
                 _db.ProductVariants.Remove(variant); // hard delete safe: no history
-                TempData["SuccessMessage"] = "Variant deleted.";
+                TempData["SuccessMessage"] = _L("Msg.VariantDeleted");
             }
             await _db.SaveChangesAsync(ct);
             return RedirectToAction("Edit", "Products", new { id = variant.ProductId });
@@ -120,3 +124,4 @@ namespace market_mvc.Controllers
         }
     }
 }
+

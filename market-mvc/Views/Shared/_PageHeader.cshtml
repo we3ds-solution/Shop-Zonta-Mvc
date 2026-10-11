@@ -1,4 +1,5 @@
 @model dynamic
+@inject market_mvc.Infrastructure.Localization.IZontaLocalizer L
 
 @{
     var title = ViewBag.PageTitle ?? ViewData["Title"] ?? "Page";
@@ -17,7 +18,7 @@
                         <li class="breadcrumb-item">
                             <a asp-controller="Home" asp-action="Index">
                                 <i class="fas fa-home me-1"></i>
-                                <span class="d-none d-sm-inline">Home</span>
+                                <span class="d-none d-sm-inline">@L.Get("Nav.Home")</span>
                             </a>
                         </li>
                         @foreach (var breadcrumb in breadcrumbs)

@@ -6,6 +6,7 @@ using market_mvc.Domain.Enums;
 using market_mvc.Domain.ObjectValues;
 using market_mvc.Features.Cart.Services;
 using market_mvc.Features.Payments;
+using market_mvc.Infrastructure.Localization;
 
 namespace market_mvc.Features.Orders.Services
 {
@@ -16,14 +17,16 @@ namespace market_mvc.Features.Orders.Services
         private readonly ICartService _cart;
         private readonly IPaymentProvider _payments;
         private readonly IConfiguration _config;
+        private readonly IZontaLocalizer _localizer;
 
-        public OrderService(IUnitOfWork unitOfWork, AppDbContext db, ICartService cart, IPaymentProvider payments, IConfiguration config)
+        public OrderService(IUnitOfWork unitOfWork, AppDbContext db, ICartService cart, IPaymentProvider payments, IConfiguration config, IZontaLocalizer localizer)
         {
             _unitOfWork = unitOfWork;
             _db = db;
             _cart = cart;
             _payments = payments;
             _config = config;
+            _localizer = localizer;
         }
 
         public async Task<IEnumerable<Order>> GetAllOrdersAsync(CancellationToken ct = default)
@@ -61,10 +64,10 @@ namespace market_mvc.Features.Orders.Services
         public async Task<(bool Ok, string? Error, Guid OrderId)> CreateOrderFromCartAsync(CheckoutInput input, CancellationToken ct = default)
         {
             var cart = await _cart.GetCartAsync(ct);
-            if (cart.IsEmpty) return (false, "Your cart is empty.", Guid.Empty);
+            if (cart.IsEmpty) return (false, _localizer.Get("Msg.CartEmpty"), Guid.Empty);
 
             if (cart.Items.Any(i => !i.IsAvailable))
-                return (false, "Some items in your cart are no longer available.", Guid.Empty);
+                return (false, _localizer.Get("Msg.CartGone"), Guid.Empty);
 
             await using var tx = await _db.Database.BeginTransactionAsync(ct);
             try
@@ -81,11 +84,11 @@ namespace market_mvc.Features.Orders.Services
                 foreach (var line in cart.Items)
                 {
                     if (!products.TryGetValue(line.ProductId, out var p))
-                        return (false, $"Product '{line.ProductName}' is no longer available.", Guid.Empty);
+                        return (false, string.Format(_localizer.Get("Msg.GoneNamed"), line.ProductName), Guid.Empty);
                     if (p.Status != ProductStatus.Active)
-                        return (false, $"Product '{p.Name}' is not available.", Guid.Empty);
+                        return (false, string.Format(_localizer.Get("Msg.NotAvailNamed"), p.Name), Guid.Empty);
                     if (line.Quantity < 1 || line.Quantity > 99)
-                        return (false, "Invalid quantity.", Guid.Empty);
+                        return (false, _localizer.Get("Msg.InvalidQty"), Guid.Empty);
 
                     decimal unitPrice = p.Price;
                     string? variantLabel = null;
@@ -96,9 +99,9 @@ namespace market_mvc.Features.Orders.Services
                     {
                         var v = p.Variants.FirstOrDefault(x => x.Id == line.VariantId.Value && !x.IsDeleted && x.IsActive);
                         if (v == null)
-                            return (false, $"Selected size/color for '{p.Name}' is no longer available.", Guid.Empty);
+                            return (false, string.Format(_localizer.Get("Msg.GoneNamed"), $"{p.Name} ({_localizer.Get("ProdForm.Variants")})"), Guid.Empty);
                         if (v.StockQuantity < line.Quantity)
-                            return (false, $"Only {v.StockQuantity} unit(s) of '{p.Name} ({v.Label})' available.", Guid.Empty);
+                            return (false, string.Format(_localizer.Get("Msg.OnlyN"), v.StockQuantity), Guid.Empty);
                         unitPrice = v.EffectivePrice(p.Price);
                         variantLabel = v.Label;
                         variantId = v.Id;
@@ -109,9 +112,9 @@ namespace market_mvc.Features.Orders.Services
                     else
                     {
                         if (p.HasVariants)
-                            return (false, $"Please select a size/color for '{p.Name}'.", Guid.Empty);
+                            return (false, _localizer.Get("Msg.PickVariant"), Guid.Empty);
                         if (p.TrackQuantity && p.StockQuantity < line.Quantity)
-                            return (false, $"Only {p.StockQuantity} unit(s) of '{p.Name}' available.", Guid.Empty);
+                            return (false, string.Format(_localizer.Get("Msg.OnlyN"), p.StockQuantity), Guid.Empty);
                         if (p.TrackQuantity)
                         {
                             p.StockQuantity -= line.Quantity;

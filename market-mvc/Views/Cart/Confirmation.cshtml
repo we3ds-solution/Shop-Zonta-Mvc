@@ -27,9 +27,9 @@
                     <dt class="col-sm-4">@L.Get("Orders.Total")</dt>
                     <dd class="col-sm-8 fw-bold">@Model.Total.ToString("N2") EGP</dd>
                     <dt class="col-sm-4">@L.Get("Orders.Payment")</dt>
-                    <dd class="col-sm-8">@(Model.PaymentMethod ?? L.Get("Common.Cod")) (@Model.PaymentStatus)</dd>
+                    <dd class="col-sm-8">@(Model.PaymentMethod ?? L.Get("Common.Cod")) (@L.PayName(Model.PaymentStatus))</dd>
                     <dt class="col-sm-4">@L.Get("Orders.Status")</dt>
-                    <dd class="col-sm-8">@Model.Status</dd>
+                    <dd class="col-sm-8">@L.StatusName(Model.Status)</dd>
                 </dl>
                 @if (Model.OrderItems.Any())
                 {

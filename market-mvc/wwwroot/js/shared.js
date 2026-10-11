@@ -21,7 +21,12 @@ class ToasterManager {
             info: 'fas fa-info-circle'
         };
 
-        const titleMap = {
+        const titleMap = (window.zontaStrings) ? {
+            success: window.zontaStrings.success,
+            error: window.zontaStrings.error,
+            warning: window.zontaStrings.warning,
+            info: window.zontaStrings.info
+        } : {
             success: 'Success',
             error: 'Error',
             warning: 'Warning',
@@ -226,21 +231,24 @@ class SearchFilterManager {
     }
 
     handleSearchError(error) {
-        window.toaster.error('An error occurred while searching. Please try again.');
+        const msg = (window.zontaStrings && window.zontaStrings.searchError)
+            || 'An error occurred while searching. Please try again.';
+        window.toaster.error(msg);
         console.error('Search error:', error);
     }
 
     updateResultsInfo() {
         const startItem = ((this.currentPage - 1) * this.pageSize) + 1;
         const endItem = Math.min(this.currentPage * this.pageSize, this.totalItems);
-        
+        const found = (window.zontaStrings && window.zontaStrings.resultsFound) || 'results found';
+
         const infoHtml = `
             <div class="results-info">
-                <span class="results-count">${this.totalItems}</span> results found
+                <span class="results-count">${this.totalItems}</span> ${found}
                 ${this.totalItems > 0 ? `(showing ${startItem}-${endItem})` : ''}
             </div>
         `;
-        
+
         $(this.resultsInfo).html(infoHtml);
     }
 

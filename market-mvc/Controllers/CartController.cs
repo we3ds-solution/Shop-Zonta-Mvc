@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using market_mvc.Domain.ViewModels.Cart;
 using market_mvc.Features.Cart.Services;
 using market_mvc.Features.Orders.Services;
+using market_mvc.Infrastructure.Localization;
 
 namespace market_mvc.Controllers
 {
@@ -11,12 +12,14 @@ namespace market_mvc.Controllers
         private readonly ICartService _cart;
         private readonly IOrderService _orders;
         private readonly IConfiguration _config;
+        private readonly IZontaLocalizer _localizer;
 
-        public CartController(ICartService cart, IOrderService orders, IConfiguration config)
+        public CartController(ICartService cart, IOrderService orders, IConfiguration config, IZontaLocalizer localizer)
         {
             _cart = cart;
             _orders = orders;
             _config = config;
+            _localizer = localizer;
         }
 
         // GET: /Cart
@@ -34,12 +37,12 @@ namespace market_mvc.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["ErrorMessage"] = "Invalid quantity.";
+                TempData["ErrorMessage"] = _localizer.Get("Msg.InvalidQty");
                 return RedirectToAction(nameof(Index));
             }
 
             var (ok, error) = await _cart.AddAsync(model.ProductId, model.VariantId, model.Quantity, ct);
-            TempData[ok ? "SuccessMessage" : "ErrorMessage"] = ok ? "Added to cart." : error;
+            TempData[ok ? "SuccessMessage" : "ErrorMessage"] = ok ? _localizer.Get("Msg.Added") : error;
             if (!ok) return RedirectToAction(nameof(Index));
             return RedirectToAction(nameof(Index));
         }
@@ -50,7 +53,7 @@ namespace market_mvc.Controllers
         public async Task<IActionResult> Update(Guid productId, Guid? variantId, int quantity, CancellationToken ct)
         {
             var (ok, error) = await _cart.UpdateQuantityAsync(productId, variantId, quantity, ct);
-            TempData[ok ? "SuccessMessage" : "ErrorMessage"] = ok ? "Cart updated." : error;
+            TempData[ok ? "SuccessMessage" : "ErrorMessage"] = ok ? _localizer.Get("Msg.CartUpdated") : error;
             return RedirectToAction(nameof(Index));
         }
 
@@ -60,7 +63,7 @@ namespace market_mvc.Controllers
         public IActionResult Remove(Guid productId, Guid? variantId)
         {
             _cart.Remove(productId, variantId);
-            TempData["SuccessMessage"] = "Item removed.";
+            TempData["SuccessMessage"] = _localizer.Get("Msg.ItemRemoved");
             return RedirectToAction(nameof(Index));
         }
 
@@ -72,7 +75,7 @@ namespace market_mvc.Controllers
             var cart = await _cart.GetCartAsync(ct);
             if (cart.IsEmpty)
             {
-                TempData["ErrorMessage"] = "Your cart is empty.";
+                TempData["ErrorMessage"] = _localizer.Get("Msg.CartEmpty");
                 return RedirectToAction(nameof(Index));
             }
 
@@ -101,7 +104,7 @@ namespace market_mvc.Controllers
 
             if (cart.IsEmpty)
             {
-                ModelState.AddModelError(string.Empty, "Your cart is empty.");
+                ModelState.AddModelError(string.Empty, _localizer.Get("Msg.CartEmpty"));
                 return View(model);
             }
 
@@ -123,16 +126,16 @@ namespace market_mvc.Controllers
                 var (ok, error, orderId) = await _orders.CreateOrderFromCartAsync(input, ct);
                 if (!ok)
                 {
-                    ModelState.AddModelError(string.Empty, error ?? "Checkout failed.");
+                    ModelState.AddModelError(string.Empty, error ?? _localizer.Get("Msg.CheckoutFail"));
                     return View(model);
                 }
 
-                TempData["SuccessMessage"] = "Order placed. Cash on delivery — payment pending.";
+                TempData["SuccessMessage"] = _localizer.Get("Msg.OrderPlaced");
                 return RedirectToAction("Confirmation", new { id = orderId });
             }
             catch (Exception)
             {
-                ModelState.AddModelError(string.Empty, "Checkout failed. Please try again.");
+                ModelState.AddModelError(string.Empty, _localizer.Get("Msg.CheckoutFail"));
                 return View(model);
             }
         }
