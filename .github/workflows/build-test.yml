@@ -10,16 +10,45 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "9.0.x"
+
+      # Official Gitleaks CLI (no org license required).
+      # Run BEFORE tests so App_Data/mail/*.eml written by the dev email
+      # sender are not scanned. History secrets are tracked in issue #13.
+      - name: Install Gitleaks
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $version = "8.30.1"
+          $zip = Join-Path $env:RUNNER_TEMP "gitleaks.zip"
+          $dir = Join-Path $env:RUNNER_TEMP "gitleaks"
+          $url = "https://github.com/gitleaks/gitleaks/releases/download/v$version/gitleaks_${version}_windows_x64.zip"
+          Write-Host "Downloading $url"
+          Invoke-WebRequest -Uri $url -OutFile $zip -UseBasicParsing
+          if (Test-Path $dir) { Remove-Item $dir -Recurse -Force }
+          New-Item -ItemType Directory -Path $dir | Out-Null
+          Expand-Archive -Path $zip -DestinationPath $dir -Force
+          $exe = Get-ChildItem -Path $dir -Filter "gitleaks.exe" -Recurse | Select-Object -First 1
+          if (-not $exe) { throw "gitleaks.exe not found after extract" }
+          & $exe.FullName version
+          "GITLEAKS_EXE=$($exe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Secret scan (working tree)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          & $env:GITLEAKS_EXE detect --no-git --source . --verbose --redact --exit-code 1
+
       - name: Restore
         run: dotnet restore market-mvc.sln
+
       - name: Build
         run: dotnet build market-mvc.sln --no-restore --nologo
+
       - name: Test
         run: dotnet test market-mvc.sln --no-build --nologo
-      - name: Secret scan
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
